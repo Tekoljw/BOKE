@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,7 +19,6 @@ const AdminAgents: React.FC = () => {
     commissionRate: 0,
   });
   
-  // Mock data for agents
   const [agents, setAgents] = useState<Agent[]>([
     { 
       id: '1', 
@@ -95,7 +93,7 @@ const AdminAgents: React.FC = () => {
   };
   
   const handleToggleStatus = (id: string, currentStatus: 'active' | 'inactive' | 'frozen') => {
-    const newStatus = currentStatus === 'active' ? 'frozen' : 'active';
+    const newStatus = currentStatus === 'active' ? 'frozen' as const : 'active' as const;
     const updatedAgents = agents.map(agent => 
       agent.id === id ? { ...agent, status: newStatus } : agent
     );
@@ -108,7 +106,6 @@ const AdminAgents: React.FC = () => {
   };
   
   const handleDelete = (id: string) => {
-    // In a real app, this would be an API call
     const updatedAgents = agents.filter(agent => agent.id !== id);
     setAgents(updatedAgents);
     
@@ -122,7 +119,6 @@ const AdminAgents: React.FC = () => {
     e.preventDefault();
     
     if (isEditMode && selectedAgent) {
-      // Update existing agent
       const updatedAgents = agents.map(agent => 
         agent.id === selectedAgent.id 
           ? { 
@@ -140,7 +136,6 @@ const AdminAgents: React.FC = () => {
         description: "代理商信息已成功更新",
       });
     } else {
-      // Add new agent
       const newAgent: Agent = {
         id: `${agents.length + 1}`,
         username: formData.username || '',
@@ -252,7 +247,6 @@ const AdminAgents: React.FC = () => {
         </CardContent>
       </Card>
       
-      {/* Add/Edit Agent Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <form onSubmit={handleSubmit}>

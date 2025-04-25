@@ -31,13 +31,15 @@ const MerchantLayout: React.FC = () => {
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
-      {/* Sidebar */}
-      <div 
-        className={`bg-sidebar text-white ${sidebarOpen ? 'w-64' : 'w-20'} transition-all duration-300 overflow-y-auto`}
-      >
+      <div className={`bg-sidebar text-white ${sidebarOpen ? 'w-64' : 'w-20'} transition-all duration-300 overflow-y-auto`}>
         <div className="flex items-center justify-between p-4">
-          <Link to="/" className={`font-bold text-xl ${!sidebarOpen && 'hidden'}`}>
-            波克棋牌
+          <Link to="/" className={`flex items-center gap-2 ${!sidebarOpen && 'hidden'}`}>
+            <img 
+              src="/lovable-uploads/135f811b-3eaa-41a9-ad61-5cd5143e0d4d.png" 
+              alt="波克棋牌" 
+              className="h-8 w-auto rounded-lg"
+            />
+            <span className="font-bold text-xl">波克棋牌</span>
           </Link>
           <Button
             variant="ghost"
@@ -71,7 +73,6 @@ const MerchantLayout: React.FC = () => {
         </div>
       </div>
       
-      {/* Main Content */}
       <div className="flex-1 overflow-y-auto">
         <header className="bg-white border-b h-16 flex items-center justify-between px-6">
           <div className="text-xl font-semibold">商户控制面板</div>

@@ -1,21 +1,66 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
+import { Globe } from 'lucide-react';
+import { 
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
 
 const LandingPage: React.FC = () => {
+  const [language, setLanguage] = useState<'cn' | 'en'>('cn');
+
+  const mockVendors = new Array(12).fill(null).map((_, index) => ({
+    id: String(index + 1),
+    name: `游戏厂商 ${index + 1}`,
+    image: '/placeholder.svg'
+  }));
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
       <header className="bg-primary text-white p-4 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
-          <div className="text-2xl font-bold">棋牌游戏联运中心</div>
-          <div className="flex gap-4">
-            <Link to="/games">
-              <Button variant="ghost" className="text-white hover:bg-primary/80">
-                游戏大厅
-              </Button>
-            </Link>
+          <div className="flex items-center gap-3">
+            <img 
+              src="/lovable-uploads/135f811b-3eaa-41a9-ad61-5cd5143e0d4d.png" 
+              alt="波克棋牌" 
+              className="h-8 w-auto rounded-lg"
+            />
+            <span className="text-2xl font-bold">波克棋牌</span>
+          </div>
+          <div className="flex gap-4 items-center">
+            <NavigationMenu>
+              <NavigationMenuList>
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger className="text-white hover:bg-primary/80">
+                    <Globe className="mr-2 h-4 w-4" />
+                    {language === 'cn' ? '中文' : 'English'}
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <div className="p-2 w-32">
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start"
+                        onClick={() => setLanguage('cn')}
+                      >
+                        中文
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start"
+                        onClick={() => setLanguage('en')}
+                      >
+                        English
+                      </Button>
+                    </div>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
             <Link to="/login">
               <Button variant="outline" className="bg-white text-primary hover:bg-gray-100">
                 登录
@@ -35,14 +80,33 @@ const LandingPage: React.FC = () => {
           <div className="flex gap-4 justify-center">
             <Link to="/games">
               <Button className="bg-white text-primary hover:bg-gray-100 px-6 py-6 text-lg">
-                浏览游戏
+                游戏体验Demo
               </Button>
             </Link>
-            <Link to="/register">
+            <Link to="/docs">
               <Button className="bg-secondary text-white hover:bg-secondary/80 px-6 py-6 text-lg">
-                立即注册
+                API接入文档
               </Button>
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Game Vendors */}
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12">热门游戏厂商</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {mockVendors.map((vendor) => (
+              <div key={vendor.id} className="bg-white rounded-lg shadow-md overflow-hidden">
+                <div className="h-40 bg-gray-200 flex items-center justify-center">
+                  <img src={vendor.image} alt={vendor.name} className="w-20 h-20" />
+                </div>
+                <div className="p-4 text-center">
+                  <h3 className="text-lg font-semibold">{vendor.name}</h3>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -107,11 +171,18 @@ const LandingPage: React.FC = () => {
           <p className="text-xl mb-8 max-w-2xl mx-auto text-gray-600">
             加入我们，享受顶级的游戏内容和技术支持
           </p>
-          <Link to="/register">
-            <Button className="bg-secondary text-white hover:bg-secondary/80 px-8 py-6 text-lg">
-              立即注册
-            </Button>
-          </Link>
+          <div className="flex gap-4 justify-center">
+            <Link to="/games">
+              <Button className="bg-secondary text-white hover:bg-secondary/80 px-8 py-6 text-lg">
+                游戏Demo
+              </Button>
+            </Link>
+            <Link to="/docs">
+              <Button className="bg-primary text-white hover:bg-primary/80 px-8 py-6 text-lg">
+                API接入文档
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
       

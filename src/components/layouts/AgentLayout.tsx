@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
@@ -9,6 +8,7 @@ import {
   FileText,
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import UserMenu from '../UserMenu';
 
 const AgentLayout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -34,9 +34,9 @@ const AgentLayout: React.FC = () => {
         className={`bg-sidebar text-white ${sidebarOpen ? 'w-64' : 'w-20'} transition-all duration-300 overflow-y-auto`}
       >
         <div className="flex items-center justify-between p-4">
-          <div className={`font-bold text-xl ${!sidebarOpen && 'hidden'}`}>
-            棋牌游戏联运
-          </div>
+          <Link to="/" className={`font-bold text-xl ${!sidebarOpen && 'hidden'}`}>
+            波克棋牌
+          </Link>
           <Button
             variant="ghost"
             size="icon"
@@ -73,9 +73,7 @@ const AgentLayout: React.FC = () => {
       <div className="flex-1 overflow-y-auto">
         <header className="bg-white border-b h-16 flex items-center justify-between px-6">
           <div className="text-xl font-semibold">代理商控制面板</div>
-          <div className="flex items-center gap-4">
-            <div className="text-sm font-medium">代理商</div>
-          </div>
+          <UserMenu />
         </header>
         <main className="p-6">
           <Outlet />

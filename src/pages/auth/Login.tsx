@@ -5,12 +5,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+type UserRole = 'merchant' | 'agent' | 'admin';
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [role, setRole] = useState<UserRole>("merchant");
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -19,19 +23,19 @@ const Login: React.FC = () => {
     setLoading(true);
 
     try {
-      // Mock login logic - in a real app, this would be an API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
       
-      // Based on username prefix, navigate to different dashboards
-      if (username.startsWith("admin")) {
-        navigate("/admin");
-      } else if (username.startsWith("agent")) {
-        navigate("/agent");
-      } else if (username.startsWith("merchant")) {
-        navigate("/merchant");
-      } else {
-        // Default to merchant
-        navigate("/merchant");
+      // Navigate based on selected role
+      switch(role) {
+        case 'admin':
+          navigate("/admin");
+          break;
+        case 'agent':
+          navigate("/agent");
+          break;
+        case 'merchant':
+          navigate("/merchant");
+          break;
       }
     } catch (err) {
       setError("登录失败，请检查您的用户名和密码");
@@ -44,7 +48,11 @@ const Login: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-900">棋牌游戏联运中心</h1>
+          <img src="/lovable-uploads/5e182d7b-57df-44a9-8656-4c185e0915f7.png" 
+               alt="波克棋牌" 
+               className="mx-auto h-16 w-16"
+          />
+          <h1 className="mt-4 text-3xl font-bold text-gray-900">波克棋牌</h1>
           <p className="mt-2 text-gray-600">请登录您的账号</p>
         </div>
 
@@ -52,11 +60,19 @@ const Login: React.FC = () => {
           <CardHeader>
             <CardTitle>账号登录</CardTitle>
             <CardDescription>
-              输入您的凭据以访问您的账户
+              选择您的角色并输入登录信息
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleLogin} className="space-y-4">
+              <Tabs defaultValue="merchant" value={role} onValueChange={(value) => setRole(value as UserRole)}>
+                <TabsList className="grid w-full grid-cols-3">
+                  <TabsTrigger value="merchant">商户</TabsTrigger>
+                  <TabsTrigger value="agent">代理商</TabsTrigger>
+                  <TabsTrigger value="admin">管理员</TabsTrigger>
+                </TabsList>
+              </Tabs>
+
               <div className="space-y-2">
                 <Label htmlFor="username">用户名</Label>
                 <Input
@@ -67,6 +83,7 @@ const Login: React.FC = () => {
                   required
                 />
               </div>
+              
               <div className="space-y-2">
                 <Label htmlFor="password">密码</Label>
                 <Input
@@ -103,7 +120,7 @@ const Login: React.FC = () => {
         </Card>
 
         <p className="text-xs text-center text-gray-500">
-          © 2024 棋牌游戏联运中心. All rights reserved.
+          © 2024 波克棋牌. All rights reserved.
         </p>
       </div>
     </div>

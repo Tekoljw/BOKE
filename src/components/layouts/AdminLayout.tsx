@@ -40,13 +40,12 @@ const AdminLayout: React.FC = () => {
     <div className="flex h-screen overflow-hidden bg-gray-50">
       <div className={`bg-sidebar text-white ${sidebarOpen ? 'w-64' : 'w-20'} transition-all duration-300 overflow-y-auto`}>
         <div className="flex items-center justify-between p-4">
-          <Link to="/" className={`flex items-center gap-2 ${!sidebarOpen && 'hidden'}`}>
+          <Link to="/" className="flex items-center">
             <img 
               src="/lovable-uploads/530e81e8-804d-48ef-8b67-b896a5b21c01.png" 
               alt="波克棋牌" 
               className="h-8 w-auto"
             />
-            <span className="font-bold text-xl">波克棋牌</span>
           </Link>
           <Button
             variant="ghost"

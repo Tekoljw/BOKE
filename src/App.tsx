@@ -42,6 +42,12 @@ import MerchantPlayers from "./pages/merchant/Players";
 import MerchantBlacklist from "./pages/merchant/Blacklist";
 import MerchantControl from "./pages/merchant/Control";
 import ManufacturerDetail from "./pages/ManufacturerDetail";
+import MerchantWinLoss from "./pages/merchant/WinLoss";
+import MerchantGameLogs from "./pages/merchant/GameLogs";
+import MerchantTransactions from "./pages/merchant/Transactions";
+import MerchantBalances from "./pages/merchant/Balances";
+import MerchantCredit from "./pages/merchant/Credit";
+import MerchantApi from "./pages/merchant/Api";
 
 const queryClient = new QueryClient();
 
@@ -85,10 +91,13 @@ const App = () => (
           {/* Merchant Routes */}
           <Route path="/merchant" element={<MerchantLayout />}>
             <Route index element={<MerchantDashboard />} />
-            <Route path="game-records" element={<MerchantGameRecords />} />
             <Route path="players" element={<MerchantPlayers />} />
-            <Route path="blacklist" element={<MerchantBlacklist />} />
-            <Route path="control" element={<MerchantControl />} />
+            <Route path="win-loss" element={<MerchantWinLoss />} />
+            <Route path="game-logs" element={<MerchantGameLogs />} />
+            <Route path="transactions" element={<MerchantTransactions />} />
+            <Route path="balances" element={<MerchantBalances />} />
+            <Route path="credit" element={<MerchantCredit />} />
+            <Route path="api" element={<MerchantApi />} />
           </Route>
           
           {/* Catch-all route */}

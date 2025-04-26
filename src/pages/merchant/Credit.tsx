@@ -14,12 +14,14 @@ import { Plus, Loader, Wallet, CreditCard, Gift, GamepadIcon } from "lucide-reac
 import BalanceCard from '@/components/merchant/BalanceCard';
 import RechargeModal from '@/components/merchant/RechargeModal';
 import type { AccountBalance, VendorBalance, RechargeRecord } from '@/types/credit';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 const MerchantCredit: React.FC = () => {
   const [showRecharge, setShowRecharge] = useState(false);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [loading, setLoading] = useState(false);
+  const isMobile = useIsMobile();
 
   // Mock data - replace with real API calls
   const balances: AccountBalance = {
@@ -75,7 +77,7 @@ const MerchantCredit: React.FC = () => {
         </Button>
       </div>
 
-      {/* Balance Cards */}
+      {/* Balance Cards - Responsive Grid */}
       <div className="grid gap-4 md:grid-cols-3">
         <BalanceCard 
           title="USDT余额" 
@@ -94,7 +96,7 @@ const MerchantCredit: React.FC = () => {
         />
       </div>
 
-      {/* Vendor Balance Distribution */}
+      {/* Vendor Balance Distribution - Responsive Grid */}
       <div>
         <h2 className="text-xl font-semibold mb-4">分数余额分布</h2>
         <div className="grid gap-4 md:grid-cols-4">
@@ -110,43 +112,43 @@ const MerchantCredit: React.FC = () => {
         </div>
       </div>
 
-      {/* Recharge Records */}
+      {/* Recharge Records with Mobile Scroll */}
       <div>
         <h2 className="text-xl font-semibold mb-4">充值记录</h2>
-        <div className="flex gap-4 mb-4">
+        <div className="flex flex-col md:flex-row gap-4 mb-4">
           <Input
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            className="w-40"
+            className="w-full md:w-40"
           />
           <Input
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            className="w-40"
+            className="w-full md:w-40"
           />
         </div>
 
-        <div className="rounded-md border">
+        <div className="rounded-md border overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>时间</TableHead>
-                <TableHead>充值前余额</TableHead>
-                <TableHead>充值金额 (USDT)</TableHead>
-                <TableHead>充值后余额</TableHead>
-                <TableHead>状态</TableHead>
+                <TableHead className="whitespace-nowrap">时间</TableHead>
+                <TableHead className="whitespace-nowrap">充值前余额</TableHead>
+                <TableHead className="whitespace-nowrap">充值金额 (USDT)</TableHead>
+                <TableHead className="whitespace-nowrap">充值后余额</TableHead>
+                <TableHead className="whitespace-nowrap">状态</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {records.map((record) => (
                 <TableRow key={record.id}>
-                  <TableCell>{record.timestamp}</TableCell>
-                  <TableCell>{record.beforeBalance}</TableCell>
-                  <TableCell>{record.amount}</TableCell>
-                  <TableCell>{record.afterBalance}</TableCell>
-                  <TableCell>
+                  <TableCell className="whitespace-nowrap">{record.timestamp}</TableCell>
+                  <TableCell className="whitespace-nowrap">{record.beforeBalance}</TableCell>
+                  <TableCell className="whitespace-nowrap">{record.amount}</TableCell>
+                  <TableCell className="whitespace-nowrap">{record.afterBalance}</TableCell>
+                  <TableCell className="whitespace-nowrap">
                     <span className={`px-2 py-1 rounded-full text-sm ${
                       record.status === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                     }`}>

@@ -47,6 +47,7 @@ const AdminLayout: React.FC = () => {
     { path: '/admin/transactions', label: '上下分记录', icon: <ArrowDownUp /> },
     { path: '/admin/recharge-records', label: '商户充值记录', icon: <Wallet /> },
     { path: '/admin/bonus-management', label: '商户赠分管理', icon: <Gift /> },
+    { path: '/admin/bonus-rules', label: '赠分规则配置', icon: <Gift /> },
     { path: '/admin/commission', label: '代理佣金订单', icon: <FileText /> },
     { path: '/admin/api', label: 'API管理', icon: <Code /> },
     { path: '/admin/demo-games', label: '游戏管理', icon: <Gamepad2 /> },

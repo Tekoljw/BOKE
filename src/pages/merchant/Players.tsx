@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Calendar, Search, User, Ban, ChevronDown, Clock } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -7,13 +6,13 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Alert, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { Alert } from "@/components/ui/alert";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { format } from "date-fns";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-// Sample data for vendors
 const vendors = [
   { id: "all", name: "全部线路" },
   { id: "vendor1", name: "波克棋牌" },
@@ -21,7 +20,6 @@ const vendors = [
   { id: "vendor3", name: "百人牛牛" },
 ];
 
-// Enhanced player data type
 interface Player {
   id: string;
   balance: number;
@@ -35,7 +33,6 @@ interface Player {
   isBlacklisted: boolean;
 }
 
-// Sample data generator
 const generatePlayers = (count: number): Player[] => {
   return Array.from({ length: count }, (_, i) => ({
     id: `player${i + 1}`,
@@ -64,17 +61,14 @@ const MerchantPlayers: React.FC = () => {
   const [selectedPlayer, setSelectedPlayer] = useState<string | null>(null);
   const [selectedAction, setSelectedAction] = useState<'add' | 'remove' | null>(null);
   
-  // Filter players based on search criteria
   const filteredPlayers = playerData.filter(player => {
     return player.id.toLowerCase().includes(searchPlayerId.toLowerCase());
   });
   
-  // Display only a portion of the filtered players
   const displayedPlayers = filteredPlayers.slice(0, displayCount);
   
   const handleLoadMore = () => {
     setLoadingMore(true);
-    // Simulate loading delay
     setTimeout(() => {
       setDisplayCount(prev => Math.min(prev + 50, filteredPlayers.length));
       setLoadingMore(false);
@@ -89,7 +83,6 @@ const MerchantPlayers: React.FC = () => {
 
   const handleConfirmBlacklist = () => {
     if (selectedPlayer && selectedAction) {
-      // This would be replaced with an actual API call in a real application
       console.log(`${selectedAction === 'add' ? 'Adding to' : 'Removing from'} blacklist: ${selectedPlayer}`);
     }
     setBlacklistDialogOpen(false);
@@ -104,7 +97,6 @@ const MerchantPlayers: React.FC = () => {
         <p className="text-muted-foreground">管理玩家账号及资金</p>
       </div>
       
-      {/* Vendor Tabs - Full width row */}
       <Card className="p-2">
         <Tabs value={selectedVendor} onValueChange={setSelectedVendor}>
           <TabsList className="w-full justify-start overflow-auto">
@@ -117,7 +109,6 @@ const MerchantPlayers: React.FC = () => {
         </Tabs>
       </Card>
       
-      {/* Search Controls */}
       <div className={cn(
         "flex gap-4",
         isMobile ? "flex-col" : "items-center justify-between"
@@ -135,7 +126,6 @@ const MerchantPlayers: React.FC = () => {
           "flex gap-4",
           isMobile ? "flex-col" : "items-center"
         )}>
-          {/* Date Selector */}
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="outline" className={cn(
@@ -160,7 +150,6 @@ const MerchantPlayers: React.FC = () => {
             </PopoverContent>
           </Popover>
           
-          {/* Player ID Search */}
           <div className="relative w-full md:w-[240px]">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input 
@@ -278,7 +267,6 @@ const MerchantPlayers: React.FC = () => {
         )}
       </Card>
 
-      {/* Blacklist Confirmation Dialog */}
       <AlertDialog open={blacklistDialogOpen} onOpenChange={setBlacklistDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>

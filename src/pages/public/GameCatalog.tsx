@@ -3,6 +3,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Globe, ArrowLeft, Loader } from 'lucide-react';
 import { Progress } from "@/components/ui/progress";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 
 // Mock data for vendors and games
 const mockVendors = [

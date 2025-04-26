@@ -7,45 +7,48 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Search, Settings, AlertCircle } from "lucide-react";
+import { Search, Settings, AlertCircle, Ban } from "lucide-react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
 // Mock data for current rates and operation logs
 const mockCurrentRates = {
   global: 55,
-  ips: {
-    '192.168.1.1': 60,
-    '192.168.1.2': 58,
-  },
+  blockedIps: ['192.168.1.1', '192.168.1.2'],
   players: {
-    'player001': 65,
-    'player002': 45,
+    'player001': 2,
+    'player002': 1,
   }
 };
 
 const mockOperationLogs = [
   { id: 1, type: 'global', value: 55, operator: 'admin', time: '2024-04-26 10:30:45' },
-  { id: 2, type: 'ip', ipAddress: '192.168.1.1', value: 60, operator: 'admin', time: '2024-04-26 09:15:22' },
-  { id: 3, type: 'player', playerId: 'player001', value: 65, operator: 'admin', time: '2024-04-25 14:45:36' },
+  { id: 2, type: 'ip', ipAddress: '192.168.1.1', action: 'block', operator: 'admin', time: '2024-04-26 09:15:22' },
+  { id: 3, type: 'player', playerId: 'player001', value: 2, operator: 'admin', time: '2024-04-25 14:45:36' },
+];
+
+const playerLevels = [
+  { value: "1", label: "等级1 - 轻度追杀" },
+  { value: "2", label: "等级2 - 中度追杀" },
+  { value: "3", label: "等级3 - 重度追杀" }
 ];
 
 const MerchantWinControl: React.FC = () => {
   const { toast } = useToast();
   
-  // States for control values
+  // States for global control
   const [globalRate, setGlobalRate] = useState<string>('');
-  const [ipAddress, setIpAddress] = useState<string>('');
-  const [ipRate, setIpRate] = useState<string>('');
-  const [playerId, setPlayerId] = useState<string>('');
-  const [playerRate, setPlayerRate] = useState<string>('');
-  
-  // States for displaying current rates
   const [currentGlobalRate, setCurrentGlobalRate] = useState<number | null>(null);
-  const [currentIpRate, setCurrentIpRate] = useState<number | null>(null);
-  const [currentPlayerRate, setCurrentPlayerRate] = useState<number | null>(null);
   
-  // States for search functionality
+  // States for IP control
+  const [ipAddress, setIpAddress] = useState<string>('');
   const [ipSearching, setIpSearching] = useState(false);
+  const [isIpBlocked, setIsIpBlocked] = useState<boolean>(false);
+  
+  // States for player control
+  const [playerId, setPlayerId] = useState<string>('');
   const [playerSearching, setPlayerSearching] = useState(false);
+  const [playerLevel, setPlayerLevel] = useState<string>('');
+  const [currentPlayerLevel, setCurrentPlayerLevel] = useState<string | null>(null);
   
   // State for operation logs
   const [logs, setLogs] = useState(mockOperationLogs);
@@ -55,7 +58,6 @@ const MerchantWinControl: React.FC = () => {
 
   // Load current global rate on component mount
   useEffect(() => {
-    // In a real app, this would be an API call
     setCurrentGlobalRate(mockCurrentRates.global);
     
     // Filter logs by type
@@ -78,15 +80,14 @@ const MerchantWinControl: React.FC = () => {
     
     // Simulate API call
     setTimeout(() => {
-      const rate = mockCurrentRates.ips[ipAddress as keyof typeof mockCurrentRates.ips];
-      setCurrentIpRate(rate || null);
-      setIpRate(rate ? String(rate) : '');
+      const isBlocked = mockCurrentRates.blockedIps.includes(ipAddress);
+      setIsIpBlocked(isBlocked);
       setIpSearching(false);
       
-      if (!rate) {
+      if (!isBlocked) {
         toast({
-          title: "未找到该IP地址的控制记录",
-          description: "将创建新的控制记录",
+          title: "IP未在黑名单中",
+          description: "可以将该IP加入黑名单",
         });
       }
     }, 500);
@@ -106,15 +107,15 @@ const MerchantWinControl: React.FC = () => {
     
     // Simulate API call
     setTimeout(() => {
-      const rate = mockCurrentRates.players[playerId as keyof typeof mockCurrentRates.players];
-      setCurrentPlayerRate(rate || null);
-      setPlayerRate(rate ? String(rate) : '');
+      const level = mockCurrentRates.players[playerId as keyof typeof mockCurrentRates.players];
+      setCurrentPlayerLevel(level ? String(level) : null);
+      setPlayerLevel(level ? String(level) : '');
       setPlayerSearching(false);
       
-      if (!rate) {
+      if (!level) {
         toast({
-          title: "未找到该玩家的控制记录",
-          description: "将创建新的控制记录",
+          title: "未找到该玩家的追杀记录",
+          description: "可以为该玩家设置追杀等级",
         });
       }
     }, 500);
@@ -122,31 +123,34 @@ const MerchantWinControl: React.FC = () => {
 
   // Handle form submission
   const handleSubmit = (type: 'global' | 'ip' | 'player') => {
-    const rate = type === 'global' ? globalRate : type === 'ip' ? ipRate : playerRate;
-    const numRate = Number(rate);
-
-    if (isNaN(numRate) || numRate < 0 || numRate > 100) {
-      toast({
-        title: "无效的概率值",
-        description: "请输入0-100之间的数值",
-        variant: "destructive",
-      });
-      return;
+    if (type === 'global') {
+      const numRate = Number(globalRate);
+      if (isNaN(numRate) || numRate < 0 || numRate > 100) {
+        toast({
+          title: "无效的概率值",
+          description: "请输入0-100之间的数值",
+          variant: "destructive",
+        });
+        return;
+      }
     }
 
     // Create new log entry
     const newLog = {
       id: Date.now(),
       type,
-      value: numRate,
       operator: 'merchant',
       time: new Date().toLocaleString('zh-CN'),
     } as any;
 
-    if (type === 'ip') {
+    if (type === 'global') {
+      newLog.value = Number(globalRate);
+    } else if (type === 'ip') {
       newLog.ipAddress = ipAddress;
-    } else if (type === 'player') {
+      newLog.action = 'block';
+    } else {
       newLog.playerId = playerId;
+      newLog.value = Number(playerLevel);
     }
 
     // Update logs
@@ -156,18 +160,18 @@ const MerchantWinControl: React.FC = () => {
     // Update filtered logs
     if (type === 'global') {
       setGlobalLogs([newLog, ...globalLogs]);
-      setCurrentGlobalRate(numRate);
+      setCurrentGlobalRate(Number(globalRate));
     } else if (type === 'ip') {
       setIpLogs([newLog, ...ipLogs]);
-      setCurrentIpRate(numRate);
+      setIsIpBlocked(true);
     } else {
       setPlayerLogs([newLog, ...playerLogs]);
-      setCurrentPlayerRate(numRate);
+      setCurrentPlayerLevel(playerLevel);
     }
 
     toast({
       title: "设置成功",
-      description: `${type === 'global' ? '全线' : type === 'ip' ? 'IP' : '玩家'}控制已更新`,
+      description: `${type === 'global' ? '全线' : type === 'ip' ? 'IP黑名单' : '玩家追杀等级'}已更新`,
     });
   };
 
@@ -189,8 +193,8 @@ const MerchantWinControl: React.FC = () => {
           <Tabs defaultValue="global" className="space-y-4">
             <TabsList className="flex justify-start">
               <TabsTrigger value="global">全线控制</TabsTrigger>
-              <TabsTrigger value="ip">IP控制</TabsTrigger>
-              <TabsTrigger value="player">玩家控制</TabsTrigger>
+              <TabsTrigger value="ip">IP黑名单</TabsTrigger>
+              <TabsTrigger value="player">玩家追杀</TabsTrigger>
             </TabsList>
 
             <TabsContent value="global" className="space-y-4">
@@ -266,42 +270,30 @@ const MerchantWinControl: React.FC = () => {
                   </div>
                 </div>
                 
-                {currentIpRate !== null && (
-                  <div className="flex items-center space-x-2">
-                    <Settings className="h-4 w-4 text-blue-500" />
-                    <span>IP: <strong>{ipAddress}</strong> 当前杀率：<strong>{currentIpRate}%</strong></span>
+                {isIpBlocked && (
+                  <div className="flex items-center space-x-2 text-red-500">
+                    <Ban className="h-4 w-4" />
+                    <span>IP: <strong>{ipAddress}</strong> 已在黑名单中</span>
                   </div>
                 )}
                 
-                <div className="space-y-2">
-                  <Label htmlFor="ipRate">IP杀数设置 (%)</Label>
-                  <Input
-                    id="ipRate"
-                    type="number"
-                    min="0"
-                    max="100"
-                    placeholder="请输入0-100之间的数值"
-                    value={ipRate}
-                    onChange={(e) => setIpRate(e.target.value)}
-                    disabled={currentIpRate === null && !ipAddress}
-                  />
-                </div>
                 <Button 
                   onClick={() => handleSubmit('ip')}
-                  disabled={!ipAddress}
+                  disabled={!ipAddress || isIpBlocked}
+                  className="w-full"
                 >
-                  保存设置
+                  加入黑名单
                 </Button>
               </div>
               
               {ipLogs.length > 0 && (
                 <div className="mt-8">
-                  <h3 className="text-lg font-semibold mb-3">操作记录</h3>
+                  <h3 className="text-lg font-semibold mb-3">黑名单记录</h3>
                   <Table>
                     <TableHeader>
                       <TableRow>
                         <TableHead>IP地址</TableHead>
-                        <TableHead>设定值</TableHead>
+                        <TableHead>操作</TableHead>
                         <TableHead>操作人</TableHead>
                         <TableHead>操作时间</TableHead>
                       </TableRow>
@@ -310,7 +302,7 @@ const MerchantWinControl: React.FC = () => {
                       {ipLogs.map(log => (
                         <TableRow key={log.id}>
                           <TableCell>{log.ipAddress}</TableCell>
-                          <TableCell>{log.value}%</TableCell>
+                          <TableCell>加入黑名单</TableCell>
                           <TableCell>{log.operator}</TableCell>
                           <TableCell>{log.time}</TableCell>
                         </TableRow>
@@ -344,31 +336,34 @@ const MerchantWinControl: React.FC = () => {
                   </div>
                 </div>
                 
-                {currentPlayerRate !== null && (
+                {currentPlayerLevel !== null && (
                   <div className="flex items-center space-x-2">
                     <Settings className="h-4 w-4 text-blue-500" />
-                    <span>玩家ID: <strong>{playerId}</strong> 当前杀率：<strong>{currentPlayerRate}%</strong></span>
+                    <span>玩家ID: <strong>{playerId}</strong> 当前追杀等级：<strong>{currentPlayerLevel}</strong></span>
                   </div>
                 )}
                 
                 <div className="space-y-2">
-                  <Label htmlFor="playerRate">玩家杀数设置 (%)</Label>
-                  <Input
-                    id="playerRate"
-                    type="number"
-                    min="0"
-                    max="100"
-                    placeholder="请输入0-100之间的数值"
-                    value={playerRate}
-                    onChange={(e) => setPlayerRate(e.target.value)}
-                    disabled={currentPlayerRate === null && !playerId}
-                  />
+                  <Label>追杀等级设置</Label>
+                  <RadioGroup 
+                    value={playerLevel} 
+                    onValueChange={setPlayerLevel}
+                    className="flex flex-col space-y-2"
+                  >
+                    {playerLevels.map((level) => (
+                      <div key={level.value} className="flex items-center space-x-2">
+                        <RadioGroupItem value={level.value} id={`level-${level.value}`} />
+                        <Label htmlFor={`level-${level.value}`}>{level.label}</Label>
+                      </div>
+                    ))}
+                  </RadioGroup>
                 </div>
                 <Button 
                   onClick={() => handleSubmit('player')}
-                  disabled={!playerId}
+                  disabled={!playerId || !playerLevel}
+                  className="w-full"
                 >
-                  保存设置
+                  设置追杀等级
                 </Button>
               </div>
               
@@ -379,7 +374,7 @@ const MerchantWinControl: React.FC = () => {
                     <TableHeader>
                       <TableRow>
                         <TableHead>玩家ID</TableHead>
-                        <TableHead>设定值</TableHead>
+                        <TableHead>追杀等级</TableHead>
                         <TableHead>操作人</TableHead>
                         <TableHead>操作时间</TableHead>
                       </TableRow>
@@ -388,7 +383,7 @@ const MerchantWinControl: React.FC = () => {
                       {playerLogs.map(log => (
                         <TableRow key={log.id}>
                           <TableCell>{log.playerId}</TableCell>
-                          <TableCell>{log.value}%</TableCell>
+                          <TableCell>等级{log.value}</TableCell>
                           <TableCell>{log.operator}</TableCell>
                           <TableCell>{log.time}</TableCell>
                         </TableRow>
@@ -406,3 +401,4 @@ const MerchantWinControl: React.FC = () => {
 };
 
 export default MerchantWinControl;
+

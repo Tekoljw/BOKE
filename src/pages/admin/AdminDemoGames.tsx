@@ -64,8 +64,8 @@ const AdminDemoGames: React.FC = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold mb-2">游戏Demo管理</h1>
-        <p className="text-muted-foreground">管理所有游戏厂商的演示游戏</p>
+        <h1 className="text-3xl font-bold mb-2">游戏管理</h1>
+        <p className="text-muted-foreground">管理游戏和厂商的展示配置（注：此处配置不仅对商户生效，同时对官网游戏Demo页面生效）</p>
       </div>
       
       <Card>

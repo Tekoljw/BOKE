@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -8,7 +7,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Search, Upload, Save } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-// Mock data for vendors
 const mockVendors = Array.from({ length: 10 }, (_, i) => ({
   id: `v${i + 1}`,
   name: `厂商 ${i + 1}`,
@@ -26,10 +24,15 @@ const AdminVendorIntro: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [editData, setEditData] = useState(mockVendors[0]);
 
-  // Filter vendors based on search term
-  const filteredVendors = searchTerm 
-    ? mockVendors.filter(v => v.name.toLowerCase().includes(searchTerm.toLowerCase()))
-    : mockVendors;
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files[0]) {
+      toast({
+        title: "文件已上传",
+        description: `已成功上传 ${files[0].name}`,
+      });
+    }
+  };
 
   const handleVendorSelect = (vendorId: string) => {
     const vendor = mockVendors.find(v => v.id === vendorId);
@@ -45,12 +48,15 @@ const AdminVendorIntro: React.FC = () => {
   };
 
   const handleSave = () => {
-    // Here you would typically save the data to your backend
     toast({
       title: "保存成功",
       description: `厂商 ${editData.name} 的介绍已更新`,
     });
   };
+
+  const filteredVendors = searchTerm 
+    ? mockVendors.filter(v => v.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    : mockVendors;
 
   return (
     <div className="space-y-6">
@@ -127,19 +133,24 @@ const AdminVendorIntro: React.FC = () => {
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium mb-1">代表游戏</label>
-                    <Input 
-                      name="featuredGames"
-                      value={editData.featuredGames.join(', ')} 
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        setEditData(prev => ({
-                          ...prev,
-                          featuredGames: value ? value.split(',').map(g => g.trim()) : []
-                        }));
-                      }}
-                    />
-                    <p className="text-xs text-muted-foreground mt-1">多个游戏名称请用逗号分隔</p>
+                    <label className="block text-sm font-medium mb-1">代表游戏图片上传</label>
+                    <div className="border-2 border-dashed border-gray-300 rounded-md p-6">
+                      <input
+                        type="file"
+                        accept=".zip,.rar,.7zip"
+                        className="hidden"
+                        id="game-images"
+                        onChange={handleFileUpload}
+                      />
+                      <label 
+                        htmlFor="game-images"
+                        className="flex flex-col items-center cursor-pointer"
+                      >
+                        <Upload className="h-12 w-12 text-gray-400" />
+                        <span className="mt-2 text-sm text-gray-500">点击上传游戏图片压缩包</span>
+                        <span className="mt-1 text-xs text-gray-400">支持 .zip, .rar, .7z 格式</span>
+                      </label>
+                    </div>
                   </div>
                 </div>
                 

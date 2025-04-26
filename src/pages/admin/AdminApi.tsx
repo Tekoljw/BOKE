@@ -24,6 +24,8 @@ const mockDemos = [
 
 const AdminApi: React.FC = () => {
   const { toast } = useToast();
+  const [chineseDocLink, setChineseDocLink] = useState('https://api-docs.example.com/zh');
+  const [englishDocLink, setEnglishDocLink] = useState('https://api-docs.example.com/en');
 
   const handleSDKUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -35,10 +37,10 @@ const AdminApi: React.FC = () => {
     }
   };
 
-  const handleSaveLink = () => {
+  const handleSaveLink = (type: 'zh' | 'en') => {
     toast({
-      title: "API文档链接已保存",
-      description: "新的API文档链接已成功保存",
+      title: `${type === 'zh' ? '中文' : '英文'}API文档链接已保存`,
+      description: `新的${type === 'zh' ? '中文' : '英文'}API文档链接已成功保存`,
     });
   };
 
@@ -126,17 +128,42 @@ const AdminApi: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="flex gap-4">
-                <div className="flex-1">
-                  <Input
-                    placeholder="输入API文档链接"
-                    type="url"
-                  />
+              <div className="space-y-3">
+                <div>
+                  <h3 className="text-sm font-medium mb-2">中文API文档</h3>
+                  <div className="flex gap-4">
+                    <div className="flex-1">
+                      <Input
+                        placeholder="输入中文API文档链接"
+                        type="url"
+                        value={chineseDocLink}
+                        onChange={(e) => setChineseDocLink(e.target.value)}
+                      />
+                    </div>
+                    <Button onClick={() => handleSaveLink('zh')}>
+                      <LinkIcon className="mr-2 h-4 w-4" />
+                      保存链接
+                    </Button>
+                  </div>
                 </div>
-                <Button onClick={handleSaveLink}>
-                  <LinkIcon className="mr-2 h-4 w-4" />
-                  保存链接
-                </Button>
+                
+                <div>
+                  <h3 className="text-sm font-medium mb-2">英文API文档</h3>
+                  <div className="flex gap-4">
+                    <div className="flex-1">
+                      <Input
+                        placeholder="输入英文API文档链接"
+                        type="url"
+                        value={englishDocLink}
+                        onChange={(e) => setEnglishDocLink(e.target.value)}
+                      />
+                    </div>
+                    <Button onClick={() => handleSaveLink('en')}>
+                      <LinkIcon className="mr-2 h-4 w-4" />
+                      保存链接
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
           </CardContent>

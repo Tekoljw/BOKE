@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -11,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { plus, loader } from "lucide-react";
+import { Plus, Loader, Wallet, CreditCard, Gift, GamepadIcon } from "lucide-react";
 import BalanceCard from '@/components/merchant/BalanceCard';
 import RechargeModal from '@/components/merchant/RechargeModal';
 import type { AccountBalance, VendorBalance, RechargeRecord } from '@/types/credit';
@@ -65,9 +64,15 @@ const MerchantCredit: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold mb-2">买分管理</h1>
-        <p className="text-muted-foreground">管理您的账户余额和充值记录</p>
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold mb-2">买分管理</h1>
+          <p className="text-muted-foreground">管理您的账户余额和充值记录</p>
+        </div>
+        <Button onClick={() => setShowRecharge(true)}>
+          <Plus className="mr-2 h-4 w-4" />
+          充值
+        </Button>
       </div>
 
       {/* Balance Cards */}
@@ -75,28 +80,31 @@ const MerchantCredit: React.FC = () => {
         <BalanceCard 
           title="USDT余额" 
           amount={balances.usdt}
-        >
-          <Button 
-            onClick={() => setShowRecharge(true)} 
-            className="mt-4"
-          >
-            <plus className="mr-2 h-4 w-4" />
-            充值
-          </Button>
-        </BalanceCard>
-        <BalanceCard title="总分数余额" amount={balances.totalPoints} />
-        <BalanceCard title="赠分余额" amount={balances.bonusPoints} />
+          icon={<Wallet className="h-5 w-5" />}
+        />
+        <BalanceCard 
+          title="总分数余额" 
+          amount={balances.totalPoints} 
+          icon={<CreditCard className="h-5 w-5" />}
+        />
+        <BalanceCard 
+          title="赠分余额" 
+          amount={balances.bonusPoints} 
+          icon={<Gift className="h-5 w-5" />}
+        />
       </div>
 
       {/* Vendor Balance Distribution */}
       <div>
         <h2 className="text-xl font-semibold mb-4">分数余额分布</h2>
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-4">
           {vendorBalances.map((vendor) => (
             <BalanceCard
               key={vendor.vendorId}
               title={vendor.vendorName}
               amount={vendor.points}
+              className="md:col-span-1"
+              icon={<GamepadIcon className="h-5 w-5" />}
             />
           ))}
         </div>
@@ -159,7 +167,7 @@ const MerchantCredit: React.FC = () => {
           >
             {loading ? (
               <>
-                <loader className="mr-2 h-4 w-4 animate-spin" />
+                <Loader className="mr-2 h-4 w-4 animate-spin" />
                 加载中...
               </>
             ) : (

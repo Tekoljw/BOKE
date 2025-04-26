@@ -1,13 +1,21 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Globe } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Link } from 'react-router-dom';
+import { 
+  Dialog, 
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription
+} from "@/components/ui/dialog";
 
 const ManufacturerDetail: React.FC = () => {
   const navigate = useNavigate();
-  const [language, setLanguage] = React.useState<'cn' | 'en'>('cn');
+  const [language, setLanguage] = useState<'cn' | 'en'>('cn');
+  const [contactDialogOpen, setContactDialogOpen] = useState(false);
 
   // Mock data for manufacturer categories and details
   const manufacturerCategories = [
@@ -72,19 +80,26 @@ const ManufacturerDetail: React.FC = () => {
     }
   ];
 
+  // Contact information for the dialog
+  const contactInfo = [
+    { name: 'Toney', title: '商务总监', contact: '@Toney' },
+    { name: 'Lion', title: '商务总监', contact: '@Lion' },
+    { name: 'Hersinber', title: '商务总监', contact: '@Hersinber' }
+  ];
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
       <header className="bg-primary text-white p-4 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-3">
+          <Link to="/" className="flex items-center gap-3">
             <img 
               src="/lovable-uploads/530e81e8-804d-48ef-8b67-b896a5b21c01.png" 
               alt="波克棋牌" 
               className="h-8 w-auto"
             />
             <span className="text-2xl font-bold">波克棋牌</span>
-          </div>
+          </Link>
           <div className="flex gap-4 items-center">
             <Button 
               variant="outline" 
@@ -165,7 +180,7 @@ const ManufacturerDetail: React.FC = () => {
 
                       <div className="flex justify-center space-x-4">
                         <Button variant="outline">查看演示</Button>
-                        <Button>技术对接</Button>
+                        <Button onClick={() => setContactDialogOpen(true)}>技术对接</Button>
                       </div>
                     </div>
                   </TabsContent>
@@ -175,6 +190,33 @@ const ManufacturerDetail: React.FC = () => {
           ))}
         </Tabs>
       </div>
+
+      {/* Contact Dialog */}
+      <Dialog open={contactDialogOpen} onOpenChange={setContactDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold mb-2">商务联系方式</DialogTitle>
+            <DialogDescription>
+              请联系以下商务人员获取技术对接支持
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-4 space-y-4">
+            {contactInfo.map((contact, index) => (
+              <div key={index} className="p-4 border rounded-lg flex items-center gap-4">
+                <div className="bg-primary/10 rounded-full p-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="font-semibold">{contact.title} {contact.name}</h3>
+                  <p className="text-gray-600">{contact.contact}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

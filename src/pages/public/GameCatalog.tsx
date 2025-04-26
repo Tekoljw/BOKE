@@ -1,15 +1,17 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { Globe, ArrowLeft } from 'lucide-react';
+import { Globe, ArrowLeft, Loader } from 'lucide-react';
+import { Progress } from "@/components/ui/progress";
 
 // Mock data for vendors and games
 const mockVendors = [
-  { id: '1', name: '皇家棋牌', logo: '' },
-  { id: '2', name: '天天游戏', logo: '' },
-  { id: '3', name: '乐游棋牌', logo: '' },
-  { id: '4', name: '扑克之星', logo: '' },
-  { id: '5', name: '众博棋牌', logo: '' },
+  { id: '1', name: '皇家棋牌', logo: '🎮' },
+  { id: '2', name: '天天游戏', logo: '🎯' },
+  { id: '3', name: '乐游棋牌', logo: '🎲' },
+  { id: '4', name: '扑克之星', logo: '♠️' },
+  { id: '5', name: '众博棋牌', logo: '🃏' },
 ];
 
 const mockGameTypes = [
@@ -39,6 +41,8 @@ const GameCatalog: React.FC = () => {
   const [selectedVendor, setSelectedVendor] = useState<string | undefined>(vendorId);
   const [selectedType, setSelectedType] = useState<string | undefined>();
   const [language, setLanguage] = useState<'cn' | 'en'>('cn');
+  const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
   const navigate = useNavigate();
   
   // Filter games based on selected vendor and type
@@ -57,19 +61,37 @@ const GameCatalog: React.FC = () => {
     }
   }, [selectedVendor, navigate]);
 
+  // Loading animation when viewing more games
+  const handleViewMore = () => {
+    setLoading(true);
+    setProgress(0);
+    
+    const interval = setInterval(() => {
+      setProgress(prev => {
+        const newProgress = prev + 10;
+        if (newProgress >= 100) {
+          clearInterval(interval);
+          setTimeout(() => setLoading(false), 200);
+          return 100;
+        }
+        return newProgress;
+      });
+    }, 200);
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
       <header className="bg-primary text-white p-4 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-3">
+          <Link to="/" className="flex items-center gap-3">
             <img 
               src="/lovable-uploads/530e81e8-804d-48ef-8b67-b896a5b21c01.png" 
               alt="波克棋牌" 
               className="h-8 w-auto"
             />
             <span className="text-2xl font-bold">波克棋牌</span>
-          </div>
+          </Link>
           <div className="flex gap-4 items-center">
             <Button 
               variant="outline" 
@@ -108,16 +130,19 @@ const GameCatalog: React.FC = () => {
             <Button 
               variant={!selectedVendor ? "default" : "outline"}
               onClick={() => setSelectedVendor(undefined)}
+              className="flex items-center gap-2"
             >
-              全部
+              <span>全部</span>
             </Button>
             {mockVendors.map(vendor => (
               <Button
                 key={vendor.id}
                 variant={selectedVendor === vendor.id ? "default" : "outline"}
                 onClick={() => setSelectedVendor(vendor.id)}
+                className="flex items-center gap-2"
               >
-                {vendor.name}
+                <span>{vendor.logo}</span>
+                <span>{vendor.name}</span>
               </Button>
             ))}
           </div>
@@ -172,11 +197,21 @@ const GameCatalog: React.FC = () => {
           </div>
         )}
         
-        {/* View More Button */}
-        <div className="mt-8 flex justify-center">
-          <Button variant="outline" size="lg" onClick={() => navigate('/games')}>
-            查看更多游戏
-          </Button>
+        {/* View More Button with Loading Animation */}
+        <div className="mt-8 flex flex-col items-center">
+          {loading ? (
+            <div className="w-full max-w-md">
+              <div className="flex items-center justify-center mb-2">
+                <Loader className="h-5 w-5 animate-spin mr-2" />
+                <span>加载更多游戏中...</span>
+              </div>
+              <Progress value={progress} className="h-2" />
+            </div>
+          ) : (
+            <Button variant="outline" size="lg" onClick={handleViewMore}>
+              查看更多游戏
+            </Button>
+          )}
         </div>
       </main>
       

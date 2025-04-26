@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -17,8 +16,8 @@ interface CommissionRecord {
   status: 'success' | 'pending';
 }
 
-// Mock data generator
-const generateMockCommissions = (count: number) => {
+// Mock data generator with correct typing
+const generateMockCommissions = (count: number): CommissionRecord[] => {
   return Array.from({ length: count }, (_, i) => {
     const depositAmount = Math.floor(Math.random() * 10000) + 1000;
     const commissionRate = 0.05 + Math.random() * 0.05; // 5-10% commission
@@ -29,7 +28,7 @@ const generateMockCommissions = (count: number) => {
       timestamp: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toLocaleString('zh-CN'),
       depositAmount,
       commission: Math.round(depositAmount * commissionRate),
-      status: Math.random() > 0.1 ? 'success' : 'pending'
+      status: Math.random() > 0.1 ? 'success' : 'pending' as 'success' | 'pending'
     };
   });
 };

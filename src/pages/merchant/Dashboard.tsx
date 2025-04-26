@@ -5,21 +5,42 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Users, TrendingUp, TrendingDown, Wallet, Coins } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const MerchantDashboard: React.FC = () => {
-  // Active tabs state
-  const [vendorTab, setVendorTab] = useState("all");
+  // Active selection state
+  const [selectedVendor, setSelectedVendor] = useState("all");
   const [timeFrame, setTimeFrame] = useState("today");
   const [gameRecordsVendor, setGameRecordsVendor] = useState("all");
   const [topGamesVendor, setTopGamesVendor] = useState("all");
+  const [visibleVendorsInChart, setVisibleVendorsInChart] = useState<string[]>([]);
   
-  // Mock vendors
+  // Mock vendors - expanded to simulate a large number
   const vendors = [
     { id: "all", name: "全部" },
     { id: "vendor1", name: "波克棋牌" },
     { id: "vendor2", name: "开元棋牌" },
     { id: "vendor3", name: "乐游棋牌" },
+    ...Array.from({ length: 47 }, (_, i) => ({
+      id: `vendor${i + 4}`,
+      name: `厂商 ${i + 4}`
+    }))
   ];
+  
+  // Handle vendor selection change
+  const handleVendorChange = (value: string) => {
+    setSelectedVendor(value);
+  };
+  
+  // Toggle vendor visibility in chart
+  const toggleVendorInChart = (vendorId: string) => {
+    setVisibleVendorsInChart(prev => 
+      prev.includes(vendorId) 
+        ? prev.filter(id => id !== vendorId) 
+        : [...prev, vendorId]
+    );
+  };
   
   // Mock time frames data based on selection
   const getStatsData = () => {
@@ -122,12 +143,41 @@ const MerchantDashboard: React.FC = () => {
   // Get top games for the selected vendor
   const topGames = topGamesByVendor[topGamesVendor as keyof typeof topGamesByVendor] || topGamesByVendor.all;
   
-  // Color map for vendor lines
-  const vendorColors = {
-    vendor1: "#8B5CF6", // Purple for vendor1
-    vendor2: "#0EA5E9", // Blue for vendor2
-    vendor3: "#F97316", // Orange for vendor3
+  // Color map for vendor lines - expanded for more vendors
+  const vendorColors: {[key: string]: string} = {
+    vendor1: "#8B5CF6", // Purple
+    vendor2: "#0EA5E9", // Blue
+    vendor3: "#F97316", // Orange
+    vendor4: "#10B981", // Green
+    vendor5: "#EC4899", // Pink
+    vendor6: "#EF4444", // Red
+    vendor7: "#F59E0B", // Amber
+    vendor8: "#6366F1", // Indigo
+    vendor9: "#14B8A6", // Teal
+    vendor10: "#D946EF", // Fuchsia
   };
+  
+  // For vendors beyond our defined colors, generate a color
+  const getVendorColor = (vendorId: string) => {
+    if (vendorColors[vendorId]) return vendorColors[vendorId];
+    
+    // Simple hash function to generate consistent colors for vendors without defined colors
+    const hash = vendorId.split('').reduce((acc, char) => {
+      return char.charCodeAt(0) + ((acc << 5) - acc);
+    }, 0);
+    
+    // Convert hash to color (ensuring it's not too light)
+    const h = hash % 360;
+    const s = 70 + (hash % 20); // 70-90%
+    const l = 40 + (hash % 20); // 40-60%
+    
+    return `hsl(${h}, ${s}%, ${l}%)`;
+  };
+  
+  // Determine which vendors to show in chart (limit to reasonable number)
+  const displayedVendors = visibleVendorsInChart.length > 0 
+    ? visibleVendorsInChart 
+    : vendors.slice(1, 6).map(v => v.id); // Default show first 5 vendors
   
   return (
     <div className="space-y-6">
@@ -136,26 +186,38 @@ const MerchantDashboard: React.FC = () => {
         <p className="text-muted-foreground">欢迎回来，查看您的经营数据</p>
       </div>
       
-      {/* Vendor and Time Frame Tabs */}
+      {/* Vendor and Time Frame Selection */}
       <div className="space-y-4">
-        <Tabs value={vendorTab} onValueChange={setVendorTab}>
-          <TabsList className="w-full grid grid-cols-4">
-            {vendors.map(vendor => (
-              <TabsTrigger key={vendor.id} value={vendor.id}>
-                {vendor.name}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
-        
-        <Tabs value={timeFrame} onValueChange={setTimeFrame}>
-          <TabsList className="w-full grid grid-cols-4">
-            <TabsTrigger value="today">今日</TabsTrigger>
-            <TabsTrigger value="yesterday">昨日</TabsTrigger>
-            <TabsTrigger value="month">本月</TabsTrigger>
-            <TabsTrigger value="accumulated">累积</TabsTrigger>
-          </TabsList>
-        </Tabs>
+        <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
+          <div className="w-full md:w-64">
+            <label className="text-sm text-muted-foreground mb-1 block">厂商线路</label>
+            <Select value={selectedVendor} onValueChange={handleVendorChange}>
+              <SelectTrigger>
+                <SelectValue placeholder="选择厂商"/>
+              </SelectTrigger>
+              <SelectContent>
+                <ScrollArea className="h-72">
+                  {vendors.map(vendor => (
+                    <SelectItem key={vendor.id} value={vendor.id}>
+                      {vendor.name}
+                    </SelectItem>
+                  ))}
+                </ScrollArea>
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div className="w-full md:w-auto flex-1">
+            <Tabs value={timeFrame} onValueChange={setTimeFrame}>
+              <TabsList className="w-full grid grid-cols-4">
+                <TabsTrigger value="today">今日</TabsTrigger>
+                <TabsTrigger value="yesterday">昨日</TabsTrigger>
+                <TabsTrigger value="month">本月</TabsTrigger>
+                <TabsTrigger value="accumulated">累积</TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
+        </div>
       </div>
       
       {/* Stats Cards */}
@@ -175,11 +237,38 @@ const MerchantDashboard: React.FC = () => {
         ))}
       </div>
       
-      {/* Profit Trend Chart */}
+      {/* Profit Trend Chart with Vendor Selection */}
       <Card>
         <CardHeader>
-          <CardTitle>最近30天盈利趋势</CardTitle>
-          <CardDescription>按天统计的游戏盈利</CardDescription>
+          <div className="flex flex-col md:flex-row justify-between gap-4">
+            <div>
+              <CardTitle>最近30天盈利趋势</CardTitle>
+              <CardDescription>按天统计的游戏盈利</CardDescription>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Select
+                value="chart-options"
+                disabled
+              >
+                <SelectTrigger className="w-[150px]">
+                  <SelectValue placeholder="显示厂商" />
+                </SelectTrigger>
+                <SelectContent>
+                  <ScrollArea className="h-72">
+                    {vendors.slice(1).map(vendor => (
+                      <div key={vendor.id} className="flex items-center px-2 py-1.5">
+                        <div 
+                          className="w-3 h-3 rounded-full mr-2" 
+                          style={{ backgroundColor: getVendorColor(vendor.id) }}
+                        />
+                        <span className="text-sm">{vendor.name}</span>
+                      </div>
+                    ))}
+                  </ScrollArea>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="h-80">
@@ -190,18 +279,22 @@ const MerchantDashboard: React.FC = () => {
                 <YAxis />
                 <Tooltip formatter={(value) => `¥${value}`} />
                 <Legend />
-                {vendors.slice(1).map((vendor) => (
-                  <Line
-                    key={vendor.id}
-                    type="monotone"
-                    dataKey={vendor.id}
-                    name={vendor.name}
-                    stroke={vendorColors[vendor.id as keyof typeof vendorColors]}
-                    strokeWidth={2}
-                    dot={{ r: 2 }}
-                    activeDot={{ r: 6 }}
-                  />
-                ))}
+                {displayedVendors.map((vendorId) => {
+                  const vendor = vendors.find(v => v.id === vendorId);
+                  if (!vendor) return null;
+                  return (
+                    <Line
+                      key={vendorId}
+                      type="monotone"
+                      dataKey={vendorId}
+                      name={vendor.name}
+                      stroke={getVendorColor(vendorId)}
+                      strokeWidth={2}
+                      dot={{ r: 2 }}
+                      activeDot={{ r: 6 }}
+                    />
+                  );
+                })}
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -212,17 +305,24 @@ const MerchantDashboard: React.FC = () => {
         {/* Recent Game Records */}
         <Card>
           <CardHeader>
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <CardTitle>最近游戏记录</CardTitle>
-              <Tabs value={gameRecordsVendor} onValueChange={setGameRecordsVendor} className="w-auto">
-                <TabsList>
-                  {vendors.map(vendor => (
-                    <TabsTrigger key={vendor.id} value={vendor.id} className="text-xs px-2 py-1">
-                      {vendor.name}
-                    </TabsTrigger>
-                  ))}
-                </TabsList>
-              </Tabs>
+              <div className="w-full md:w-40">
+                <Select value={gameRecordsVendor} onValueChange={setGameRecordsVendor}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="选择厂商"/>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <ScrollArea className="h-72">
+                      {vendors.map(vendor => (
+                        <SelectItem key={vendor.id} value={vendor.id}>
+                          {vendor.name}
+                        </SelectItem>
+                      ))}
+                    </ScrollArea>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
             <CardDescription>近期玩家游戏记录</CardDescription>
           </CardHeader>
@@ -257,17 +357,24 @@ const MerchantDashboard: React.FC = () => {
         {/* Top Games */}
         <Card>
           <CardHeader>
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <CardTitle>热门游戏</CardTitle>
-              <Tabs value={topGamesVendor} onValueChange={setTopGamesVendor} className="w-auto">
-                <TabsList>
-                  {vendors.map(vendor => (
-                    <TabsTrigger key={vendor.id} value={vendor.id} className="text-xs px-2 py-1">
-                      {vendor.name}
-                    </TabsTrigger>
-                  ))}
-                </TabsList>
-              </Tabs>
+              <div className="w-full md:w-40">
+                <Select value={topGamesVendor} onValueChange={setTopGamesVendor}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="选择厂商"/>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <ScrollArea className="h-72">
+                      {vendors.map(vendor => (
+                        <SelectItem key={vendor.id} value={vendor.id}>
+                          {vendor.name}
+                        </SelectItem>
+                      ))}
+                    </ScrollArea>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
             <CardDescription>按玩家参与度排序</CardDescription>
           </CardHeader>

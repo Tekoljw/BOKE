@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
@@ -9,6 +8,7 @@ import {
   Home,
   Coins,
   FileText,
+  MessageCircle
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import UserMenu from '../UserMenu';
@@ -21,7 +21,6 @@ const AgentLayout: React.FC = () => {
   const isMobile = useIsMobile();
   const [language, setLanguage] = useState<'zh' | 'en'>('zh');
 
-  // Close sidebar by default on mobile
   React.useEffect(() => {
     if (isMobile) {
       setSidebarOpen(false);
@@ -45,9 +44,14 @@ const AgentLayout: React.FC = () => {
     setLanguage(prev => prev === 'zh' ? 'en' : 'zh');
   };
 
+  const handleContactSupport = () => {
+    if (window.$crisp) {
+      window.$crisp.push(['do', 'chat:open']);
+    }
+  };
+
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
-      {/* Mobile overlay */}
       {isMobile && sidebarOpen && (
         <div 
           className="fixed inset-0 bg-black/50 z-40"
@@ -55,7 +59,6 @@ const AgentLayout: React.FC = () => {
         />
       )}
 
-      {/* Sidebar */}
       <div 
         className={`
           fixed md:relative bg-sidebar text-white z-50 h-full
@@ -108,7 +111,6 @@ const AgentLayout: React.FC = () => {
         </div>
       </div>
       
-      {/* Main content */}
       <div className="flex-1 overflow-y-auto">
         <header className="bg-white border-b h-16 flex items-center justify-between px-6">
           <div className="flex items-center gap-4">
@@ -138,6 +140,14 @@ const AgentLayout: React.FC = () => {
             >
               <Globe className="mr-1 h-4 w-4" />
               <span>{language === 'zh' ? '中/EN' : 'EN/中'}</span>
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={handleContactSupport}
+            >
+              <MessageCircle className="mr-1 h-4 w-4" />
+              <span>客服</span>
             </Button>
             <UserMenu />
           </div>

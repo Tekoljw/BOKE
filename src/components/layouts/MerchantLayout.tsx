@@ -12,7 +12,8 @@ import {
   Database,
   Globe,
   Gift,
-  Settings
+  Settings,
+  MessageCircle
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import UserMenu from '../UserMenu';
@@ -51,6 +52,12 @@ const MerchantLayout: React.FC = () => {
 
   const toggleLanguage = () => {
     setLanguage(prev => prev === 'zh' ? 'en' : 'zh');
+  };
+
+  const handleContactSupport = () => {
+    if (window.$crisp) {
+      window.$crisp.push(['do', 'chat:open']);
+    }
   };
 
   return (
@@ -143,6 +150,14 @@ const MerchantLayout: React.FC = () => {
             >
               <Globe className="mr-1 h-4 w-4" />
               <span>{language === 'zh' ? '中/EN' : 'EN/中'}</span>
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={handleContactSupport}
+            >
+              <MessageCircle className="mr-1 h-4 w-4" />
+              <span>客服</span>
             </Button>
             <UserMenu />
           </div>

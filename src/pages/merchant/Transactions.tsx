@@ -16,6 +16,7 @@ const mockTransactions: TransactionRecord[] = [
   {
     id: "TX001",
     timestamp: "2024-04-26 10:30:00",
+    merchantId: "merchant001", // Added merchantId
     username: "player1",
     type: "deposit",
     beforeAmount: 1000,
@@ -27,6 +28,7 @@ const mockTransactions: TransactionRecord[] = [
   {
     id: "TX002",
     timestamp: "2024-04-26 11:45:00",
+    merchantId: "merchant002", // Added merchantId
     username: "player2",
     type: "withdraw",
     beforeAmount: 2000,
@@ -38,6 +40,7 @@ const mockTransactions: TransactionRecord[] = [
   {
     id: "TX003",
     timestamp: "2024-04-26 12:15:00",
+    merchantId: "merchant001", // Added merchantId
     username: "player1",
     type: "deposit",
     beforeAmount: 1500,
@@ -73,6 +76,7 @@ const MerchantTransactions: React.FC = () => {
         {
           id: `TX00${prev.length + 1}`,
           timestamp: "2024-04-26 13:30:00",
+          merchantId: `merchant00${prev.length % 2 + 1}`, // Added merchantId
           username: `player${prev.length % 3 + 1}`,
           type: selectedType,
           beforeAmount: 2000,

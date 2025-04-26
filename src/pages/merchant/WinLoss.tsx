@@ -22,6 +22,7 @@ const mockRecords: WinLossRecord[] = [
   {
     id: "1",
     timestamp: "2024-04-26 10:30:00",
+    merchantId: "merchant001", // Added merchantId
     username: "player1",
     gameType: "德州扑克",
     roomType: "普通场",

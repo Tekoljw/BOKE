@@ -9,6 +9,7 @@ const mockTransactions: TransactionRecord[] = [
   {
     id: "T001",
     timestamp: "2024-04-26 10:30:00",
+    merchantId: "merchant001", // Added merchantId
     username: "player1",
     type: "deposit",
     beforeAmount: 1000,

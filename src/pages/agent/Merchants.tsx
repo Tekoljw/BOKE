@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -7,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Loader } from "lucide-react";
 import { type Merchant } from '@/types';
 import { generateRandomMerchants } from '@/utils/mockData';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 type CurrencyTab = 'all' | 'usdt' | 'cny' | 'usd' | 'mmk' | 'rm';
 

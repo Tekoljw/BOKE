@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Calendar, Search, User, Ban, ChevronDown, Clock } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -12,7 +11,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { format } from "date-fns";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 const vendors = [
   { id: "all", name: "全部线路" },
@@ -91,7 +90,6 @@ const MerchantPlayers: React.FC = () => {
     setSelectedAction(null);
   };
 
-  // Mobile player card component
   const PlayerCard = ({ player }: { player: Player }) => (
     <Card className="mb-4">
       <CardHeader className="pb-2">

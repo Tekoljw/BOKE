@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
@@ -14,7 +15,7 @@ import {
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import UserMenu from '../UserMenu';
-import { useIsMobile } from '@/hooks/useIsMobile';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const MerchantLayout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -23,6 +24,7 @@ const MerchantLayout: React.FC = () => {
   const isMobile = useIsMobile();
   const [language, setLanguage] = useState<'zh' | 'en'>('zh');
 
+  // Close sidebar by default on mobile
   useEffect(() => {
     if (isMobile) {
       setSidebarOpen(false);
@@ -51,6 +53,7 @@ const MerchantLayout: React.FC = () => {
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
+      {/* Mobile overlay */}
       {isMobile && sidebarOpen && (
         <div 
           className="fixed inset-0 bg-black/50 z-40"
@@ -58,6 +61,7 @@ const MerchantLayout: React.FC = () => {
         />
       )}
 
+      {/* Sidebar */}
       <div 
         className={`
           fixed md:relative bg-sidebar text-white z-50 h-full
@@ -110,6 +114,7 @@ const MerchantLayout: React.FC = () => {
         </div>
       </div>
       
+      {/* Main content */}
       <div className="flex-1 overflow-y-auto">
         <header className="bg-white border-b h-16 flex items-center justify-between px-6">
           <div className="flex items-center gap-4">

@@ -1,27 +1,18 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
-import { Card, CardContent } from "@/components/ui/card";
-import { 
-  Plus, 
-  Loader, 
-  Wallet, 
-  CreditCard, 
-  Gift, 
-  GamepadIcon 
-} from "lucide-react";
+import { Plus, Loader, Wallet, CreditCard, Gift, GamepadIcon } from "lucide-react";
 import BalanceCard from '@/components/merchant/BalanceCard';
 import RechargeModal from '@/components/merchant/RechargeModal';
-import { useIsMobile } from '@/hooks/useIsMobile';
 import type { AccountBalance, VendorBalance, RechargeRecord } from '@/types/credit';
 
 const MerchantCredit: React.FC = () => {
@@ -29,7 +20,6 @@ const MerchantCredit: React.FC = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [loading, setLoading] = useState(false);
-  const isMobile = useIsMobile();
 
   // Mock data - replace with real API calls
   const balances: AccountBalance = {
@@ -85,8 +75,8 @@ const MerchantCredit: React.FC = () => {
         </Button>
       </div>
 
-      {/* Balance Cards - Responsive Grid */}
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+      {/* Balance Cards */}
+      <div className="grid gap-4 md:grid-cols-3">
         <BalanceCard 
           title="USDT余额" 
           amount={balances.usdt}
@@ -104,10 +94,10 @@ const MerchantCredit: React.FC = () => {
         />
       </div>
 
-      {/* Vendor Balance Distribution - Responsive Grid */}
+      {/* Vendor Balance Distribution */}
       <div>
         <h2 className="text-xl font-semibold mb-4">分数余额分布</h2>
-        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-4">
           {vendorBalances.map((vendor) => (
             <BalanceCard
               key={vendor.vendorId}
@@ -120,89 +110,54 @@ const MerchantCredit: React.FC = () => {
         </div>
       </div>
 
-      {/* Recharge Records with Mobile Support */}
+      {/* Recharge Records */}
       <div>
         <h2 className="text-xl font-semibold mb-4">充值记录</h2>
-        <div className="flex flex-col md:flex-row gap-4 mb-4">
+        <div className="flex gap-4 mb-4">
           <Input
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            className="w-full md:w-40"
+            className="w-40"
           />
           <Input
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            className="w-full md:w-40"
+            className="w-40"
           />
         </div>
 
-        {isMobile ? (
-          <div className="space-y-4">
-            {records.map(record => (
-              <Card key={record.id} className="p-4">
-                <CardContent className="p-0 space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">时间</span>
-                    <span>{record.timestamp}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">充值前余额</span>
-                    <span>{record.beforeBalance}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">充值金额</span>
-                    <span className="font-medium">{record.amount}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">充值后余额</span>
-                    <span>{record.afterBalance}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">状态</span>
+        <div className="rounded-md border">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>时间</TableHead>
+                <TableHead>充值前余额</TableHead>
+                <TableHead>充值金额 (USDT)</TableHead>
+                <TableHead>充值后余额</TableHead>
+                <TableHead>状态</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {records.map((record) => (
+                <TableRow key={record.id}>
+                  <TableCell>{record.timestamp}</TableCell>
+                  <TableCell>{record.beforeBalance}</TableCell>
+                  <TableCell>{record.amount}</TableCell>
+                  <TableCell>{record.afterBalance}</TableCell>
+                  <TableCell>
                     <span className={`px-2 py-1 rounded-full text-sm ${
                       record.status === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                     }`}>
                       {record.status === 'success' ? '成功' : '超时'}
                     </span>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        ) : (
-          <div className="rounded-md border overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="whitespace-nowrap">时间</TableHead>
-                  <TableHead className="whitespace-nowrap">充值前余额</TableHead>
-                  <TableHead className="whitespace-nowrap">充值金额 (USDT)</TableHead>
-                  <TableHead className="whitespace-nowrap">充值后余额</TableHead>
-                  <TableHead className="whitespace-nowrap">状态</TableHead>
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {records.map((record) => (
-                  <TableRow key={record.id}>
-                    <TableCell className="whitespace-nowrap">{record.timestamp}</TableCell>
-                    <TableCell className="whitespace-nowrap">{record.beforeBalance}</TableCell>
-                    <TableCell className="whitespace-nowrap">{record.amount}</TableCell>
-                    <TableCell className="whitespace-nowrap">{record.afterBalance}</TableCell>
-                    <TableCell className="whitespace-nowrap">
-                      <span className={`px-2 py-1 rounded-full text-sm ${
-                        record.status === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                      }`}>
-                        {record.status === 'success' ? '成功' : '超时'}
-                      </span>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        )}
+              ))}
+            </TableBody>
+          </Table>
+        </div>
 
         <div className="flex justify-center mt-4">
           <Button 

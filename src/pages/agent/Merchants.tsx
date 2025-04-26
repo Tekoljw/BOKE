@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -5,22 +6,40 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { Loader } from "lucide-react";
 import { type Merchant } from '@/types';
-import { generateRandomMerchants } from '@/utils/mockData';
-import { useIsMobile } from '@/hooks/useIsMobile';
 
 type CurrencyTab = 'all' | 'usdt' | 'cny' | 'usd' | 'mmk' | 'rm';
 
 const AgentMerchants: React.FC = () => {
   const [activeTab, setActiveTab] = useState<CurrencyTab>('all');
   const [isLoading, setIsLoading] = useState(false);
-  const isMobile = useIsMobile();
-  const [merchants, setMerchants] = React.useState<Merchant[]>(() => generateRandomMerchants(50));
+
+  // Temporary mock data
+  const merchants: Merchant[] = [
+    {
+      id: "M001",
+      username: "merchant1",
+      telegramId: "@merchant1",
+      role: "merchant",
+      email: "merchant1@example.com",
+      status: "active",
+      createdAt: "2024-01-01",
+      agentId: "A001",
+      agentName: "agent1",
+      gamePoints: 10000,
+      usdtBalance: 5000,
+      feeRate: 0.05,
+      featured: true,
+      totalDeposit: 100000,
+      monthlyDeposit: 15000,
+      totalCommission: 5000,
+      monthlyCommission: 750,
+    }
+  ];
 
   const handleLoadMore = () => {
     setIsLoading(true);
+    // Simulate loading delay
     setTimeout(() => {
-      const newMerchants = generateRandomMerchants(10);
-      setMerchants(prev => [...prev, ...newMerchants]);
       setIsLoading(false);
     }, 1500);
   };
@@ -35,11 +54,13 @@ const AgentMerchants: React.FC = () => {
       <Card>
         <CardHeader>
           <CardTitle>商户列表</CardTitle>
-          <CardDescription>按币种查看商户信息</CardDescription>
+          <CardDescription>
+            按币种查看商户信息
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as CurrencyTab)}>
-            <TabsList className="mb-4 flex overflow-x-auto whitespace-nowrap">
+            <TabsList className="mb-4">
               <TabsTrigger value="all">全部</TabsTrigger>
               <TabsTrigger value="usdt">USDT</TabsTrigger>
               <TabsTrigger value="cny">CNY</TabsTrigger>
@@ -49,39 +70,37 @@ const AgentMerchants: React.FC = () => {
             </TabsList>
 
             <TabsContent value={activeTab} className="mt-0">
-              <div className="rounded-md border overflow-x-auto">
+              <div className="rounded-md border">
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="whitespace-nowrap">商户ID</TableHead>
-                      <TableHead className="whitespace-nowrap">商户名称</TableHead>
-                      <TableHead className="whitespace-nowrap">商户TG</TableHead>
-                      <TableHead className="whitespace-nowrap">商户充值总额</TableHead>
-                      <TableHead className="whitespace-nowrap">本月充值总额</TableHead>
-                      <TableHead className="whitespace-nowrap">商户买分费率</TableHead>
-                      <TableHead className="whitespace-nowrap">为我贡献总佣金</TableHead>
-                      <TableHead className="whitespace-nowrap">本月为我贡献佣金</TableHead>
+                      <TableHead>商户ID</TableHead>
+                      <TableHead>商户名称</TableHead>
+                      <TableHead>商户TG</TableHead>
+                      <TableHead>商户充值总额</TableHead>
+                      <TableHead>本月充值总额</TableHead>
+                      <TableHead>商户买分费率</TableHead>
+                      <TableHead>为我贡献总佣金</TableHead>
+                      <TableHead>本月为我贡献佣金</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {merchants.map((merchant) => (
                       <TableRow key={merchant.id}>
-                        <TableCell className="whitespace-nowrap">{merchant.id}</TableCell>
-                        <TableCell className="whitespace-nowrap">{merchant.username}</TableCell>
-                        <TableCell className="whitespace-nowrap">{merchant.telegramId}</TableCell>
-                        <TableCell className="whitespace-nowrap text-blue-600 font-medium">
+                        <TableCell>{merchant.id}</TableCell>
+                        <TableCell>{merchant.username}</TableCell>
+                        <TableCell>{merchant.telegramId}</TableCell>
+                        <TableCell className="text-blue-600 font-medium">
                           {merchant.totalDeposit?.toLocaleString()}
                         </TableCell>
-                        <TableCell className="whitespace-nowrap text-green-600 font-medium">
+                        <TableCell className="text-green-600 font-medium">
                           {merchant.monthlyDeposit?.toLocaleString()}
                         </TableCell>
-                        <TableCell className="whitespace-nowrap">
-                          {(merchant.feeRate * 100).toFixed(2)}%
-                        </TableCell>
-                        <TableCell className="whitespace-nowrap text-purple-600 font-medium">
+                        <TableCell>{(merchant.feeRate * 100).toFixed(2)}%</TableCell>
+                        <TableCell className="text-purple-600 font-medium">
                           {merchant.totalCommission?.toLocaleString()}
                         </TableCell>
-                        <TableCell className="whitespace-nowrap text-orange-600 font-medium">
+                        <TableCell className="text-orange-600 font-medium">
                           {merchant.monthlyCommission?.toLocaleString()}
                         </TableCell>
                       </TableRow>

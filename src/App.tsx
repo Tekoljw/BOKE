@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -50,6 +49,7 @@ import MerchantTransactions from "./pages/merchant/Transactions";
 import MerchantBalances from "./pages/merchant/Balances";
 import MerchantCredit from "./pages/merchant/Credit";
 import MerchantApi from "./pages/merchant/Api";
+import MerchantBonusPoints from "./pages/merchant/BonusPoints";
 
 // Create a client function to ensure a new instance is created for each app mount
 function createQueryClient() {
@@ -115,6 +115,7 @@ const App = () => {
               <Route path="balances" element={<MerchantBalances />} />
               <Route path="credit" element={<MerchantCredit />} />
               <Route path="api" element={<MerchantApi />} />
+              <Route path="bonus-points" element={<MerchantBonusPoints />} />
             </Route>
             
             {/* Catch-all route */}

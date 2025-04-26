@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
@@ -12,6 +11,7 @@ import {
   Coins,
   Database,
   Globe,
+  Gift
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import UserMenu from '../UserMenu';
@@ -24,7 +24,6 @@ const MerchantLayout: React.FC = () => {
   const isMobile = useIsMobile();
   const [language, setLanguage] = useState<'zh' | 'en'>('zh');
 
-  // Close sidebar by default on mobile
   useEffect(() => {
     if (isMobile) {
       setSidebarOpen(false);
@@ -40,6 +39,7 @@ const MerchantLayout: React.FC = () => {
     { path: '/merchant/game-logs', label: '对局日志', icon: <FileText /> },
     { path: '/merchant/transactions', label: '上下分记录', icon: <Activity /> },
     { path: '/merchant/credit', label: '买分管理', icon: <Coins /> },
+    { path: '/merchant/bonus-points', label: '赠分领取', icon: <Gift /> },
     { path: '/merchant/api', label: 'API管理', icon: <Database /> },
   ];
 
@@ -53,7 +53,6 @@ const MerchantLayout: React.FC = () => {
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
-      {/* Mobile overlay */}
       {isMobile && sidebarOpen && (
         <div 
           className="fixed inset-0 bg-black/50 z-40"
@@ -61,7 +60,6 @@ const MerchantLayout: React.FC = () => {
         />
       )}
 
-      {/* Sidebar */}
       <div 
         className={`
           fixed md:relative bg-sidebar text-white z-50 h-full
@@ -114,7 +112,6 @@ const MerchantLayout: React.FC = () => {
         </div>
       </div>
       
-      {/* Main content */}
       <div className="flex-1 overflow-y-auto">
         <header className="bg-white border-b h-16 flex items-center justify-between px-6">
           <div className="flex items-center gap-4">

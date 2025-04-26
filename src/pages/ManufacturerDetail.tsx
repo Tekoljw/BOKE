@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Globe } from "lucide-react";
+import { ArrowLeft, Globe, Loader } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
 import { 
   Card, 
   CardContent, 
@@ -40,6 +41,8 @@ const ManufacturerDetail: React.FC = () => {
   const navigate = useNavigate();
   const [language, setLanguage] = useState<'cn' | 'en'>('cn');
   const [contactDialogOpen, setContactDialogOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   const manufacturerCategories = [
     {
@@ -67,6 +70,23 @@ const ManufacturerDetail: React.FC = () => {
 
   const handleBackClick = () => {
     navigate(-1);
+  };
+
+  const handleLoadMore = () => {
+    setLoading(true);
+    setProgress(0);
+    
+    const interval = setInterval(() => {
+      setProgress(prev => {
+        const newProgress = prev + 10;
+        if (newProgress >= 100) {
+          clearInterval(interval);
+          setTimeout(() => setLoading(false), 200);
+          return 100;
+        }
+        return newProgress;
+      });
+    }, 200);
   };
 
   return (
@@ -103,11 +123,11 @@ const ManufacturerDetail: React.FC = () => {
         <div className="flex items-center gap-4 mb-6">
           <Button 
             variant="ghost"
-            size="icon"
             onClick={handleBackClick}
-            className="p-2"
+            className="flex items-center gap-2"
           >
             <ArrowLeft className="h-5 w-5" />
+            <span>返回</span>
           </Button>
           <h1 className="text-xl font-semibold">游戏厂商</h1>
         </div>
@@ -150,22 +170,33 @@ const ManufacturerDetail: React.FC = () => {
                         <h3 className="text-xl font-semibold mb-4">游戏列表</h3>
                         <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-8 gap-3">
                           {manufacturer.games.map((game) => (
-                            <Card key={game.id} className="overflow-hidden aspect-square">
-                              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-orange-100 to-orange-50 hover:from-orange-200 hover:to-orange-100 transition-colors cursor-pointer">
-                                <img 
-                                  src="/lovable-uploads/4b9bddee-a0e6-4dfb-ab50-2598752dec72.png"
-                                  alt={game.name}
-                                  className="w-4/5 h-4/5 object-contain"
-                                />
-                              </div>
-                            </Card>
+                            <div key={game.id} 
+                              className="aspect-square flex items-center justify-center bg-gradient-to-br from-orange-100 to-orange-50 hover:from-orange-200 hover:to-orange-100 transition-colors cursor-pointer rounded-lg"
+                            >
+                              <img 
+                                src="/lovable-uploads/4b9bddee-a0e6-4dfb-ab50-2598752dec72.png"
+                                alt={game.name}
+                                className="w-4/5 h-4/5 object-contain"
+                              />
+                            </div>
                           ))}
                         </div>
-                      </div>
 
-                      <div className="flex justify-center space-x-4">
-                        <Button variant="outline">查看演示</Button>
-                        <Button onClick={() => setContactDialogOpen(true)}>技术对接</Button>
+                        <div className="mt-8 flex flex-col items-center">
+                          {loading ? (
+                            <div className="w-full max-w-md">
+                              <div className="flex items-center justify-center mb-2">
+                                <Loader className="h-5 w-5 animate-spin mr-2" />
+                                <span>加载更多游戏中...</span>
+                              </div>
+                              <Progress value={progress} className="h-2" />
+                            </div>
+                          ) : (
+                            <Button variant="outline" size="lg" onClick={handleLoadMore}>
+                              加载更多游戏
+                            </Button>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </TabsContent>

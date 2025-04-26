@@ -119,11 +119,11 @@ const GameCatalog: React.FC = () => {
         <div className="flex items-center gap-4 mb-8">
           <Button 
             variant="ghost"
-            size="icon"
             onClick={handleBackClick}
-            className="p-2"
+            className="flex items-center gap-2"
           >
             <ArrowLeft className="h-5 w-5" />
+            <span>返回</span>
           </Button>
           <h1 className="text-3xl font-bold">游戏大厅</h1>
         </div>

@@ -40,6 +40,7 @@ import AdminVendors from "./pages/admin/AdminVendors";
 import AdminDemoGames from "./pages/admin/AdminDemoGames";
 import AdminVendorIntro from "./pages/admin/AdminVendorIntro";
 import AdminPermissions from "./pages/admin/AdminPermissions";
+import AdminBonusRules from "./pages/admin/AdminBonusRules";
 
 // Agent Pages
 import AgentDashboard from "./pages/agent/Dashboard";
@@ -107,6 +108,7 @@ const App = () => {
               <Route path="transactions" element={<AdminTransactions />} />
               <Route path="recharge-records" element={<AdminRechargeRecords />} />
               <Route path="bonus-management" element={<AdminBonusManagement />} />
+              <Route path="bonus-rules" element={<AdminBonusRules />} />
               <Route path="commission" element={<AdminCommission />} />
               <Route path="api" element={<AdminApi />} />
               <Route path="self-games" element={<AdminSelfGames />} />

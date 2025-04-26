@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -49,12 +48,22 @@ const AdminWinControl: React.FC = () => {
   const [playerSearching, setPlayerSearching] = useState(false);
   const [playerLevel, setPlayerLevel] = useState<string>('');
   const [currentPlayerLevel, setCurrentPlayerLevel] = useState<string | null>(null);
+
+  // Add new states for room control
+  const [roomSearching, setRoomSearching] = useState(false);
+  const [roomGameId, setRoomGameId] = useState<string>('');
+  const [roomId, setRoomId] = useState<string>('');
+  const [roomRate, setRoomRate] = useState<string>('');
+  const [currentRoomRate, setCurrentRoomRate] = useState<number | null>(null);
   
   // State for operation logs
   const [logs, setLogs] = useState(mockOperationLogs);
   const [merchantLogs, setMerchantLogs] = useState<typeof mockOperationLogs>([]);
   const [ipLogs, setIpLogs] = useState<typeof mockOperationLogs>([]);
   const [playerLogs, setPlayerLogs] = useState<typeof mockOperationLogs>([]);
+
+  // Mock room control logs
+  const [roomLogs, setRoomLogs] = useState<typeof mockOperationLogs>([]);
 
   // Load current rates on component mount
   React.useEffect(() => {
@@ -141,6 +150,31 @@ const AdminWinControl: React.FC = () => {
     }, 500);
   };
 
+  // Handle room search
+  const handleRoomSearch = () => {
+    if (!roomGameId || !roomId) {
+      toast({
+        title: "请输入游戏ID和房间ID",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    setRoomSearching(true);
+    
+    // Simulate API call
+    setTimeout(() => {
+      setCurrentRoomRate(null);
+      setRoomRate('');
+      setRoomSearching(false);
+      
+      toast({
+        title: "未找到该房间的控制记录",
+        description: "可以为该房间设置新的杀率",
+      });
+    }, 500);
+  };
+
   // Handle form submission
   const handleSubmit = (type: 'merchant' | 'ip' | 'player') => {
     if (type === 'merchant') {
@@ -196,6 +230,39 @@ const AdminWinControl: React.FC = () => {
     });
   };
 
+  // Handle room control submit
+  const handleRoomSubmit = () => {
+    const numRate = Number(roomRate);
+    if (isNaN(numRate) || numRate < 0 || numRate > 100) {
+      toast({
+        title: "无效的概率值",
+        description: "请输入0-100之间的数值",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Create new log entry
+    const newLog = {
+      id: Date.now(),
+      type: 'room',
+      gameId: roomGameId,
+      roomId: roomId,
+      value: Number(roomRate),
+      operator: 'admin',
+      time: new Date().toLocaleString('zh-CN'),
+    };
+
+    // Update logs
+    setRoomLogs([newLog, ...roomLogs]);
+    setCurrentRoomRate(Number(roomRate));
+
+    toast({
+      title: "房间控制设置成功",
+      description: `已设置房间 ${roomId} 的杀率为 ${roomRate}%`,
+    });
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -216,6 +283,7 @@ const AdminWinControl: React.FC = () => {
               <TabsTrigger value="merchant">商户控制</TabsTrigger>
               <TabsTrigger value="ip">IP控制</TabsTrigger>
               <TabsTrigger value="player">玩家控制</TabsTrigger>
+              <TabsTrigger value="room">房间控制</TabsTrigger>
             </TabsList>
 
             <TabsContent value="merchant" className="space-y-4">
@@ -432,6 +500,97 @@ const AdminWinControl: React.FC = () => {
                         <TableRow key={log.id}>
                           <TableCell>{log.playerId}</TableCell>
                           <TableCell>等级{log.value}</TableCell>
+                          <TableCell>{log.operator}</TableCell>
+                          <TableCell>{log.time}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </TabsContent>
+
+            <TabsContent value="room" className="space-y-4">
+              <div className="grid gap-4">
+                <div className="flex items-start gap-2">
+                  <div className="space-y-2 flex-1">
+                    <Label>游戏ID</Label>
+                    <Input
+                      placeholder="请输入游戏ID"
+                      value={roomGameId}
+                      onChange={(e) => setRoomGameId(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2 flex-1">  
+                    <Label>房间ID</Label>
+                    <Input
+                      placeholder="请输入房间ID"
+                      value={roomId}
+                      onChange={(e) => setRoomId(e.target.value)}
+                    />
+                  </div>
+                  <Button 
+                    variant="secondary" 
+                    className="mt-8"
+                    onClick={handleRoomSearch}
+                    disabled={roomSearching}
+                  >
+                    {roomSearching ? "搜索中..." : "搜索"}
+                    {!roomSearching && <Search className="ml-2 h-4 w-4" />}
+                  </Button>
+                </div>
+                
+                {currentRoomRate !== null && (
+                  <div className="flex items-center space-x-2">
+                    <Settings className="h-4 w-4 text-blue-500" />
+                    <span>游戏ID: <strong>{roomGameId}</strong> 房间ID: <strong>{roomId}</strong> 当前杀率：<strong>{currentRoomRate}%</strong></span>
+                  </div>
+                )}
+
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <Label htmlFor="roomRate">房间杀率设置 (%)</Label>
+                    <span className="text-xs text-muted-foreground">(仅自研游戏可以配置)</span>
+                  </div>
+                  <Input
+                    id="roomRate"
+                    type="number"
+                    min="0"
+                    max="100"
+                    placeholder="请输入0-100之间的数值"
+                    value={roomRate}
+                    onChange={(e) => setRoomRate(e.target.value)}
+                    disabled={!roomGameId || !roomId}
+                  />
+                </div>
+
+                <Button 
+                  onClick={handleRoomSubmit}
+                  disabled={!roomGameId || !roomId || !roomRate}
+                >
+                  保存设置
+                </Button>
+              </div>
+              
+              {roomLogs.length > 0 && (
+                <div className="mt-8">
+                  <h3 className="text-lg font-semibold mb-3">操作记录</h3>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>游戏ID</TableHead>
+                        <TableHead>房间ID</TableHead>
+                        <TableHead>设定值</TableHead>
+                        <TableHead>操作人</TableHead>
+                        <TableHead>操作时间</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {roomLogs.map(log => (
+                        <TableRow key={log.id}>
+                          <TableCell>{log.gameId}</TableCell>
+                          <TableCell>{log.roomId}</TableCell>
+                          <TableCell>{log.value}%</TableCell>
                           <TableCell>{log.operator}</TableCell>
                           <TableCell>{log.time}</TableCell>
                         </TableRow>

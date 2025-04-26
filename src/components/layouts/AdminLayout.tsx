@@ -11,6 +11,13 @@ import {
   Shield,
   LogOut,
   Globe,
+  ArrowDownUp,
+  Gift,
+  Wallet,
+  Code,
+  Gamepad2,
+  Paintbrush,
+  Layers,
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import UserMenu from '../UserMenu';
@@ -36,13 +43,17 @@ const AdminLayout: React.FC = () => {
     { path: '/admin', label: '仪表盘', icon: <Home /> },
     { path: '/admin/agents', label: '代理商管理', icon: <Users /> },
     { path: '/admin/merchants', label: '商户管理', icon: <Users /> },
+    { path: '/admin/win-loss', label: '输赢报表', icon: <BarChart2 /> },
+    { path: '/admin/game-logs', label: '对局日志', icon: <FileText /> },
+    { path: '/admin/transactions', label: '上下分记录', icon: <ArrowDownUp /> },
+    { path: '/admin/recharge-records', label: '商户充值记录', icon: <Wallet /> },
+    { path: '/admin/bonus-management', label: '商户赠分管理', icon: <Gift /> },
+    { path: '/admin/commission', label: '代理佣金订单', icon: <FileText /> },
+    { path: '/admin/api', label: 'API管理', icon: <Code /> },
+    { path: '/admin/self-games', label: '自研游戏管理', icon: <Gamepad2 /> },
+    { path: '/admin/game-customization', label: '自研游戏定制', icon: <Paintbrush /> },
+    { path: '/admin/vendors', label: '线路厂商管理', icon: <Layers /> },
     { path: '/admin/games', label: '游戏管理', icon: <Shield /> },
-    { path: '/admin/game-records', label: '游戏记录', icon: <FileText /> },
-    { path: '/admin/win-control', label: '输赢控制', icon: <Shield /> },
-    { path: '/admin/statistics', label: '数据统计', icon: <BarChart2 /> },
-    { path: '/admin/system', label: '系统管理', icon: <Settings /> },
-    { path: '/admin/reports', label: '经营报表', icon: <FileText /> },
-    { path: '/admin/commission', label: '佣金结算', icon: <FileText /> },
   ];
 
   const handleLogout = () => {
@@ -76,7 +87,7 @@ const AdminLayout: React.FC = () => {
           {sidebarOpen && (
             <Link to="/" className="flex items-center">
               <img 
-                src="/lovable-uploads/530e81e8-804d-48ef-8b67-b896a5b21c01.png" 
+                src="/lovable-uploads/4b9bddee-a0e6-4dfb-ab50-2598752dec72.png" 
                 alt="波克棋牌" 
                 className="h-8 w-auto"
               />

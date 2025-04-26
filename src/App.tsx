@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -89,11 +90,20 @@ const App = () => {
               <Route path="merchants" element={<AdminMerchants />} />
               <Route path="games" element={<AdminGames />} />
               <Route path="game-records" element={<AdminGameRecords />} />
+              <Route path="win-loss" element={<AdminWinLoss />} />
+              <Route path="game-logs" element={<AdminGameLogs />} />
+              <Route path="transactions" element={<AdminTransactions />} />
+              <Route path="recharge-records" element={<AdminRechargeRecords />} />
+              <Route path="bonus-management" element={<AdminBonusManagement />} />
+              <Route path="commission" element={<AdminCommission />} />
+              <Route path="api" element={<AdminApi />} />
+              <Route path="self-games" element={<AdminSelfGames />} />
+              <Route path="game-customization" element={<AdminGameCustomization />} />
+              <Route path="vendors" element={<AdminVendors />} />
               <Route path="win-control" element={<AdminWinControl />} />
               <Route path="statistics" element={<AdminStatistics />} />
               <Route path="system" element={<AdminSystem />} />
               <Route path="reports" element={<AdminReports />} />
-              <Route path="commission" element={<AdminCommission />} />
             </Route>
             
             {/* Agent Routes */}

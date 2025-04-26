@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -17,7 +18,47 @@ const mockCurrentRates = {
   }
 };
 
-const mockOperationLogs = [
+// Define log types for proper typing
+type MerchantLog = {
+  id: number;
+  type: 'merchant';
+  merchantId: string;
+  value: number;
+  operator: string;
+  time: string;
+}
+
+type IpLog = {
+  id: number;
+  type: 'ip';
+  ipAddress: string;
+  action: string;
+  operator: string;
+  time: string;
+}
+
+type PlayerLog = {
+  id: number;
+  type: 'player';
+  playerId: string;
+  value: number;
+  operator: string;
+  time: string;
+}
+
+type RoomLog = {
+  id: number;
+  type: 'room';
+  gameId: string;
+  roomId: string;
+  value: number;
+  operator: string;
+  time: string;
+}
+
+type LogEntry = MerchantLog | IpLog | PlayerLog | RoomLog;
+
+const mockOperationLogs: LogEntry[] = [
   { id: 1, type: 'merchant', merchantId: 'merchant001', value: 55, operator: 'admin', time: '2024-04-26 10:30:45' },
   { id: 2, type: 'ip', ipAddress: '192.168.1.1', action: 'block', operator: 'admin', time: '2024-04-26 09:15:22' },
   { id: 3, type: 'player', playerId: 'player001', value: 2, operator: 'admin', time: '2024-04-25 14:45:36' },
@@ -57,21 +98,21 @@ const AdminWinControl: React.FC = () => {
   const [currentRoomRate, setCurrentRoomRate] = useState<number | null>(null);
   
   // State for operation logs
-  const [logs, setLogs] = useState(mockOperationLogs);
-  const [merchantLogs, setMerchantLogs] = useState<typeof mockOperationLogs>([]);
-  const [ipLogs, setIpLogs] = useState<typeof mockOperationLogs>([]);
-  const [playerLogs, setPlayerLogs] = useState<typeof mockOperationLogs>([]);
+  const [logs, setLogs] = useState<LogEntry[]>(mockOperationLogs);
+  const [merchantLogs, setMerchantLogs] = useState<MerchantLog[]>([]);
+  const [ipLogs, setIpLogs] = useState<IpLog[]>([]);
+  const [playerLogs, setPlayerLogs] = useState<PlayerLog[]>([]);
 
   // Mock room control logs
-  const [roomLogs, setRoomLogs] = useState<typeof mockOperationLogs>([]);
+  const [roomLogs, setRoomLogs] = useState<RoomLog[]>([]);
 
   // Load current rates on component mount
   React.useEffect(() => {
     // Filter logs by type
-    setMerchantLogs(mockOperationLogs.filter(log => log.type === 'merchant'));
-    setIpLogs(mockOperationLogs.filter(log => log.type === 'ip'));
-    setPlayerLogs(mockOperationLogs.filter(log => log.type === 'player'));
-  }, []);
+    setMerchantLogs(logs.filter((log): log is MerchantLog => log.type === 'merchant'));
+    setIpLogs(logs.filter((log): log is IpLog => log.type === 'ip'));
+    setPlayerLogs(logs.filter((log): log is PlayerLog => log.type === 'player'));
+  }, [logs]);
 
   // Handle merchant search
   const handleMerchantSearch = () => {
@@ -243,7 +284,7 @@ const AdminWinControl: React.FC = () => {
     }
 
     // Create new log entry
-    const newLog = {
+    const newLog: RoomLog = {
       id: Date.now(),
       type: 'room',
       gameId: roomGameId,
@@ -255,6 +296,7 @@ const AdminWinControl: React.FC = () => {
 
     // Update logs
     setRoomLogs([newLog, ...roomLogs]);
+    setLogs([newLog, ...logs]);
     setCurrentRoomRate(Number(roomRate));
 
     toast({

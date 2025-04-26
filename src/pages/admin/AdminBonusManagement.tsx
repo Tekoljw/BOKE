@@ -1,10 +1,9 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { search } from 'lucide-react';
+import { Search } from 'lucide-react';
 
 // Mock data
 const mockBonusRecords = [
@@ -66,7 +65,7 @@ const AdminBonusManagement: React.FC = () => {
                 />
               </div>
               <Button>
-                <search className="mr-2 h-4 w-4" />
+                <Search className="mr-2 h-4 w-4" />
                 查询
               </Button>
             </div>

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
@@ -9,14 +8,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const MerchantDashboard: React.FC = () => {
-  // Active selection state
   const [selectedVendor, setSelectedVendor] = useState("all");
   const [timeFrame, setTimeFrame] = useState("today");
   const [gameRecordsVendor, setGameRecordsVendor] = useState("all");
   const [topGamesVendor, setTopGamesVendor] = useState("all");
   const [visibleVendorsInChart, setVisibleVendorsInChart] = useState<string[]>([]);
   
-  // Mock vendors - expanded to simulate a large number
   const vendors = [
     { id: "all", name: "全部" },
     { id: "vendor1", name: "波克棋牌" },
@@ -28,12 +25,10 @@ const MerchantDashboard: React.FC = () => {
     }))
   ];
   
-  // Handle vendor selection change
   const handleVendorChange = (value: string) => {
     setSelectedVendor(value);
   };
   
-  // Toggle vendor visibility in chart
   const toggleVendorInChart = (vendorId: string) => {
     setVisibleVendorsInChart(prev => 
       prev.includes(vendorId) 
@@ -42,9 +37,7 @@ const MerchantDashboard: React.FC = () => {
     );
   };
   
-  // Mock time frames data based on selection
   const getStatsData = () => {
-    // This would be replaced with API calls in a real implementation
     return [
       { title: "玩家总输分", value: timeFrame === "accumulated" ? "¥1,250,845" : "¥58,942", icon: <TrendingDown className="text-red-500" /> },
       { title: "玩家总赢分", value: timeFrame === "accumulated" ? "¥1,050,230" : "¥42,126", icon: <TrendingUp className="text-green-500" /> },
@@ -54,7 +47,6 @@ const MerchantDashboard: React.FC = () => {
     ];
   };
   
-  // Profit trend data for the last 30 days - multiple vendors
   const profitTrendData = [
     { date: "04-01", vendor1: 1200, vendor2: 800, vendor3: 500 },
     { date: "04-02", vendor1: 1400, vendor2: 1000, vendor3: 600 },
@@ -88,7 +80,6 @@ const MerchantDashboard: React.FC = () => {
     { date: "04-30", vendor1: 4300, vendor2: 3700, vendor3: 3200 },
   ];
   
-  // Mock game records by vendor
   const gameRecordsByVendor = {
     all: [
       { id: '1', player: '玩家001', game: '斗地主', vendor: '波克棋牌', bet: 1000, win: 1500, time: '15:32' },
@@ -110,7 +101,6 @@ const MerchantDashboard: React.FC = () => {
     ],
   };
   
-  // Mock top games by vendor
   const topGamesByVendor = {
     all: [
       { name: '斗地主', vendor: '波克棋牌', plays: 284, profit: 15800 },
@@ -134,50 +124,42 @@ const MerchantDashboard: React.FC = () => {
     ],
   };
   
-  // Get the appropriate stats data based on the selected time frame
   const statsData = getStatsData();
   
-  // Get game records for the selected vendor
   const recentGameRecords = gameRecordsByVendor[gameRecordsVendor as keyof typeof gameRecordsByVendor] || gameRecordsByVendor.all;
   
-  // Get top games for the selected vendor
   const topGames = topGamesByVendor[topGamesVendor as keyof typeof topGamesByVendor] || topGamesByVendor.all;
   
-  // Color map for vendor lines - expanded for more vendors
   const vendorColors: {[key: string]: string} = {
-    vendor1: "#8B5CF6", // Purple
-    vendor2: "#0EA5E9", // Blue
-    vendor3: "#F97316", // Orange
-    vendor4: "#10B981", // Green
-    vendor5: "#EC4899", // Pink
-    vendor6: "#EF4444", // Red
-    vendor7: "#F59E0B", // Amber
-    vendor8: "#6366F1", // Indigo
-    vendor9: "#14B8A6", // Teal
-    vendor10: "#D946EF", // Fuchsia
+    vendor1: "#8B5CF6",
+    vendor2: "#0EA5E9",
+    vendor3: "#F97316",
+    vendor4: "#10B981",
+    vendor5: "#EC4899",
+    vendor6: "#EF4444",
+    vendor7: "#F59E0B",
+    vendor8: "#6366F1",
+    vendor9: "#14B8A6",
+    vendor10: "#D946EF",
   };
   
-  // For vendors beyond our defined colors, generate a color
   const getVendorColor = (vendorId: string) => {
     if (vendorColors[vendorId]) return vendorColors[vendorId];
     
-    // Simple hash function to generate consistent colors for vendors without defined colors
     const hash = vendorId.split('').reduce((acc, char) => {
       return char.charCodeAt(0) + ((acc << 5) - acc);
     }, 0);
     
-    // Convert hash to color (ensuring it's not too light)
     const h = hash % 360;
-    const s = 70 + (hash % 20); // 70-90%
-    const l = 40 + (hash % 20); // 40-60%
+    const s = 70 + (hash % 20);
+    const l = 40 + (hash % 20);
     
     return `hsl(${h}, ${s}%, ${l}%)`;
   };
   
-  // Determine which vendors to show in chart (limit to reasonable number)
   const displayedVendors = visibleVendorsInChart.length > 0 
     ? visibleVendorsInChart 
-    : vendors.slice(1, 6).map(v => v.id); // Default show first 5 vendors
+    : vendors.slice(1, 6).map(v => v.id);
   
   return (
     <div className="space-y-6">
@@ -186,41 +168,38 @@ const MerchantDashboard: React.FC = () => {
         <p className="text-muted-foreground">欢迎回来，查看您的经营数据</p>
       </div>
       
-      {/* Vendor and Time Frame Selection */}
-      <div className="space-y-4">
-        <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
-          <div className="w-full md:w-64">
-            <label className="text-sm text-muted-foreground mb-1 block">厂商线路</label>
-            <Select value={selectedVendor} onValueChange={handleVendorChange}>
-              <SelectTrigger>
-                <SelectValue placeholder="选择厂商"/>
-              </SelectTrigger>
-              <SelectContent>
-                <ScrollArea className="h-72">
-                  {vendors.map(vendor => (
-                    <SelectItem key={vendor.id} value={vendor.id}>
-                      {vendor.name}
-                    </SelectItem>
-                  ))}
-                </ScrollArea>
-              </SelectContent>
-            </Select>
-          </div>
-          
-          <div className="w-full md:w-auto flex-1">
-            <Tabs value={timeFrame} onValueChange={setTimeFrame}>
-              <TabsList className="w-full grid grid-cols-4">
-                <TabsTrigger value="today">今日</TabsTrigger>
-                <TabsTrigger value="yesterday">昨日</TabsTrigger>
-                <TabsTrigger value="month">本月</TabsTrigger>
-                <TabsTrigger value="accumulated">累积</TabsTrigger>
-              </TabsList>
-            </Tabs>
-          </div>
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+        <div className="md:col-span-4">
+          <label className="text-sm text-muted-foreground mb-1 block">厂商线路</label>
+          <Select value={selectedVendor} onValueChange={handleVendorChange}>
+            <SelectTrigger>
+              <SelectValue placeholder="选择厂商"/>
+            </SelectTrigger>
+            <SelectContent>
+              <ScrollArea className="h-72">
+                {vendors.map(vendor => (
+                  <SelectItem key={vendor.id} value={vendor.id}>
+                    {vendor.name}
+                  </SelectItem>
+                ))}
+              </ScrollArea>
+            </SelectContent>
+          </Select>
+        </div>
+        
+        <div className="md:col-span-8">
+          <label className="text-sm text-muted-foreground mb-1 block">时间范围</label>
+          <Tabs value={timeFrame} onValueChange={setTimeFrame}>
+            <TabsList className="w-full grid grid-cols-4">
+              <TabsTrigger value="today">今日</TabsTrigger>
+              <TabsTrigger value="yesterday">昨日</TabsTrigger>
+              <TabsTrigger value="month">本月</TabsTrigger>
+              <TabsTrigger value="accumulated">累积</TabsTrigger>
+            </TabsList>
+          </Tabs>
         </div>
       </div>
       
-      {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         {statsData.map((stat, index) => (
           <Card key={index}>
@@ -237,7 +216,6 @@ const MerchantDashboard: React.FC = () => {
         ))}
       </div>
       
-      {/* Profit Trend Chart with Vendor Selection */}
       <Card>
         <CardHeader>
           <div className="flex flex-col md:flex-row justify-between gap-4">
@@ -302,7 +280,6 @@ const MerchantDashboard: React.FC = () => {
       </Card>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent Game Records */}
         <Card>
           <CardHeader>
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -354,7 +331,6 @@ const MerchantDashboard: React.FC = () => {
           </CardContent>
         </Card>
         
-        {/* Top Games */}
         <Card>
           <CardHeader>
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -406,99 +382,114 @@ const MerchantDashboard: React.FC = () => {
         </Card>
       </div>
       
-      {/* Account Info */}
-      <Card>
-        <CardHeader>
-          <CardTitle>账户信息</CardTitle>
-          <CardDescription>您的商户账户详情</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h3 className="text-lg font-semibold mb-2">基本信息</h3>
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">商户名称</span>
-                  <span>GamePalace</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">代理商</span>
-                  <span>TopAgent</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">注册日期</span>
-                  <span>2023-12-15</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">账户状态</span>
-                  <span className="badge-active">正常</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">商户币种</span>
-                  <span className="px-2 py-1 bg-green-100 text-green-800 rounded-md font-medium">USDT</span>
-                </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>账户信息</CardTitle>
+            <CardDescription>您的商户账户详情</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">商户名称</span>
+                <span>GamePalace</span>
               </div>
-              
-              <h3 className="text-lg font-semibold mb-2 mt-6">线路分成</h3>
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">已开通线路</span>
-                  <span>3 个</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">波克棋牌</span>
-                  <span>70%</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">开元棋牌</span>
-                  <span>65%</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">乐游棋牌</span>
-                  <span>60%</span>
-                </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">代理商</span>
+                <span>TopAgent</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">注册日期</span>
+                <span>2023-12-15</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">账户状态</span>
+                <span className="badge-active">正常</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">商户币种</span>
+                <span className="px-2 py-1 bg-green-100 text-green-800 rounded-md font-medium">USDT</span>
               </div>
             </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-2">账户余额</h3>
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">商户余额 (USDT)</span>
-                  <span className="text-green-600 font-bold">$35,250</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">分数余额</span>
-                  <span className="font-bold">2,580,000</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">赠分余额</span>
-                  <span className="text-blue-600 font-bold">120,000</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">上次买分时间</span>
-                  <span>2024-04-22 14:30</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">手续费率</span>
-                  <span>5%</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">代理商分成</span>
-                  <span>25%</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">本月已结算</span>
-                  <span>¥125,800</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">下次结算日</span>
-                  <span>2024-05-01</span>
-                </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>账户余额</CardTitle>
+            <CardDescription>您的账户余额信息</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">商户余额 (USDT)</span>
+                <span className="text-green-600 font-bold">$35,250</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">分数余额</span>
+                <span className="font-bold">2,580,000</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">赠分余额</span>
+                <span className="text-blue-600 font-bold">120,000</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">上次买分时间</span>
+                <span>2024-04-22 14:30</span>
               </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle>线路分成</CardTitle>
+            <CardDescription>已开通的厂商线路信息</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>厂商名称</TableHead>
+                  <TableHead>运营游戏数量</TableHead>
+                  <TableHead>当前状态</TableHead>
+                  <TableHead>本月盈利</TableHead>
+                  <TableHead>厂商分成费率</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell>波克棋牌</TableCell>
+                  <TableCell>42</TableCell>
+                  <TableCell>
+                    <span className="px-2 py-1 bg-green-100 text-green-800 rounded-md text-sm">正常</span>
+                  </TableCell>
+                  <TableCell className="text-green-600">¥125,800</TableCell>
+                  <TableCell>70%</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>开元棋牌</TableCell>
+                  <TableCell>38</TableCell>
+                  <TableCell>
+                    <span className="px-2 py-1 bg-green-100 text-green-800 rounded-md text-sm">正常</span>
+                  </TableCell>
+                  <TableCell className="text-green-600">¥98,500</TableCell>
+                  <TableCell>65%</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>乐游棋牌</TableCell>
+                  <TableCell>35</TableCell>
+                  <TableCell>
+                    <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-md text-sm">维护中</span>
+                  </TableCell>
+                  <TableCell className="text-green-600">¥85,200</TableCell>
+                  <TableCell>60%</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };

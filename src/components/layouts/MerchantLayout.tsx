@@ -11,6 +11,7 @@ import {
   Activity,
   Coins,
   Database,
+  Globe,
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import UserMenu from '../UserMenu';
@@ -21,6 +22,7 @@ const MerchantLayout: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const [language, setLanguage] = useState<'zh' | 'en'>('zh');
 
   // Close sidebar by default on mobile
   useEffect(() => {
@@ -37,13 +39,16 @@ const MerchantLayout: React.FC = () => {
     { path: '/merchant/win-loss', label: '输赢报表', icon: <BarChart2 /> },
     { path: '/merchant/game-logs', label: '对局日志', icon: <FileText /> },
     { path: '/merchant/transactions', label: '上下分记录', icon: <Activity /> },
-    { path: '/merchant/balances', label: '玩家分数', icon: <Coins /> },
     { path: '/merchant/credit', label: '买分管理', icon: <Coins /> },
     { path: '/merchant/api', label: 'API管理', icon: <Database /> },
   ];
 
   const handleLogout = () => {
     navigate('/login');
+  };
+
+  const toggleLanguage = () => {
+    setLanguage(prev => prev === 'zh' ? 'en' : 'zh');
   };
 
   return (
@@ -123,7 +128,23 @@ const MerchantLayout: React.FC = () => {
             )}
             <div className="text-xl font-semibold">商户控制面板</div>
           </div>
-          <UserMenu />
+          <div className="flex items-center space-x-4">
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/">
+                <Home className="mr-1 h-4 w-4" />
+                <span>首页</span>
+              </Link>
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={toggleLanguage}
+            >
+              <Globe className="mr-1 h-4 w-4" />
+              <span>{language === 'zh' ? '中/EN' : 'EN/中'}</span>
+            </Button>
+            <UserMenu />
+          </div>
         </header>
         <main className="p-6">
           <Outlet />

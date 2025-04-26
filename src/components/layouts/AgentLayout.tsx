@@ -1,14 +1,14 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   Users, 
   LogOut, 
   Menu,
-  FileText,
   Globe,
   Home,
   Coins,
+  FileText,
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import UserMenu from '../UserMenu';
@@ -22,7 +22,7 @@ const AgentLayout: React.FC = () => {
   const [language, setLanguage] = useState<'zh' | 'en'>('zh');
 
   // Close sidebar by default on mobile
-  useEffect(() => {
+  React.useEffect(() => {
     if (isMobile) {
       setSidebarOpen(false);
     } else {

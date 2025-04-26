@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Search, Settings, Ban, AlertCircle } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import RoomConfigDialog from "@/components/admin/RoomConfigDialog";
 
 const mockCurrentRates = {
   merchants: {
@@ -101,6 +102,9 @@ const AdminWinControl: React.FC = () => {
   const [playerLogs, setPlayerLogs] = useState<PlayerLog[]>([]);
 
   const [roomLogs, setRoomLogs] = useState<RoomLog[]>([]);
+
+  const [isRoomConfigOpen, setIsRoomConfigOpen] = useState(false);
+  const [selectedRoom, setSelectedRoom] = useState<{gameId: string; roomId: string; rate: number} | null>(null);
 
   React.useEffect(() => {
     setMerchantLogs(logs.filter((log): log is MerchantLog => log.type === 'merchant'));
@@ -253,8 +257,10 @@ const AdminWinControl: React.FC = () => {
     });
   };
 
-  const handleRoomSubmit = () => {
-    const numRate = Number(roomRate);
+  const handleRoomRateChange = (newRate: string) => {
+    if (!selectedRoom) return;
+    
+    const numRate = Number(newRate);
     if (isNaN(numRate) || numRate < 0 || numRate > 100) {
       toast({
         title: "无效的概率值",
@@ -267,20 +273,19 @@ const AdminWinControl: React.FC = () => {
     const newLog: RoomLog = {
       id: Date.now(),
       type: 'room',
-      gameId: roomGameId,
-      roomId: roomId,
-      value: Number(roomRate),
+      gameId: selectedRoom.gameId,
+      roomId: selectedRoom.roomId,
+      value: numRate,
       operator: 'admin',
       time: new Date().toLocaleString('zh-CN'),
     };
 
     setRoomLogs([newLog, ...roomLogs]);
     setLogs([newLog, ...logs]);
-    setCurrentRoomRate(Number(roomRate));
 
     toast({
       title: "房间控制设置成功",
-      description: `已设置房间 ${roomId} 的杀率为 ${roomRate}%`,
+      description: `已设置房间 ${selectedRoom.roomId} 的杀率为 ${numRate}%`,
     });
   };
 
@@ -533,34 +538,6 @@ const AdminWinControl: React.FC = () => {
 
             <TabsContent value="room" className="space-y-4">
               <div className="grid gap-4">
-                <div className="flex items-start gap-2">
-                  <div className="space-y-2 flex-1">
-                    <Label>游戏ID</Label>
-                    <Input
-                      placeholder="请输入游戏ID"
-                      value={roomGameId}
-                      onChange={(e) => setRoomGameId(e.target.value)}
-                    />
-                  </div>
-                  <div className="space-y-2 flex-1">  
-                    <Label>房间ID</Label>
-                    <Input
-                      placeholder="请输入房间ID"
-                      value={roomId}
-                      onChange={(e) => setRoomId(e.target.value)}
-                    />
-                  </div>
-                  <Button 
-                    variant="secondary" 
-                    className="mt-8"
-                    onClick={handleRoomSearch}
-                    disabled={roomSearching}
-                  >
-                    {roomSearching ? "搜索中..." : "搜索"}
-                    {!roomSearching && <Search className="ml-2 h-4 w-4" />}
-                  </Button>
-                </div>
-                
                 <div>
                   <h3 className="text-lg font-semibold mb-3">房间控制列表</h3>
                   <div className="text-sm text-muted-foreground mb-4">
@@ -591,10 +568,12 @@ const AdminWinControl: React.FC = () => {
                               variant="outline" 
                               size="sm"
                               onClick={() => {
-                                setRoomGameId(room.gameId);
-                                setRoomId(room.roomId);
-                                setRoomRate(room.winRate.toString());
-                                setCurrentRoomRate(room.winRate);
+                                setSelectedRoom({
+                                  gameId: room.gameId,
+                                  roomId: room.roomId,
+                                  rate: room.winRate
+                                });
+                                setIsRoomConfigOpen(true);
                               }}
                             >
                               修改配置
@@ -605,39 +584,6 @@ const AdminWinControl: React.FC = () => {
                     </TableBody>
                   </Table>
                 </div>
-
-                {(roomGameId && roomId) && (
-                  <>
-                    {currentRoomRate !== null && (
-                      <div className="flex items-center space-x-2">
-                        <Settings className="h-4 w-4 text-blue-500" />
-                        <span>游戏ID: <strong>{roomGameId}</strong> 房间ID: <strong>{roomId}</strong> 当前杀率：<strong>{currentRoomRate}%</strong></span>
-                      </div>
-                    )}
-
-                    <div className="space-y-2">
-                      <div className="flex items-center space-x-2">
-                        <Label htmlFor="roomRate">房间杀率设置 (%)</Label>
-                      </div>
-                      <Input
-                        id="roomRate"
-                        type="number"
-                        min="0"
-                        max="100"
-                        placeholder="请输入0-100之间的数值"
-                        value={roomRate}
-                        onChange={(e) => setRoomRate(e.target.value)}
-                      />
-                    </div>
-
-                    <Button 
-                      onClick={handleRoomSubmit}
-                      disabled={!roomGameId || !roomId || !roomRate}
-                    >
-                      保存设置
-                    </Button>
-                  </>
-                )}
                 
                 {roomLogs.length > 0 && (
                   <div className="mt-8">
@@ -671,6 +617,17 @@ const AdminWinControl: React.FC = () => {
           </Tabs>
         </CardContent>
       </Card>
+
+      {selectedRoom && (
+        <RoomConfigDialog
+          open={isRoomConfigOpen}
+          onOpenChange={setIsRoomConfigOpen}
+          gameId={selectedRoom.gameId}
+          roomId={selectedRoom.roomId}
+          currentRate={selectedRoom.rate}
+          onSubmit={handleRoomRateChange}
+        />
+      )}
     </div>
   );
 };

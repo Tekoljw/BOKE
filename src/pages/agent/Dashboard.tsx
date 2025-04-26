@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import {
   Dialog,
@@ -11,8 +10,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import BalanceCard from '@/components/merchant/BalanceCard';
-import { Coins, Users, DollarSign } from 'lucide-react';
+import { Coins, Users, DollarSign, Percent } from 'lucide-react';
 import type { CommissionStats, MerchantStats } from '@/types/commission';
 
 const MyCommission: React.FC = () => {
@@ -52,6 +52,24 @@ const MyCommission: React.FC = () => {
           结算佣金
         </Button>
       </div>
+      
+      {/* Commission Rate Card */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Percent className="h-5 w-5" />
+            我的佣金比例
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            <div className="text-3xl font-bold">10%</div>
+            <p className="text-muted-foreground">
+              佣金计算方式 = 商户充值买分金额（USDT）× 我的佣金比例
+            </p>
+          </div>
+        </CardContent>
+      </Card>
       
       {/* Commission Stats Cards */}
       <div>

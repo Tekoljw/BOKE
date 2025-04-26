@@ -26,6 +26,8 @@ const MerchantLayout: React.FC = () => {
   useEffect(() => {
     if (isMobile) {
       setSidebarOpen(false);
+    } else {
+      setSidebarOpen(true);
     }
   }, [isMobile]);
 
@@ -46,7 +48,7 @@ const MerchantLayout: React.FC = () => {
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
-      {/* Overlay for mobile */}
+      {/* Mobile overlay */}
       {isMobile && sidebarOpen && (
         <div 
           className="fixed inset-0 bg-black/50 z-40"
@@ -60,7 +62,7 @@ const MerchantLayout: React.FC = () => {
           fixed md:relative bg-sidebar text-white z-50 h-full
           transition-all duration-300 ease-in-out
           ${sidebarOpen ? 'w-64' : 'w-20'} 
-          ${isMobile && !sidebarOpen ? '-translate-x-full' : 'translate-x-0'}
+          ${isMobile ? (sidebarOpen ? 'translate-x-0' : '-translate-x-full') : 'translate-x-0'}
         `}
       >
         <div className="flex items-center justify-between p-4">
@@ -106,9 +108,21 @@ const MerchantLayout: React.FC = () => {
       </div>
       
       {/* Main content */}
-      <div className={`flex-1 overflow-y-auto ${!isMobile && 'transition-all duration-300'}`}>
+      <div className="flex-1 overflow-y-auto">
         <header className="bg-white border-b h-16 flex items-center justify-between px-6">
-          <div className="text-xl font-semibold">商户控制面板</div>
+          <div className="flex items-center gap-4">
+            {isMobile && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setSidebarOpen(true)}
+                className="md:hidden"
+              >
+                <Menu className="h-5 w-5" />
+              </Button>
+            )}
+            <div className="text-xl font-semibold">商户控制面板</div>
+          </div>
           <UserMenu />
         </header>
         <main className="p-6">

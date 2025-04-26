@@ -33,4 +33,7 @@ export interface TransactionRecord {
   beforeAmount: number;
   changeAmount: number;
   afterAmount: number;
+  platformBalanceChange: number;
+  merchantBalanceChange: number;
 }
+

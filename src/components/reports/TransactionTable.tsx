@@ -4,7 +4,6 @@ import { TransactionRecord } from '@/types/report';
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Loader } from "lucide-react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 interface TransactionTableProps {
   records: TransactionRecord[];
@@ -14,8 +13,6 @@ interface TransactionTableProps {
 }
 
 export function TransactionTable({ records, loading, onLoadMore, hasMore }: TransactionTableProps) {
-  const [selectedTransaction, setSelectedTransaction] = useState<TransactionRecord | null>(null);
-
   // Format amount with color based on positive/negative value
   const formatAmount = (amount: number) => {
     const isPositive = amount > 0;
@@ -36,16 +33,16 @@ export function TransactionTable({ records, loading, onLoadMore, hasMore }: Tran
       </div>
       <div className="flex justify-between">
         <span className="text-sm">玩家账号: {record.username}</span>
-        <span className="text-sm">
-          类型: {record.type === 'deposit' ? '上分' : '下分'}
-        </span>
+        <span className="text-sm">类型: {record.type === 'deposit' ? '上分' : '下分'}</span>
       </div>
-      <div className="flex justify-between">
-        <span className="text-sm">账变前: {record.beforeAmount.toFixed(2)}</span>
-        <span className="text-sm">
-          账变: {formatAmount(record.changeAmount)}
-        </span>
-        <span className="text-sm">账变后: {record.afterAmount.toFixed(2)}</span>
+      <div className="flex justify-between text-sm">
+        <span>账变前: {record.beforeAmount.toFixed(2)}</span>
+        <span>账变: {formatAmount(record.changeAmount)}</span>
+        <span>账变后: {record.afterAmount.toFixed(2)}</span>
+      </div>
+      <div className="flex justify-between text-sm">
+        <span>平台分数: {formatAmount(record.platformBalanceChange)}</span>
+        <span>商户余额: {formatAmount(record.merchantBalanceChange)}</span>
       </div>
     </div>
   );
@@ -64,12 +61,14 @@ export function TransactionTable({ records, loading, onLoadMore, hasMore }: Tran
               <TableHead>账变前金额</TableHead>
               <TableHead>账变金额</TableHead>
               <TableHead>账变后金额</TableHead>
+              <TableHead>平台分数增减</TableHead>
+              <TableHead>商户余额增减</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {records.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="h-24 text-center">
+                <TableCell colSpan={9} className="h-24 text-center">
                   暂无数据
                 </TableCell>
               </TableRow>
@@ -85,6 +84,8 @@ export function TransactionTable({ records, loading, onLoadMore, hasMore }: Tran
                   <TableCell>{record.beforeAmount.toFixed(2)}</TableCell>
                   <TableCell>{formatAmount(record.changeAmount)}</TableCell>
                   <TableCell>{record.afterAmount.toFixed(2)}</TableCell>
+                  <TableCell>{formatAmount(record.platformBalanceChange)}</TableCell>
+                  <TableCell>{formatAmount(record.merchantBalanceChange)}</TableCell>
                 </TableRow>
               ))
             )}

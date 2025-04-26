@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -49,63 +50,78 @@ import MerchantBalances from "./pages/merchant/Balances";
 import MerchantCredit from "./pages/merchant/Credit";
 import MerchantApi from "./pages/merchant/Api";
 
-const queryClient = new QueryClient();
+// Create a client function to ensure a new instance is created for each app mount
+function createQueryClient() {
+  return new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 5 * 60 * 1000, // 5 minutes
+        retry: 1,
+      },
+    },
+  });
+}
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/games/:vendorId?" element={<GameCatalog />} />
-          <Route path="/manufacturer/:id" element={<ManufacturerDetail />} />
-          
-          {/* Auth Routes */}
-          <Route path="/login" element={<Login />} />
-          
-          {/* Admin Routes */}
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<AdminDashboard />} />
-            <Route path="agents" element={<AdminAgents />} />
-            <Route path="merchants" element={<AdminMerchants />} />
-            <Route path="games" element={<AdminGames />} />
-            <Route path="game-records" element={<AdminGameRecords />} />
-            <Route path="win-control" element={<AdminWinControl />} />
-            <Route path="statistics" element={<AdminStatistics />} />
-            <Route path="system" element={<AdminSystem />} />
-            <Route path="reports" element={<AdminReports />} />
-            <Route path="commission" element={<AdminCommission />} />
-          </Route>
-          
-          {/* Agent Routes */}
-          <Route path="/agent" element={<AgentLayout />}>
-            <Route index element={<AgentDashboard />} />
-            <Route path="merchants" element={<AgentMerchants />} />
-            <Route path="commission" element={<AgentCommission />} />
-            <Route path="settlements" element={<AgentSettlements />} />
-          </Route>
-          
-          {/* Merchant Routes */}
-          <Route path="/merchant" element={<MerchantLayout />}>
-            <Route index element={<MerchantDashboard />} />
-            <Route path="players" element={<MerchantPlayers />} />
-            <Route path="win-loss" element={<MerchantWinLoss />} />
-            <Route path="game-logs" element={<MerchantGameLogs />} />
-            <Route path="transactions" element={<MerchantTransactions />} />
-            <Route path="balances" element={<MerchantBalances />} />
-            <Route path="credit" element={<MerchantCredit />} />
-            <Route path="api" element={<MerchantApi />} />
-          </Route>
-          
-          {/* Catch-all route */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  // Create a new QueryClient for this component instance
+  const queryClient = createQueryClient();
+  
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/games/:vendorId?" element={<GameCatalog />} />
+            <Route path="/manufacturer/:id" element={<ManufacturerDetail />} />
+            
+            {/* Auth Routes */}
+            <Route path="/login" element={<Login />} />
+            
+            {/* Admin Routes */}
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="agents" element={<AdminAgents />} />
+              <Route path="merchants" element={<AdminMerchants />} />
+              <Route path="games" element={<AdminGames />} />
+              <Route path="game-records" element={<AdminGameRecords />} />
+              <Route path="win-control" element={<AdminWinControl />} />
+              <Route path="statistics" element={<AdminStatistics />} />
+              <Route path="system" element={<AdminSystem />} />
+              <Route path="reports" element={<AdminReports />} />
+              <Route path="commission" element={<AdminCommission />} />
+            </Route>
+            
+            {/* Agent Routes */}
+            <Route path="/agent" element={<AgentLayout />}>
+              <Route index element={<AgentDashboard />} />
+              <Route path="merchants" element={<AgentMerchants />} />
+              <Route path="commission" element={<AgentCommission />} />
+              <Route path="settlements" element={<AgentSettlements />} />
+            </Route>
+            
+            {/* Merchant Routes */}
+            <Route path="/merchant" element={<MerchantLayout />}>
+              <Route index element={<MerchantDashboard />} />
+              <Route path="players" element={<MerchantPlayers />} />
+              <Route path="win-loss" element={<MerchantWinLoss />} />
+              <Route path="game-logs" element={<MerchantGameLogs />} />
+              <Route path="transactions" element={<MerchantTransactions />} />
+              <Route path="balances" element={<MerchantBalances />} />
+              <Route path="credit" element={<MerchantCredit />} />
+              <Route path="api" element={<MerchantApi />} />
+            </Route>
+            
+            {/* Catch-all route */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

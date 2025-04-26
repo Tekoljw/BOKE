@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -176,23 +175,24 @@ const GameCatalog: React.FC = () => {
         </div>
         
         {/* Games Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+        <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-8 gap-3">
           {filteredGames.map(game => (
-            <div key={game.id} className="game-card">
-              <div className="bg-gray-200 game-card-image flex items-center justify-center">
-                <span className="text-gray-500">游戏图片</span>
+            <Card key={game.id} className="overflow-hidden">
+              <div className="bg-gray-100 p-3 flex items-center justify-center aspect-square">
+                <span className="text-2xl">🎮</span>
               </div>
-              <div className="p-4">
-                <h3 className="font-semibold text-lg mb-2">{game.name}</h3>
-                <p className="text-sm text-gray-500 mb-4">
-                  {mockVendors.find(v => v.id === game.vendorId)?.name} · 
-                  {mockGameTypes.find(t => t.id === game.typeId)?.name}
+              <CardContent className="p-2">
+                <h4 className="font-medium text-sm truncate">{game.name}</h4>
+                <p className="text-xs text-gray-500 truncate">
+                  {mockVendors.find(v => v.id === game.vendorId)?.name}
                 </p>
-                <Button variant="default" className="w-full">
+              </CardContent>
+              <CardFooter className="p-2 pt-0">
+                <Button size="sm" className="w-full text-xs py-1">
                   立即游戏
                 </Button>
-              </div>
-            </div>
+              </CardFooter>
+            </Card>
           ))}
         </div>
         

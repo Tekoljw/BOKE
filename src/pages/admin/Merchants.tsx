@@ -74,7 +74,6 @@ const AdminMerchants: React.FC = () => {
   const [isWhitelistDialogOpen, setIsWhitelistDialogOpen] = useState(false);
   const [selectedMerchant, setSelectedMerchant] = useState<Merchant | null>(null);
   
-  // Form states
   const [formData, setFormData] = useState({
     name: '',
     username: '',
@@ -86,13 +85,10 @@ const AdminMerchants: React.FC = () => {
   const [whitelistIp, setWhitelistIp] = useState('');
   const [selectedAgent, setSelectedAgent] = useState<string>('all');
 
-  // Mock agents data for demonstration
-  const agents = [
-    { id: '1', name: '代理商1' },
-    { id: '2', name: '代理商2' },
-    { id: '3', name: '代理商3' },
-    // Add more mock agents as needed...
-  ];
+  const agents = Array.from({ length: 20 }, (_, i) => ({
+    id: `${i + 1}`, 
+    name: `代理商${i + 1}`
+  }));
 
   const filteredMerchants = merchants.filter(merchant => {
     const matchesSearch = merchant.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -107,7 +103,6 @@ const AdminMerchants: React.FC = () => {
   };
 
   const handleAddMerchant = () => {
-    // Validate form
     if (formData.password !== formData.confirmPassword) {
       toast({
         title: '密码不匹配',
@@ -137,7 +132,6 @@ const AdminMerchants: React.FC = () => {
       description: `商户 ${formData.name} 已成功添加`,
     });
     
-    // Reset form and close dialog
     setFormData({
       name: '',
       username: '',
@@ -278,8 +272,8 @@ const AdminMerchants: React.FC = () => {
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="all" className="mb-6" onValueChange={(value) => setSelectedAgent(value)}>
-            <TabsList className="w-full flex-wrap h-auto">
-              <TabsTrigger value="all">全部</TabsTrigger>
+            <TabsList className="w-full justify-start items-start flex-wrap h-auto gap-2">
+              <TabsTrigger value="all" className="ml-0">全部</TabsTrigger>
               {agents.map((agent) => (
                 <TabsTrigger key={agent.id} value={agent.id}>
                   {agent.name}
@@ -364,7 +358,6 @@ const AdminMerchants: React.FC = () => {
         </CardContent>
       </Card>
       
-      {/* Add Merchant Dialog */}
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
         <DialogContent className="sm:max-w-[525px]">
           <DialogHeader>
@@ -439,7 +432,6 @@ const AdminMerchants: React.FC = () => {
         </DialogContent>
       </Dialog>
       
-      {/* Edit Merchant Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="sm:max-w-[525px]">
           <DialogHeader>
@@ -498,7 +490,6 @@ const AdminMerchants: React.FC = () => {
         </DialogContent>
       </Dialog>
       
-      {/* Whitelist IP Dialog */}
       <Dialog open={isWhitelistDialogOpen} onOpenChange={setIsWhitelistDialogOpen}>
         <DialogContent className="sm:max-w-[525px]">
           <DialogHeader>

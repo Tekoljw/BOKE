@@ -22,6 +22,26 @@ import { Button } from "@/components/ui/button";
 import UserMenu from '../UserMenu';
 import { useIsMobile } from '@/hooks/use-mobile';
 
+const navigationItems = [
+  { path: '/admin', label: '仪表盘', icon: <Home /> },
+  { path: '/admin/agents', label: '代理商管理', icon: <Users /> },
+  { path: '/admin/merchants', label: '商户管理', icon: <Users /> },
+  { path: '/admin/win-control', label: '输赢控制', icon: <Shield /> },
+  { path: '/admin/win-loss', label: '输赢报表', icon: <BarChart2 /> },
+  { path: '/admin/game-logs', label: '对局日志', icon: <FileText /> },
+  { path: '/admin/transactions', label: '上下分记录', icon: <ArrowDownUp /> },
+  { path: '/admin/recharge-records', label: '商户充值记录', icon: <Wallet /> },
+  { path: '/admin/bonus-management', label: '商户赠分管理', icon: <Gift /> },
+  { path: '/admin/bonus-rules', label: '赠分规则配置', icon: <Gift /> },
+  { path: '/admin/commission', label: '代理佣金订单', icon: <FileText /> },
+  { path: '/admin/api', label: 'API管理', icon: <Code /> },
+  { path: '/admin/demo-games', label: '游戏管理', icon: <Gamepad2 /> },
+  { path: '/admin/game-customization', label: '自研游戏定制', icon: <Paintbrush /> },
+  { path: '/admin/vendor-intro', label: '厂商介绍配置', icon: <Layers /> },
+  { path: '/admin/permissions', label: '账号权限管理', icon: <Shield /> },
+  { path: '/admin/line-management', label: '线路管理', icon: <Globe /> },
+];
+
 const AdminLayout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const location = useLocation();
@@ -36,25 +56,6 @@ const AdminLayout: React.FC = () => {
       setSidebarOpen(true);
     }
   }, [isMobile]);
-
-  const navigationItems = [
-    { path: '/admin', label: '仪表盘', icon: <Home /> },
-    { path: '/admin/agents', label: '代理商管理', icon: <Users /> },
-    { path: '/admin/merchants', label: '商户管理', icon: <Users /> },
-    { path: '/admin/win-control', label: '输赢控制', icon: <Shield /> },
-    { path: '/admin/win-loss', label: '输赢报表', icon: <BarChart2 /> },
-    { path: '/admin/game-logs', label: '对局日志', icon: <FileText /> },
-    { path: '/admin/transactions', label: '上下分记录', icon: <ArrowDownUp /> },
-    { path: '/admin/recharge-records', label: '商户充值记录', icon: <Wallet /> },
-    { path: '/admin/bonus-management', label: '商户赠分管理', icon: <Gift /> },
-    { path: '/admin/bonus-rules', label: '赠分规则配置', icon: <Gift /> },
-    { path: '/admin/commission', label: '代理佣金订单', icon: <FileText /> },
-    { path: '/admin/api', label: 'API管理', icon: <Code /> },
-    { path: '/admin/demo-games', label: '游戏管理', icon: <Gamepad2 /> },
-    { path: '/admin/game-customization', label: '自研游戏定制', icon: <Paintbrush /> },
-    { path: '/admin/vendor-intro', label: '厂商介绍配置', icon: <Layers /> },
-    { path: '/admin/permissions', label: '账号权限管理', icon: <Shield /> },
-  ];
 
   const handleLogout = () => {
     navigate('/login');
@@ -75,7 +76,7 @@ const AdminLayout: React.FC = () => {
 
       <div 
         className={`
-          fixed md:relative bg-sidebar text-white z-50 h-full
+          fixed md:relative bg-sidebar text-white z-50 h-full flex flex-col
           transition-all duration-300 ease-in-out
           ${sidebarOpen ? 'w-64' : 'w-20'} 
           ${isMobile ? (sidebarOpen ? 'translate-x-0' : '-translate-x-full') : 'translate-x-0'}
@@ -101,17 +102,19 @@ const AdminLayout: React.FC = () => {
           </Button>
         </div>
 
-        <div className="mt-6 space-y-1 px-3">
-          {navigationItems.map((item, index) => (
-            <Link
-              to={item.path}
-              key={index}
-              className={`sidebar-menu-item ${location.pathname === item.path ? 'active' : ''}`}
-            >
-              {item.icon}
-              {sidebarOpen && <span>{item.label}</span>}
-            </Link>
-          ))}
+        <div className="mt-6 flex-1 overflow-y-auto">
+          <div className="space-y-1 px-3">
+            {navigationItems.map((item, index) => (
+              <Link
+                to={item.path}
+                key={index}
+                className={`sidebar-menu-item ${location.pathname === item.path ? 'active' : ''}`}
+              >
+                {item.icon}
+                {sidebarOpen && <span>{item.label}</span>}
+              </Link>
+            ))}
+          </div>
         </div>
 
         <div className="absolute bottom-4 left-0 right-0 px-3">

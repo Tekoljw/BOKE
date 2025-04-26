@@ -41,6 +41,7 @@ import AdminDemoGames from "./pages/admin/AdminDemoGames";
 import AdminVendorIntro from "./pages/admin/AdminVendorIntro";
 import AdminPermissions from "./pages/admin/AdminPermissions";
 import AdminBonusRules from "./pages/admin/AdminBonusRules";
+import LineManagement from "./pages/admin/LineManagement";
 
 // Agent Pages
 import AgentDashboard from "./pages/agent/Dashboard";
@@ -121,6 +122,7 @@ const App = () => {
               <Route path="demo-games" element={<AdminDemoGames />} />
               <Route path="vendor-intro" element={<AdminVendorIntro />} />
               <Route path="permissions" element={<AdminPermissions />} />
+              <Route path="line-management" element={<LineManagement />} />
             </Route>
             
             {/* Agent Routes */}

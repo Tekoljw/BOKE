@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
@@ -8,6 +9,7 @@ import {
   Home,
   Coins,
   FileText,
+  BarChart2,
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import UserMenu from '../UserMenu';
@@ -32,6 +34,7 @@ const AgentLayout: React.FC = () => {
     { path: '/agent', label: '我的佣金', icon: <Coins /> },
     { path: '/agent/merchants', label: '我的商户', icon: <Users /> },
     { path: '/agent/settlements', label: '结算记录', icon: <FileText /> },
+    { path: '/agent/commission-details', label: '佣金明细', icon: <BarChart2 /> },
   ];
 
   const handleLogout = () => {

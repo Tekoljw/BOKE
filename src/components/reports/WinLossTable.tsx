@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { WinLossRecord } from "@/types/report";
-import { useIsMobile } from "@/hooks/useIsMobile";  // Updated import path
+import { useIsMobile } from "@/hooks/useIsMobile";  
 import { Card } from "@/components/ui/card";
 
 interface WinLossTableProps {

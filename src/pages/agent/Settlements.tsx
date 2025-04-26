@@ -2,6 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 interface SettlementRecord {
   id: string;
@@ -26,6 +27,8 @@ const mockSettlements: SettlementRecord[] = Array.from({ length: 10 }, (_, i) =>
 });
 
 const AgentSettlements: React.FC = () => {
+  const isMobile = useIsMobile();
+
   return (
     <div className="space-y-6">
       <div>
@@ -41,48 +44,89 @@ const AgentSettlements: React.FC = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="rounded-md border overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="whitespace-nowrap">订单ID</TableHead>
-                  <TableHead className="whitespace-nowrap">时间</TableHead>
-                  <TableHead className="whitespace-nowrap">金额</TableHead>
-                  <TableHead className="whitespace-nowrap">结算前余额</TableHead>
-                  <TableHead className="whitespace-nowrap">结算后余额</TableHead>
-                  <TableHead className="whitespace-nowrap">状态</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {mockSettlements.map((record) => (
-                  <TableRow key={record.id}>
-                    <TableCell className="whitespace-nowrap">{record.id}</TableCell>
-                    <TableCell className="whitespace-nowrap">
-                      {new Date(record.timestamp).toLocaleString('zh-CN')}
-                    </TableCell>
-                    <TableCell className="whitespace-nowrap text-blue-600 font-medium">
-                      {record.amount.toLocaleString()}
-                    </TableCell>
-                    <TableCell className="whitespace-nowrap">
-                      {record.beforeBalance.toLocaleString()}
-                    </TableCell>
-                    <TableCell className="whitespace-nowrap">
-                      {record.afterBalance.toLocaleString()}
-                    </TableCell>
-                    <TableCell className="whitespace-nowrap">
-                      <span className={`inline-block px-2 py-1 rounded-full text-sm ${
+          {isMobile ? (
+            <div className="space-y-4">
+              {mockSettlements.map((record) => (
+                <Card key={record.id} className="p-4">
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-sm text-muted-foreground">订单ID</span>
+                      <span>{record.id}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-muted-foreground">时间</span>
+                      <span>{new Date(record.timestamp).toLocaleString('zh-CN')}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-muted-foreground">金额</span>
+                      <span className="text-blue-600 font-medium">{record.amount.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-muted-foreground">结算前余额</span>
+                      <span>{record.beforeBalance.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-muted-foreground">结算后余额</span>
+                      <span>{record.afterBalance.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-muted-foreground">状态</span>
+                      <span className={`px-2 py-1 rounded-full text-sm ${
                         record.status === 'success' 
                           ? 'bg-green-100 text-green-800' 
                           : 'bg-red-100 text-red-800'
                       }`}>
                         {record.status === 'success' ? '成功' : '失败'}
                       </span>
-                    </TableCell>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-md border overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="whitespace-nowrap">订单ID</TableHead>
+                    <TableHead className="whitespace-nowrap">时间</TableHead>
+                    <TableHead className="whitespace-nowrap">金额</TableHead>
+                    <TableHead className="whitespace-nowrap">结算前余额</TableHead>
+                    <TableHead className="whitespace-nowrap">结算后余额</TableHead>
+                    <TableHead className="whitespace-nowrap">状态</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+                </TableHeader>
+                <TableBody>
+                  {mockSettlements.map((record) => (
+                    <TableRow key={record.id}>
+                      <TableCell className="whitespace-nowrap">{record.id}</TableCell>
+                      <TableCell className="whitespace-nowrap">
+                        {new Date(record.timestamp).toLocaleString('zh-CN')}
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap text-blue-600 font-medium">
+                        {record.amount.toLocaleString()}
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap">
+                        {record.beforeBalance.toLocaleString()}
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap">
+                        {record.afterBalance.toLocaleString()}
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap">
+                        <span className={`inline-block px-2 py-1 rounded-full text-sm ${
+                          record.status === 'success' 
+                            ? 'bg-green-100 text-green-800' 
+                            : 'bg-red-100 text-red-800'
+                        }`}>
+                          {record.status === 'success' ? '成功' : '失败'}
+                        </span>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

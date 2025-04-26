@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
@@ -9,14 +10,27 @@ import {
   FileText,
   Shield,
   LogOut,
+  Globe,
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import UserMenu from '../UserMenu';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const AdminLayout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
+  const [language, setLanguage] = useState<'zh' | 'en'>('zh');
+
+  // Close sidebar by default on mobile
+  React.useEffect(() => {
+    if (isMobile) {
+      setSidebarOpen(false);
+    } else {
+      setSidebarOpen(true);
+    }
+  }, [isMobile]);
 
   const navigationItems = [
     { path: '/admin', label: '仪表盘', icon: <Home /> },
@@ -32,30 +46,52 @@ const AdminLayout: React.FC = () => {
   ];
 
   const handleLogout = () => {
-    // Handle logout logic
     navigate('/login');
+  };
+
+  const toggleLanguage = () => {
+    setLanguage(prev => prev === 'zh' ? 'en' : 'zh');
   };
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
-      <div className={`bg-sidebar text-white ${sidebarOpen ? 'w-64' : 'w-20'} transition-all duration-300 overflow-y-auto`}>
+      {/* Mobile overlay */}
+      {isMobile && sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <div 
+        className={`
+          fixed md:relative bg-sidebar text-white z-50 h-full
+          transition-all duration-300 ease-in-out
+          ${sidebarOpen ? 'w-64' : 'w-20'} 
+          ${isMobile ? (sidebarOpen ? 'translate-x-0' : '-translate-x-full') : 'translate-x-0'}
+        `}
+      >
         <div className="flex items-center justify-between p-4">
-          <Link to="/" className="flex items-center">
-            <img 
-              src="/lovable-uploads/530e81e8-804d-48ef-8b67-b896a5b21c01.png" 
-              alt="波克棋牌" 
-              className="h-8 w-auto"
-            />
-          </Link>
+          {sidebarOpen && (
+            <Link to="/" className="flex items-center">
+              <img 
+                src="/lovable-uploads/530e81e8-804d-48ef-8b67-b896a5b21c01.png" 
+                alt="波克棋牌" 
+                className="h-8 w-auto"
+              />
+            </Link>
+          )}
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setSidebarOpen(prev => !prev)}
-            className="text-white hover:bg-sidebar-accent"
+            className="text-white hover:bg-sidebar-accent ml-auto"
           >
             <Menu />
           </Button>
         </div>
+
         <div className="mt-6 space-y-1 px-3">
           {navigationItems.map((item, index) => (
             <Link
@@ -68,6 +104,7 @@ const AdminLayout: React.FC = () => {
             </Link>
           ))}
         </div>
+
         <div className="absolute bottom-4 left-0 right-0 px-3">
           <button 
             onClick={handleLogout}
@@ -79,10 +116,39 @@ const AdminLayout: React.FC = () => {
         </div>
       </div>
       
+      {/* Main content */}
       <div className="flex-1 overflow-y-auto">
         <header className="bg-white border-b h-16 flex items-center justify-between px-6">
-          <div className="text-xl font-semibold">管理员控制面板</div>
-          <UserMenu />
+          <div className="flex items-center gap-4">
+            {isMobile && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setSidebarOpen(true)}
+                className="md:hidden"
+              >
+                <Menu className="h-5 w-5" />
+              </Button>
+            )}
+            <div className="text-xl font-semibold">管理员控制面板</div>
+          </div>
+          <div className="flex items-center space-x-4">
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/">
+                <Home className="mr-1 h-4 w-4" />
+                <span>首页</span>
+              </Link>
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={toggleLanguage}
+            >
+              <Globe className="mr-1 h-4 w-4" />
+              <span>{language === 'zh' ? '中/EN' : 'EN/中'}</span>
+            </Button>
+            <UserMenu />
+          </div>
         </header>
         <main className="p-6">
           <Outlet />

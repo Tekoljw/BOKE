@@ -64,18 +64,20 @@ const AgentLayout: React.FC = () => {
         `}
       >
         <div className="flex items-center justify-between p-4">
-          <Link to="/" className="flex items-center">
-            <img 
-              src="/lovable-uploads/135f811b-3eaa-41a9-ad61-5cd5143e0d4d.png" 
-              alt="波克棋牌" 
-              className="h-8 w-auto rounded-lg"
-            />
-          </Link>
+          {sidebarOpen && (
+            <Link to="/" className="flex items-center">
+              <img 
+                src="/lovable-uploads/135f811b-3eaa-41a9-ad61-5cd5143e0d4d.png" 
+                alt="波克棋牌" 
+                className="h-8 w-auto rounded-lg"
+              />
+            </Link>
+          )}
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setSidebarOpen(prev => !prev)}
-            className="text-white hover:bg-sidebar-accent"
+            className="text-white hover:bg-sidebar-accent ml-auto"
           >
             <Menu />
           </Button>

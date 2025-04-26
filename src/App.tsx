@@ -60,6 +60,7 @@ import MerchantBalances from "./pages/merchant/Balances";
 import MerchantCredit from "./pages/merchant/Credit";
 import MerchantApi from "./pages/merchant/Api";
 import MerchantBonusPoints from "./pages/merchant/BonusPoints";
+import MerchantWinControl from "./pages/merchant/WinControl";
 
 // Create a client function to ensure a new instance is created for each app mount
 function createQueryClient() {
@@ -135,6 +136,7 @@ const App = () => {
               <Route path="credit" element={<MerchantCredit />} />
               <Route path="api" element={<MerchantApi />} />
               <Route path="bonus-points" element={<MerchantBonusPoints />} />
+              <Route path="win-control" element={<MerchantWinControl />} />
             </Route>
             
             {/* Catch-all route */}

@@ -1,25 +1,108 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { search } from 'lucide-react';
+
+// Mock data
+const mockBonusRecords = [
+  {
+    id: '1',
+    merchantId: 'M001',
+    merchantName: '商户A',
+    bonusAmount: 1000,
+    status: 'active',
+    createdAt: '2024-04-26 10:30:00',
+    expireAt: '2024-05-26 10:30:00'
+  },
+  {
+    id: '2',
+    merchantId: 'M002',
+    merchantName: '商户B',
+    bonusAmount: 500,
+    status: 'expired',
+    createdAt: '2024-04-25 15:45:00',
+    expireAt: '2024-05-25 15:45:00'
+  },
+];
 
 const AdminBonusManagement: React.FC = () => {
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold mb-2">商户赠分管理</h1>
-        <p className="text-muted-foreground">管理商户赠分规则和分配</p>
+        <p className="text-muted-foreground">管理商户赠分记录</p>
       </div>
       
       <Card>
         <CardHeader>
-          <CardTitle>商户赠分管理</CardTitle>
+          <CardTitle>赠分记录查询</CardTitle>
           <CardDescription>
-            平台商户赠分管理功能
+            按时间范围查询商户赠分记录
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="py-8 text-center text-muted-foreground">
-            此功能正在开发中...
+          <div className="space-y-4">
+            <div className="flex gap-4 items-end">
+              <div className="grid w-full max-w-sm items-center gap-1.5">
+                <label className="text-sm text-muted-foreground">开始时间</label>
+                <Input
+                  type="datetime-local"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                />
+              </div>
+              <div className="grid w-full max-w-sm items-center gap-1.5">
+                <label className="text-sm text-muted-foreground">结束时间</label>
+                <Input
+                  type="datetime-local"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                />
+              </div>
+              <Button>
+                <search className="mr-2 h-4 w-4" />
+                查询
+              </Button>
+            </div>
+
+            <div className="rounded-md border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>商户ID</TableHead>
+                    <TableHead>商户名称</TableHead>
+                    <TableHead>赠分数量</TableHead>
+                    <TableHead>状态</TableHead>
+                    <TableHead>创建时间</TableHead>
+                    <TableHead>过期时间</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {mockBonusRecords.map((record) => (
+                    <TableRow key={record.id}>
+                      <TableCell>{record.merchantId}</TableCell>
+                      <TableCell>{record.merchantName}</TableCell>
+                      <TableCell>{record.bonusAmount}</TableCell>
+                      <TableCell>
+                        <span className={`px-2 py-1 rounded-full text-sm ${
+                          record.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                        }`}>
+                          {record.status === 'active' ? '生效中' : '已过期'}
+                        </span>
+                      </TableCell>
+                      <TableCell>{record.createdAt}</TableCell>
+                      <TableCell>{record.expireAt}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </div>
         </CardContent>
       </Card>

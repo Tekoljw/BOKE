@@ -1,10 +1,26 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Upload, FileCode, Link as LinkIcon } from 'lucide-react';
+import { FileCode, Link as LinkIcon, Download } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
+
+// Mock data for uploaded demos
+const mockDemos = [
+  {
+    id: 1,
+    name: 'PHP Demo SDK',
+    size: '2.3MB',
+    uploadDate: '2024-04-25'
+  },
+  {
+    id: 2,
+    name: 'Java Demo SDK',
+    size: '3.1MB',
+    uploadDate: '2024-04-24'
+  }
+];
 
 const AdminApi: React.FC = () => {
   const { toast } = useToast();
@@ -23,6 +39,13 @@ const AdminApi: React.FC = () => {
     toast({
       title: "API文档链接已保存",
       description: "新的API文档链接已成功保存",
+    });
+  };
+
+  const handleDownload = (demoName: string) => {
+    toast({
+      title: "开始下载",
+      description: `正在下载 ${demoName}`,
     });
   };
 
@@ -60,6 +83,36 @@ const AdminApi: React.FC = () => {
                   <p className="text-xs text-gray-500 mt-1">支持 .zip, .rar, .7z 格式</p>
                 </div>
               </label>
+
+              <div className="mt-6">
+                <h4 className="text-sm font-medium mb-3">已上传的Demo</h4>
+                <div className="space-y-2">
+                  {mockDemos.map((demo) => (
+                    <div 
+                      key={demo.id}
+                      className="flex items-center justify-between p-3 bg-muted rounded-lg"
+                    >
+                      <div className="flex items-center gap-3">
+                        <FileCode className="h-5 w-5 text-muted-foreground" />
+                        <div>
+                          <p className="text-sm font-medium">{demo.name}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {demo.size} • 上传于 {demo.uploadDate}
+                          </p>
+                        </div>
+                      </div>
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => handleDownload(demo.name)}
+                      >
+                        <Download className="h-4 w-4 mr-1" />
+                        下载
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>

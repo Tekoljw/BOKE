@@ -1,13 +1,13 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Search, Upload, Save } from "lucide-react";
+import { Search, Upload, Save, Info } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { InfoCircled } from "lucide-react";
 
 const mockVendors = Array.from({ length: 10 }, (_, i) => ({
   id: `v${i + 1}`,
@@ -68,7 +68,7 @@ const AdminVendorIntro: React.FC = () => {
       </div>
 
       <Alert>
-        <InfoCircled className="h-4 w-4" />
+        <Info className="h-4 w-4" />
         <AlertDescription>
           此配置仅对首页厂商介绍的页面展示生效，跟系统支持的厂商无关
         </AlertDescription>

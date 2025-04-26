@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -10,7 +11,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Loader, Wallet, CreditCard, Gift, GamepadIcon } from "lucide-react";
+import { 
+  Plus, 
+  Loader, 
+  Wallet, 
+  CircleDollarSign, 
+  Gift, 
+  GamepadIcon, 
+  TrendingUp,
+  Award
+} from "lucide-react";
 import BalanceCard from '@/components/merchant/BalanceCard';
 import RechargeModal from '@/components/merchant/RechargeModal';
 import type { AccountBalance, VendorBalance, RechargeRecord } from '@/types/credit';
@@ -32,6 +42,12 @@ const MerchantCredit: React.FC = () => {
     { vendorId: '1', vendorName: '波克棋牌', points: 50000 },
     { vendorId: '2', vendorName: '开元棋牌', points: 30000 },
     { vendorId: '3', vendorName: 'AG棋牌', points: 20000 },
+  ];
+
+  const bonusBalances: VendorBalance[] = [
+    { vendorId: '1', vendorName: '波克棋牌', points: 2000 },
+    { vendorId: '2', vendorName: '开元棋牌', points: 1500 },
+    { vendorId: '3', vendorName: 'AG棋牌', points: 1500 },
   ];
 
   const [records, setRecords] = useState<RechargeRecord[]>([
@@ -80,23 +96,29 @@ const MerchantCredit: React.FC = () => {
         <BalanceCard 
           title="USDT余额" 
           amount={balances.usdt}
-          icon={<Wallet className="h-5 w-5" />}
+          icon={<Wallet className="h-5 w-5 text-brand-secondary" />}
+          amountClassName="text-brand-secondary"
         />
         <BalanceCard 
           title="总分数余额" 
           amount={balances.totalPoints} 
-          icon={<CreditCard className="h-5 w-5" />}
+          icon={<CircleDollarSign className="h-5 w-5 text-brand-DEFAULT" />}
+          amountClassName="text-brand-DEFAULT"
         />
         <BalanceCard 
           title="赠分余额" 
           amount={balances.bonusPoints} 
-          icon={<Gift className="h-5 w-5" />}
+          icon={<Gift className="h-5 w-5 text-brand-accent" />}
+          amountClassName="text-brand-accent"
         />
       </div>
 
-      {/* Vendor Balance Distribution */}
+      {/* Points Balance Distribution */}
       <div>
-        <h2 className="text-xl font-semibold mb-4">分数余额分布</h2>
+        <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+          <TrendingUp className="h-5 w-5 text-brand-DEFAULT" />
+          分数余额分布
+        </h2>
         <div className="grid gap-4 md:grid-cols-4">
           {vendorBalances.map((vendor) => (
             <BalanceCard
@@ -104,7 +126,28 @@ const MerchantCredit: React.FC = () => {
               title={vendor.vendorName}
               amount={vendor.points}
               className="md:col-span-1"
-              icon={<GamepadIcon className="h-5 w-5" />}
+              icon={<GamepadIcon className="h-5 w-5 text-brand-DEFAULT" />}
+              amountClassName="text-brand-DEFAULT"
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Bonus Points Distribution */}
+      <div>
+        <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+          <Award className="h-5 w-5 text-brand-accent" />
+          赠分余额分布
+        </h2>
+        <div className="grid gap-4 md:grid-cols-4">
+          {bonusBalances.map((vendor) => (
+            <BalanceCard
+              key={vendor.vendorId}
+              title={vendor.vendorName}
+              amount={vendor.points}
+              className="md:col-span-1"
+              icon={<Gift className="h-5 w-5 text-brand-accent" />}
+              amountClassName="text-brand-accent"
             />
           ))}
         </div>

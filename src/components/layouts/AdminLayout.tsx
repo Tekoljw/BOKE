@@ -17,6 +17,7 @@ import {
   Gamepad2,
   Paintbrush,
   Layers,
+  MessageCircle
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import UserMenu from '../UserMenu';
@@ -63,6 +64,10 @@ const AdminLayout: React.FC = () => {
 
   const toggleLanguage = () => {
     setLanguage(prev => prev === 'zh' ? 'en' : 'zh');
+  };
+
+  const handleContactSupport = () => {
+    console.log('Contact support clicked');
   };
 
   return (
@@ -157,6 +162,14 @@ const AdminLayout: React.FC = () => {
             >
               <Globe className="mr-1 h-4 w-4" />
               <span>{language === 'zh' ? '中/EN' : 'EN/中'}</span>
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={handleContactSupport}
+            >
+              <MessageCircle className="mr-1 h-4 w-4" />
+              <span>联系客服</span>
             </Button>
             <UserMenu />
           </div>

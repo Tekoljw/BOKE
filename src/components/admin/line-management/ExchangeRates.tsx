@@ -4,34 +4,43 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { Plus } from "lucide-react";
+import { Plus, Edit, Check } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 
 interface ExchangeRate {
   currency: string;
+  displayName: string;
   rate: number;
   autoUpdate: boolean;
 }
 
 const INITIAL_RATES: ExchangeRate[] = [
-  { currency: "CNY", rate: 7.2, autoUpdate: true },
-  { currency: "THB", rate: 35.8, autoUpdate: false },
-  { currency: "IDR", rate: 15600, autoUpdate: true },
+  { currency: "CNY", displayName: "人民币", rate: 7.2, autoUpdate: true },
+  { currency: "THB", displayName: "泰铢", rate: 35.8, autoUpdate: false },
+  { currency: "IDR", displayName: "印尼盾", rate: 15600, autoUpdate: true },
 ];
 
 const ExchangeRates: React.FC = () => {
   const [rates, setRates] = useState<ExchangeRate[]>(INITIAL_RATES);
   const [newCurrency, setNewCurrency] = useState("");
+  const [newCurrencyDisplayName, setNewCurrencyDisplayName] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editingCurrency, setEditingCurrency] = useState<string | null>(null);
   const { toast } = useToast();
 
   const handleAddCurrency = () => {
-    if (!newCurrency) return;
+    if (!newCurrency || !newCurrencyDisplayName) return;
     
-    setRates([...rates, { currency: newCurrency, rate: 1, autoUpdate: true }]);
+    setRates([...rates, { 
+      currency: newCurrency, 
+      displayName: newCurrencyDisplayName, 
+      rate: 1, 
+      autoUpdate: true 
+    }]);
     setNewCurrency("");
+    setNewCurrencyDisplayName("");
     setIsDialogOpen(false);
     
     toast({
@@ -56,6 +65,15 @@ const ExchangeRates: React.FC = () => {
     ));
   };
 
+  const handleEditDisplayName = (currency: string, newDisplayName: string) => {
+    setRates(rates.map(rate => 
+      rate.currency === currency 
+        ? { ...rate, displayName: newDisplayName } 
+        : rate
+    ));
+    setEditingCurrency(null);
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between mb-4">
@@ -75,15 +93,27 @@ const ExchangeRates: React.FC = () => {
             <DialogHeader>
               <DialogTitle>添加新币种</DialogTitle>
             </DialogHeader>
-            <div className="py-4">
-              <Label htmlFor="currency">币种代码</Label>
-              <Input
-                id="currency"
-                value={newCurrency}
-                onChange={(e) => setNewCurrency(e.target.value.toUpperCase())}
-                placeholder="例如: EUR"
-                className="mt-2"
-              />
+            <div className="py-4 space-y-4">
+              <div>
+                <Label htmlFor="currency">币种代码</Label>
+                <Input
+                  id="currency"
+                  value={newCurrency}
+                  onChange={(e) => setNewCurrency(e.target.value.toUpperCase())}
+                  placeholder="例如: EUR"
+                  className="mt-2"
+                />
+              </div>
+              <div>
+                <Label htmlFor="currencyName">币种名称</Label>
+                <Input
+                  id="currencyName"
+                  value={newCurrencyDisplayName}
+                  onChange={(e) => setNewCurrencyDisplayName(e.target.value)}
+                  placeholder="例如: 欧元"
+                  className="mt-2"
+                />
+              </div>
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
@@ -100,15 +130,46 @@ const ExchangeRates: React.FC = () => {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>币种</TableHead>
+            <TableHead>币种代码</TableHead>
+            <TableHead>币种名称</TableHead>
             <TableHead>汇率 (1 USDT =)</TableHead>
             <TableHead>自动更新</TableHead>
+            <TableHead>操作</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {rates.map((rate) => (
             <TableRow key={rate.currency}>
               <TableCell className="font-medium">{rate.currency}</TableCell>
+              <TableCell>
+                {editingCurrency === rate.currency ? (
+                  <div className="flex items-center gap-2">
+                    <Input
+                      value={rate.displayName}
+                      onChange={(e) => handleEditDisplayName(rate.currency, e.target.value)}
+                      className="w-32"
+                    />
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      onClick={() => setEditingCurrency(null)}
+                    >
+                      <Check className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    {rate.displayName}
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      onClick={() => setEditingCurrency(rate.currency)}
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                  </div>
+                )}
+              </TableCell>
               <TableCell>
                 <Input
                   type="number"
@@ -123,6 +184,13 @@ const ExchangeRates: React.FC = () => {
                   checked={rate.autoUpdate}
                   onCheckedChange={() => toggleAutoUpdate(rate.currency)}
                 />
+              </TableCell>
+              <TableCell>
+                {rate.currency !== "USDT" && (
+                  <Button variant="destructive" size="sm" className="text-xs">
+                    删除
+                  </Button>
+                )}
               </TableCell>
             </TableRow>
           ))}

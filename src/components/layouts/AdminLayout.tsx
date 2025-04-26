@@ -26,6 +26,8 @@ const navigationItems = [
   { path: '/admin', label: '仪表盘', icon: <Home /> },
   { path: '/admin/agents', label: '代理商管理', icon: <Users /> },
   { path: '/admin/merchants', label: '商户管理', icon: <Users /> },
+  { path: '/admin/line-management', label: '线路管理', icon: <Globe /> },
+  { path: '/admin/demo-games', label: '游戏管理', icon: <Gamepad2 /> },
   { path: '/admin/win-control', label: '输赢控制', icon: <Shield /> },
   { path: '/admin/win-loss', label: '输赢报表', icon: <BarChart2 /> },
   { path: '/admin/game-logs', label: '对局日志', icon: <FileText /> },
@@ -35,11 +37,9 @@ const navigationItems = [
   { path: '/admin/bonus-rules', label: '赠分规则配置', icon: <Gift /> },
   { path: '/admin/commission', label: '代理佣金订单', icon: <FileText /> },
   { path: '/admin/api', label: 'API管理', icon: <Code /> },
-  { path: '/admin/demo-games', label: '游戏管理', icon: <Gamepad2 /> },
-  { path: '/admin/game-customization', label: '自研游戏定制', icon: <Paintbrush /> },
+  { path: '/admin/game-customization', label: '品牌定制管理', icon: <Paintbrush /> },
   { path: '/admin/vendor-intro', label: '厂商介绍配置', icon: <Layers /> },
   { path: '/admin/permissions', label: '账号权限管理', icon: <Shield /> },
-  { path: '/admin/line-management', label: '线路管理', icon: <Globe /> },
 ];
 
 const AdminLayout: React.FC = () => {

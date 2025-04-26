@@ -22,3 +22,15 @@ export interface VendorOption {
   id: string;
   name: string;
 }
+
+export type TransactionType = 'deposit' | 'withdraw';
+
+export interface TransactionRecord {
+  id: string;
+  timestamp: string;
+  username: string;
+  type: TransactionType;
+  beforeAmount: number;
+  changeAmount: number;
+  afterAmount: number;
+}

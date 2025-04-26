@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -7,10 +6,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Search, Settings, Ban } from 'lucide-react';
+import { Search, Settings, Ban, AlertCircle } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
-// Mock data for current rates and operation logs
 const mockCurrentRates = {
   merchants: {
     'merchant001': 55,
@@ -18,7 +16,11 @@ const mockCurrentRates = {
   }
 };
 
-// Define log types for proper typing
+const mockRoomData = [
+  { gameId: 'G001', gameName: '德州扑克', roomId: 'R001', winRate: 55 },
+  { gameId: 'G002', gameName: '炸金花', roomId: 'R002', winRate: 58 },
+];
+
 type MerchantLog = {
   id: number;
   type: 'merchant';
@@ -73,48 +75,39 @@ const playerLevels = [
 const AdminWinControl: React.FC = () => {
   const { toast } = useToast();
   
-  // States for merchant control
   const [merchantId, setMerchantId] = useState<string>('');
   const [merchantRate, setMerchantRate] = useState<string>('');
   const [merchantSearching, setMerchantSearching] = useState(false);
   const [currentMerchantRate, setCurrentMerchantRate] = useState<number | null>(null);
   
-  // States for IP control
   const [ipAddress, setIpAddress] = useState<string>('');
   const [ipSearching, setIpSearching] = useState(false);
   const [isIpBlocked, setIsIpBlocked] = useState<boolean>(false);
   
-  // States for player control
   const [playerId, setPlayerId] = useState<string>('');
   const [playerSearching, setPlayerSearching] = useState(false);
   const [playerLevel, setPlayerLevel] = useState<string>('');
   const [currentPlayerLevel, setCurrentPlayerLevel] = useState<string | null>(null);
 
-  // Add new states for room control
   const [roomSearching, setRoomSearching] = useState(false);
   const [roomGameId, setRoomGameId] = useState<string>('');
   const [roomId, setRoomId] = useState<string>('');
   const [roomRate, setRoomRate] = useState<string>('');
   const [currentRoomRate, setCurrentRoomRate] = useState<number | null>(null);
   
-  // State for operation logs
   const [logs, setLogs] = useState<LogEntry[]>(mockOperationLogs);
   const [merchantLogs, setMerchantLogs] = useState<MerchantLog[]>([]);
   const [ipLogs, setIpLogs] = useState<IpLog[]>([]);
   const [playerLogs, setPlayerLogs] = useState<PlayerLog[]>([]);
 
-  // Mock room control logs
   const [roomLogs, setRoomLogs] = useState<RoomLog[]>([]);
 
-  // Load current rates on component mount
   React.useEffect(() => {
-    // Filter logs by type
     setMerchantLogs(logs.filter((log): log is MerchantLog => log.type === 'merchant'));
     setIpLogs(logs.filter((log): log is IpLog => log.type === 'ip'));
     setPlayerLogs(logs.filter((log): log is PlayerLog => log.type === 'player'));
   }, [logs]);
 
-  // Handle merchant search
   const handleMerchantSearch = () => {
     if (!merchantId) {
       toast({
@@ -126,7 +119,6 @@ const AdminWinControl: React.FC = () => {
     
     setMerchantSearching(true);
     
-    // Simulate API call
     setTimeout(() => {
       const rate = mockCurrentRates.merchants[merchantId as keyof typeof mockCurrentRates.merchants];
       setCurrentMerchantRate(rate || null);
@@ -142,7 +134,6 @@ const AdminWinControl: React.FC = () => {
     }, 500);
   };
 
-  // Handle IP search
   const handleIpSearch = () => {
     if (!ipAddress) {
       toast({
@@ -154,7 +145,6 @@ const AdminWinControl: React.FC = () => {
     
     setIpSearching(true);
     
-    // Simulate API call
     setTimeout(() => {
       setIsIpBlocked(false);
       setIpSearching(false);
@@ -166,7 +156,6 @@ const AdminWinControl: React.FC = () => {
     }, 500);
   };
   
-  // Handle player search
   const handlePlayerSearch = () => {
     if (!playerId) {
       toast({
@@ -178,7 +167,6 @@ const AdminWinControl: React.FC = () => {
     
     setPlayerSearching(true);
     
-    // Simulate API call
     setTimeout(() => {
       setCurrentPlayerLevel(null);
       setPlayerLevel('');
@@ -191,7 +179,6 @@ const AdminWinControl: React.FC = () => {
     }, 500);
   };
 
-  // Handle room search
   const handleRoomSearch = () => {
     if (!roomGameId || !roomId) {
       toast({
@@ -203,7 +190,6 @@ const AdminWinControl: React.FC = () => {
     
     setRoomSearching(true);
     
-    // Simulate API call
     setTimeout(() => {
       setCurrentRoomRate(null);
       setRoomRate('');
@@ -216,7 +202,6 @@ const AdminWinControl: React.FC = () => {
     }, 500);
   };
 
-  // Handle form submission
   const handleSubmit = (type: 'merchant' | 'ip' | 'player') => {
     if (type === 'merchant') {
       const numRate = Number(merchantRate);
@@ -230,7 +215,6 @@ const AdminWinControl: React.FC = () => {
       }
     }
 
-    // Create new log entry
     const newLog = {
       id: Date.now(),
       type,
@@ -249,11 +233,9 @@ const AdminWinControl: React.FC = () => {
       newLog.value = Number(playerLevel);
     }
 
-    // Update logs
     const updatedLogs = [newLog, ...logs];
     setLogs(updatedLogs);
 
-    // Update filtered logs
     if (type === 'merchant') {
       setMerchantLogs([newLog, ...merchantLogs]);
       setCurrentMerchantRate(Number(merchantRate));
@@ -271,7 +253,6 @@ const AdminWinControl: React.FC = () => {
     });
   };
 
-  // Handle room control submit
   const handleRoomSubmit = () => {
     const numRate = Number(roomRate);
     if (isNaN(numRate) || numRate < 0 || numRate > 100) {
@@ -283,7 +264,6 @@ const AdminWinControl: React.FC = () => {
       return;
     }
 
-    // Create new log entry
     const newLog: RoomLog = {
       id: Date.now(),
       type: 'room',
@@ -294,7 +274,6 @@ const AdminWinControl: React.FC = () => {
       time: new Date().toLocaleString('zh-CN'),
     };
 
-    // Update logs
     setRoomLogs([newLog, ...roomLogs]);
     setLogs([newLog, ...logs]);
     setCurrentRoomRate(Number(roomRate));
@@ -582,65 +561,112 @@ const AdminWinControl: React.FC = () => {
                   </Button>
                 </div>
                 
-                {currentRoomRate !== null && (
-                  <div className="flex items-center space-x-2">
-                    <Settings className="h-4 w-4 text-blue-500" />
-                    <span>游戏ID: <strong>{roomGameId}</strong> 房间ID: <strong>{roomId}</strong> 当前杀率：<strong>{currentRoomRate}%</strong></span>
+                <div>
+                  <h3 className="text-lg font-semibold mb-3">房间控制列表</h3>
+                  <div className="text-sm text-muted-foreground mb-4">
+                    <span className="flex items-center gap-1">
+                      <AlertCircle className="h-4 w-4" />
+                      仅自研游戏可以配置
+                    </span>
                   </div>
-                )}
-
-                <div className="space-y-2">
-                  <div className="flex items-center space-x-2">
-                    <Label htmlFor="roomRate">房间杀率设置 (%)</Label>
-                    <span className="text-xs text-muted-foreground">(仅自研游戏可以配置)</span>
-                  </div>
-                  <Input
-                    id="roomRate"
-                    type="number"
-                    min="0"
-                    max="100"
-                    placeholder="请输入0-100之间的数值"
-                    value={roomRate}
-                    onChange={(e) => setRoomRate(e.target.value)}
-                    disabled={!roomGameId || !roomId}
-                  />
-                </div>
-
-                <Button 
-                  onClick={handleRoomSubmit}
-                  disabled={!roomGameId || !roomId || !roomRate}
-                >
-                  保存设置
-                </Button>
-              </div>
-              
-              {roomLogs.length > 0 && (
-                <div className="mt-8">
-                  <h3 className="text-lg font-semibold mb-3">操作记录</h3>
                   <Table>
                     <TableHeader>
                       <TableRow>
                         <TableHead>游戏ID</TableHead>
+                        <TableHead>游戏名称</TableHead>
                         <TableHead>房间ID</TableHead>
-                        <TableHead>设定值</TableHead>
-                        <TableHead>操作人</TableHead>
-                        <TableHead>操作时间</TableHead>
+                        <TableHead>当前杀率</TableHead>
+                        <TableHead>操作</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {roomLogs.map(log => (
-                        <TableRow key={log.id}>
-                          <TableCell>{log.gameId}</TableCell>
-                          <TableCell>{log.roomId}</TableCell>
-                          <TableCell>{log.value}%</TableCell>
-                          <TableCell>{log.operator}</TableCell>
-                          <TableCell>{log.time}</TableCell>
+                      {mockRoomData.map((room) => (
+                        <TableRow key={`${room.gameId}-${room.roomId}`}>
+                          <TableCell>{room.gameId}</TableCell>
+                          <TableCell>{room.gameName}</TableCell>
+                          <TableCell>{room.roomId}</TableCell>
+                          <TableCell>{room.winRate}%</TableCell>
+                          <TableCell>
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => {
+                                setRoomGameId(room.gameId);
+                                setRoomId(room.roomId);
+                                setRoomRate(room.winRate.toString());
+                                setCurrentRoomRate(room.winRate);
+                              }}
+                            >
+                              修改配置
+                            </Button>
+                          </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
                   </Table>
                 </div>
-              )}
+
+                {(roomGameId && roomId) && (
+                  <>
+                    {currentRoomRate !== null && (
+                      <div className="flex items-center space-x-2">
+                        <Settings className="h-4 w-4 text-blue-500" />
+                        <span>游戏ID: <strong>{roomGameId}</strong> 房间ID: <strong>{roomId}</strong> 当前杀率：<strong>{currentRoomRate}%</strong></span>
+                      </div>
+                    )}
+
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-2">
+                        <Label htmlFor="roomRate">房间杀率设置 (%)</Label>
+                      </div>
+                      <Input
+                        id="roomRate"
+                        type="number"
+                        min="0"
+                        max="100"
+                        placeholder="请输入0-100之间的数值"
+                        value={roomRate}
+                        onChange={(e) => setRoomRate(e.target.value)}
+                      />
+                    </div>
+
+                    <Button 
+                      onClick={handleRoomSubmit}
+                      disabled={!roomGameId || !roomId || !roomRate}
+                    >
+                      保存设置
+                    </Button>
+                  </>
+                )}
+                
+                {roomLogs.length > 0 && (
+                  <div className="mt-8">
+                    <h3 className="text-lg font-semibold mb-3">操作记录</h3>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>游戏ID</TableHead>
+                          <TableHead>房间ID</TableHead>
+                          <TableHead>设定值</TableHead>
+                          <TableHead>操作人</TableHead>
+                          <TableHead>操作时间</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {roomLogs.map(log => (
+                          <TableRow key={log.id}>
+                            <TableCell>{log.gameId}</TableCell>
+                            <TableCell>{log.roomId}</TableCell>
+                            <TableCell>{log.value}%</TableCell>
+                            <TableCell>{log.operator}</TableCell>
+                            <TableCell>{log.time}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
+              </div>
             </TabsContent>
           </Tabs>
         </CardContent>

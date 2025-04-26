@@ -21,6 +21,8 @@ const mockTransactions: TransactionRecord[] = [
     beforeAmount: 1000,
     changeAmount: 500,
     afterAmount: 1500,
+    platformBalanceChange: 500,
+    merchantBalanceChange: -500,
   },
   {
     id: "TX002",
@@ -30,6 +32,8 @@ const mockTransactions: TransactionRecord[] = [
     beforeAmount: 2000,
     changeAmount: -800,
     afterAmount: 1200,
+    platformBalanceChange: -800,
+    merchantBalanceChange: 800,
   },
   {
     id: "TX003",
@@ -39,6 +43,8 @@ const mockTransactions: TransactionRecord[] = [
     beforeAmount: 1500,
     changeAmount: 300,
     afterAmount: 1800,
+    platformBalanceChange: 300,
+    merchantBalanceChange: -300,
   },
 ];
 
@@ -72,6 +78,8 @@ const MerchantTransactions: React.FC = () => {
           beforeAmount: 2000,
           changeAmount: selectedType === "deposit" ? 500 : -500,
           afterAmount: selectedType === "deposit" ? 2500 : 1500,
+          platformBalanceChange: selectedType === "deposit" ? 500 : -500,
+          merchantBalanceChange: selectedType === "deposit" ? -500 : 500,
         }
       ]);
       setLoading(false);

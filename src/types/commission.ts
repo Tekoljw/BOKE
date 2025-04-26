@@ -25,3 +25,13 @@ export interface SettlementRecord {
   balanceAfter: number;
   status: 'success' | 'failed';
 }
+
+export interface CommissionRecord {
+  id: string;
+  merchantId: string;
+  merchantName: string;
+  timestamp: string;
+  depositAmount: number;
+  commission: number;
+  status: 'success' | 'pending';
+}

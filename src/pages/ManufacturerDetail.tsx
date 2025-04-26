@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -17,10 +16,8 @@ import {
   DialogDescription
 } from "@/components/ui/dialog";
 
-// Generate vendor icons
 const vendorIcons = ['🎮', '🎯', '🎲', '♠️', '🃏', '🎪', '🎨', '🎭', '🎰', '🧩', '🎪', '📱', '🖥️', '🚀', '🌟', '🔮', '💎', '🏆', '🎁', '🎨'];
 
-// Generate random manufacturer data
 const generateManufacturers = (categoryId: string, count: number, startIndex: number) => {
   return Array.from({ length: count }, (_, i) => ({
     id: `${categoryId}-${startIndex + i}`,
@@ -44,7 +41,6 @@ const ManufacturerDetail: React.FC = () => {
   const [language, setLanguage] = useState<'cn' | 'en'>('cn');
   const [contactDialogOpen, setContactDialogOpen] = useState(false);
 
-  // Generate 20 manufacturers across categories
   const manufacturerCategories = [
     {
       id: 'live',
@@ -63,21 +59,18 @@ const ManufacturerDetail: React.FC = () => {
     }
   ];
 
-  // Contact information for the dialog
   const contactInfo = [
     { name: 'Toney', title: '商务总监', contact: '@Toney' },
     { name: 'Lion', title: '商务总监', contact: '@Lion' },
     { name: 'Hersinber', title: '商务总监', contact: '@Hersinber' }
   ];
 
-  // Handle back button click - improved for faster response
   const handleBackClick = () => {
     navigate(-1);
   };
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Header */}
       <header className="bg-primary text-white p-4 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
           <Link to="/" className="flex items-center gap-3">
@@ -106,7 +99,6 @@ const ManufacturerDetail: React.FC = () => {
         </div>
       </header>
 
-      {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center gap-4 mb-6">
           <Button 
@@ -156,19 +148,16 @@ const ManufacturerDetail: React.FC = () => {
 
                       <div>
                         <h3 className="text-xl font-semibold mb-4">游戏列表</h3>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3">
+                        <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-8 gap-3">
                           {manufacturer.games.map((game) => (
-                            <Card key={game.id} className="overflow-hidden">
-                              <div className="bg-gray-100 p-3 flex items-center justify-center aspect-square">
-                                <span className="text-2xl">{game.icon}</span>
+                            <Card key={game.id} className="overflow-hidden aspect-square">
+                              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-orange-100 to-orange-50 hover:from-orange-200 hover:to-orange-100 transition-colors cursor-pointer">
+                                <img 
+                                  src="/lovable-uploads/4b9bddee-a0e6-4dfb-ab50-2598752dec72.png"
+                                  alt={game.name}
+                                  className="w-4/5 h-4/5 object-contain"
+                                />
                               </div>
-                              <CardContent className="p-2">
-                                <h4 className="font-medium text-sm truncate">{game.name}</h4>
-                                <p className="text-xs text-gray-500 truncate">{game.type}</p>
-                              </CardContent>
-                              <CardFooter className="p-2 pt-0">
-                                <Button size="sm" className="w-full text-xs py-1">玩游戏</Button>
-                              </CardFooter>
                             </Card>
                           ))}
                         </div>
@@ -187,7 +176,6 @@ const ManufacturerDetail: React.FC = () => {
         </Tabs>
       </div>
 
-      {/* Contact Dialog */}
       <Dialog open={contactDialogOpen} onOpenChange={setContactDialogOpen}>
         <DialogContent>
           <DialogHeader>

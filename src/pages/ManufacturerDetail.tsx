@@ -1,12 +1,13 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Globe } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Link } from 'react-router-dom';
 
 const ManufacturerDetail: React.FC = () => {
   const navigate = useNavigate();
+  const [language, setLanguage] = React.useState<'cn' | 'en'>('cn');
 
   // Mock data for manufacturer categories and details
   const manufacturerCategories = [
@@ -72,25 +73,50 @@ const ManufacturerDetail: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen flex flex-col">
       {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center gap-4">
+      <header className="bg-primary text-white p-4 shadow-md">
+        <div className="container mx-auto flex justify-between items-center">
+          <div className="flex items-center gap-3">
+            <img 
+              src="/lovable-uploads/530e81e8-804d-48ef-8b67-b896a5b21c01.png" 
+              alt="波克棋牌" 
+              className="h-8 w-auto"
+            />
+            <span className="text-2xl font-bold">波克棋牌</span>
+          </div>
+          <div className="flex gap-4 items-center">
             <Button 
-              variant="ghost" 
-              onClick={() => navigate(-1)}
-              className="p-2"
+              variant="outline" 
+              className="bg-sidebar text-white hover:bg-sidebar-accent flex items-center space-x-2"
+              onClick={() => setLanguage(language === 'cn' ? 'en' : 'cn')}
             >
-              <ArrowLeft className="h-5 w-5" />
+              <Globe className="h-4 w-4" />
+              <span>{language === 'cn' ? '中文' : 'English'}</span>
             </Button>
-            <h1 className="text-xl font-semibold">游戏厂商</h1>
+            <Link to="/login">
+              <Button variant="outline" className="bg-white text-primary hover:bg-gray-100">
+                登录
+              </Button>
+            </Link>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
+        <div className="flex items-center gap-4 mb-6">
+          <Button 
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate(-1)}
+            className="p-2"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <h1 className="text-xl font-semibold">游戏厂商</h1>
+        </div>
+
         <Tabs defaultValue="live" className="w-full">
           <TabsList className="flex flex-wrap gap-2 mb-6">
             {manufacturerCategories.map((category) => (

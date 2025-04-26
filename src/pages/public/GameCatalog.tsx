@@ -1,7 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
+import { Globe, ArrowLeft } from 'lucide-react';
 
 // Mock data for vendors and games
 const mockVendors = [
@@ -38,6 +38,7 @@ const GameCatalog: React.FC = () => {
   const { vendorId } = useParams<{ vendorId?: string }>();
   const [selectedVendor, setSelectedVendor] = useState<string | undefined>(vendorId);
   const [selectedType, setSelectedType] = useState<string | undefined>();
+  const [language, setLanguage] = useState<'cn' | 'en'>('cn');
   const navigate = useNavigate();
   
   // Filter games based on selected vendor and type
@@ -61,8 +62,23 @@ const GameCatalog: React.FC = () => {
       {/* Header */}
       <header className="bg-primary text-white p-4 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
-          <Link to="/" className="text-2xl font-bold">棋牌游戏联运中心</Link>
-          <div className="flex gap-4">
+          <div className="flex items-center gap-3">
+            <img 
+              src="/lovable-uploads/530e81e8-804d-48ef-8b67-b896a5b21c01.png" 
+              alt="波克棋牌" 
+              className="h-8 w-auto"
+            />
+            <span className="text-2xl font-bold">波克棋牌</span>
+          </div>
+          <div className="flex gap-4 items-center">
+            <Button 
+              variant="outline" 
+              className="bg-sidebar text-white hover:bg-sidebar-accent flex items-center space-x-2"
+              onClick={() => setLanguage(language === 'cn' ? 'en' : 'cn')}
+            >
+              <Globe className="h-4 w-4" />
+              <span>{language === 'cn' ? '中文' : 'English'}</span>
+            </Button>
             <Link to="/login">
               <Button variant="outline" className="bg-white text-primary hover:bg-gray-100">
                 登录
@@ -73,7 +89,17 @@ const GameCatalog: React.FC = () => {
       </header>
       
       <main className="flex-grow container mx-auto py-8 px-4">
-        <h1 className="text-3xl font-bold mb-8">游戏大厅</h1>
+        <div className="flex items-center gap-4 mb-8">
+          <Button 
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate(-1)}
+            className="p-2"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <h1 className="text-3xl font-bold">游戏大厅</h1>
+        </div>
         
         {/* Vendors Filter */}
         <div className="mb-8">
@@ -145,6 +171,13 @@ const GameCatalog: React.FC = () => {
             <p className="text-gray-500 text-lg">暂无游戏</p>
           </div>
         )}
+        
+        {/* View More Button */}
+        <div className="mt-8 flex justify-center">
+          <Button variant="outline" size="lg" onClick={() => navigate('/games')}>
+            查看更多游戏
+          </Button>
+        </div>
       </main>
       
       {/* Footer */}

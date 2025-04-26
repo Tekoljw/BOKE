@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { TransactionRecord } from '@/types/report';
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
@@ -32,7 +31,10 @@ export function TransactionTable({ records, loading, onLoadMore, hasMore }: Tran
         <span className="text-sm text-muted-foreground">{record.timestamp}</span>
       </div>
       <div className="flex justify-between">
+        <span className="text-sm">商户ID: {record.merchantId}</span>
         <span className="text-sm">玩家账号: {record.username}</span>
+      </div>
+      <div className="flex justify-between">
         <span className="text-sm">类型: {record.type === 'deposit' ? '上分' : '下分'}</span>
       </div>
       <div className="flex justify-between text-sm">
@@ -56,6 +58,7 @@ export function TransactionTable({ records, loading, onLoadMore, hasMore }: Tran
             <TableRow>
               <TableHead>订单号</TableHead>
               <TableHead>时间</TableHead>
+              <TableHead>商户ID</TableHead>
               <TableHead>玩家账号</TableHead>
               <TableHead>类型</TableHead>
               <TableHead>账变前金额</TableHead>
@@ -68,7 +71,7 @@ export function TransactionTable({ records, loading, onLoadMore, hasMore }: Tran
           <TableBody>
             {records.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={9} className="h-24 text-center">
+                <TableCell colSpan={10} className="h-24 text-center">
                   暂无数据
                 </TableCell>
               </TableRow>
@@ -77,6 +80,7 @@ export function TransactionTable({ records, loading, onLoadMore, hasMore }: Tran
                 <TableRow key={record.id}>
                   <TableCell>{record.id}</TableCell>
                   <TableCell>{record.timestamp}</TableCell>
+                  <TableCell>{record.merchantId}</TableCell>
                   <TableCell>{record.username}</TableCell>
                   <TableCell>
                     {record.type === 'deposit' ? '上分' : '下分'}

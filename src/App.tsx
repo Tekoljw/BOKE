@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -38,6 +37,9 @@ import AdminApi from "./pages/admin/AdminApi";
 import AdminSelfGames from "./pages/admin/AdminSelfGames";
 import AdminGameCustomization from "./pages/admin/AdminGameCustomization";
 import AdminVendors from "./pages/admin/AdminVendors";
+import AdminDemoGames from "./pages/admin/AdminDemoGames";
+import AdminVendorIntro from "./pages/admin/AdminVendorIntro";
+import AdminPermissions from "./pages/admin/AdminPermissions";
 
 // Agent Pages
 import AgentDashboard from "./pages/agent/Dashboard";
@@ -114,6 +116,9 @@ const App = () => {
               <Route path="statistics" element={<AdminStatistics />} />
               <Route path="system" element={<AdminSystem />} />
               <Route path="reports" element={<AdminReports />} />
+              <Route path="demo-games" element={<AdminDemoGames />} />
+              <Route path="vendor-intro" element={<AdminVendorIntro />} />
+              <Route path="permissions" element={<AdminPermissions />} />
             </Route>
             
             {/* Agent Routes */}

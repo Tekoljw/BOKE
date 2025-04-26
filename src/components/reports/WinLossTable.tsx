@@ -29,6 +29,10 @@ export function WinLossTable({ records, loading, onLoadMore, hasMore }: WinLossT
           <Card key={record.id} className="p-4">
             <div className="space-y-2">
               <div className="flex justify-between">
+                <span className="text-sm text-muted-foreground">商户ID</span>
+                <span>{record.merchantId}</span>
+              </div>
+              <div className="flex justify-between">
                 <span className="text-sm text-muted-foreground">用户名</span>
                 <span>{record.username}</span>
               </div>
@@ -86,6 +90,7 @@ export function WinLossTable({ records, loading, onLoadMore, hasMore }: WinLossT
         <TableHeader>
           <TableRow>
             <TableHead>账变时间</TableHead>
+            <TableHead>商户ID</TableHead>
             <TableHead>用户名</TableHead>
             <TableHead>游戏类型</TableHead>
             <TableHead>房间类型</TableHead>
@@ -101,6 +106,7 @@ export function WinLossTable({ records, loading, onLoadMore, hasMore }: WinLossT
           {records.map((record) => (
             <TableRow key={record.id}>
               <TableCell>{record.timestamp}</TableCell>
+              <TableCell>{record.merchantId}</TableCell>
               <TableCell>{record.username}</TableCell>
               <TableCell>{record.gameType}</TableCell>
               <TableCell>{record.roomType}</TableCell>

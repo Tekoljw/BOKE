@@ -1,7 +1,7 @@
-
 export interface WinLossRecord {
   id: string;
   timestamp: string;
+  merchantId: string; // Added merchantId
   username: string;
   gameType: string;
   roomType: string;
@@ -28,6 +28,7 @@ export type TransactionType = 'deposit' | 'withdraw';
 export interface TransactionRecord {
   id: string;
   timestamp: string;
+  merchantId: string; // Added merchantId
   username: string;
   type: TransactionType;
   beforeAmount: number;
@@ -36,4 +37,3 @@ export interface TransactionRecord {
   platformBalanceChange: number;
   merchantBalanceChange: number;
 }
-

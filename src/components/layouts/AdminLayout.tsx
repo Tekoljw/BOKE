@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
@@ -49,10 +50,10 @@ const AdminLayout: React.FC = () => {
     { path: '/admin/bonus-management', label: '商户赠分管理', icon: <Gift /> },
     { path: '/admin/commission', label: '代理佣金订单', icon: <FileText /> },
     { path: '/admin/api', label: 'API管理', icon: <Code /> },
-    { path: '/admin/self-games', label: '自研游戏管理', icon: <Gamepad2 /> },
+    { path: '/admin/demo-games', label: '游戏Demo管理', icon: <Gamepad2 /> },
     { path: '/admin/game-customization', label: '自研游戏定制', icon: <Paintbrush /> },
-    { path: '/admin/vendors', label: '线路厂商管理', icon: <Layers /> },
-    { path: '/admin/games', label: '游戏管理', icon: <Shield /> },
+    { path: '/admin/vendor-intro', label: '厂商介绍配置', icon: <Layers /> },
+    { path: '/admin/permissions', label: '账号权限管理', icon: <Shield /> },
   ];
 
   const handleLogout = () => {

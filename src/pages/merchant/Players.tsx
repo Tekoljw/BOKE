@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Calendar, Search, User, Ban, ChevronDown, Clock } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -90,6 +91,70 @@ const MerchantPlayers: React.FC = () => {
     setSelectedAction(null);
   };
 
+  // Mobile player card component
+  const PlayerCard = ({ player }: { player: Player }) => (
+    <Card className="mb-4">
+      <CardHeader className="pb-2">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center">
+            <User className="mr-2 h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-base">{player.id}</CardTitle>
+          </div>
+          <Button
+            variant={player.isBlacklisted ? "default" : "outline"}
+            size="sm"
+            onClick={() => handleBlacklistAction(player.id, player.isBlacklisted ? 'remove' : 'add')}
+            className={player.isBlacklisted ? "bg-red-500 hover:bg-red-600" : ""}
+          >
+            <Ban className="mr-1 h-4 w-4" />
+            {player.isBlacklisted ? "解除黑名单" : "设置黑名单"}
+          </Button>
+        </div>
+      </CardHeader>
+      <CardContent className="pb-2 pt-0">
+        <div className="grid grid-cols-2 gap-2 text-sm">
+          <div>
+            <div className="text-muted-foreground">分数余额</div>
+            <div>{player.balance.toLocaleString()}</div>
+          </div>
+          <div>
+            <div className="text-muted-foreground">累积上分</div>
+            <div>{player.totalDeposit.toLocaleString()}</div>
+          </div>
+          <div>
+            <div className="text-muted-foreground">累积下分</div>
+            <div>{player.totalWithdraw.toLocaleString()}</div>
+          </div>
+          <div>
+            <div className="text-muted-foreground">总输分</div>
+            <div>{player.totalLoss.toLocaleString()}</div>
+          </div>
+          <div>
+            <div className="text-muted-foreground">总赢分</div>
+            <div>{player.totalWin.toLocaleString()}</div>
+          </div>
+          <div>
+            <div className="text-muted-foreground">玩家盈利</div>
+            <div className={player.netProfit >= 0 ? "text-green-500" : "text-red-500"}>
+              {player.netProfit.toLocaleString()}
+            </div>
+          </div>
+          <div>
+            <div className="text-muted-foreground">最后游戏</div>
+            <div>{format(player.lastGameTime, "MM-dd HH:mm")}</div>
+          </div>
+          <div>
+            <div className="text-muted-foreground">游戏时长</div>
+            <div className="flex items-center gap-1">
+              <Clock className="h-4 w-4 text-muted-foreground" />
+              {Math.floor(player.totalGameTime / 60)}小时
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+
   return (
     <div className="space-y-6">
       <div>
@@ -170,75 +235,89 @@ const MerchantPlayers: React.FC = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[180px]">玩家ID</TableHead>
-                  <TableHead className="text-right">分数余额</TableHead>
-                  <TableHead className="text-right">累积上分</TableHead>
-                  <TableHead className="text-right">累积下分</TableHead>
-                  <TableHead className="text-right">总输分</TableHead>
-                  <TableHead className="text-right">总赢分</TableHead>
-                  <TableHead className="text-right">玩家盈利</TableHead>
-                  <TableHead className="text-right">最后游戏</TableHead>
-                  <TableHead className="text-right">游戏时长</TableHead>
-                  <TableHead className="text-center">操作</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {displayedPlayers.length > 0 ? (
-                  displayedPlayers.map((player) => (
-                    <TableRow key={player.id}>
-                      <TableCell>
-                        <div className="flex items-center">
-                          <User className="mr-2 h-4 w-4 text-muted-foreground" />
-                          {player.id}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right">{player.balance.toLocaleString()}</TableCell>
-                      <TableCell className="text-right">{player.totalDeposit.toLocaleString()}</TableCell>
-                      <TableCell className="text-right">{player.totalWithdraw.toLocaleString()}</TableCell>
-                      <TableCell className="text-right">{player.totalLoss.toLocaleString()}</TableCell>
-                      <TableCell className="text-right">{player.totalWin.toLocaleString()}</TableCell>
-                      <TableCell className={cn(
-                        "text-right font-medium",
-                        player.netProfit >= 0 ? "text-green-500" : "text-red-500"
-                      )}>
-                        {player.netProfit.toLocaleString()}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {format(player.lastGameTime, "MM-dd HH:mm")}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex items-center justify-end gap-1">
-                          <Clock className="h-4 w-4 text-muted-foreground" />
-                          {Math.floor(player.totalGameTime / 60)}小时
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-center">
-                        <Button
-                          variant={player.isBlacklisted ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => handleBlacklistAction(player.id, player.isBlacklisted ? 'remove' : 'add')}
-                          className={player.isBlacklisted ? "bg-red-500 hover:bg-red-600" : ""}
-                        >
-                          <Ban className="mr-1 h-4 w-4" />
-                          {player.isBlacklisted ? "解除黑名单" : "设置黑名单"}
-                        </Button>
+          {isMobile ? (
+            <div className="px-4 pb-4">
+              {displayedPlayers.length > 0 ? (
+                displayedPlayers.map((player) => (
+                  <PlayerCard key={player.id} player={player} />
+                ))
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  未找到玩家记录
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[180px]">玩家ID</TableHead>
+                    <TableHead className="text-right">分数余额</TableHead>
+                    <TableHead className="text-right">累积上分</TableHead>
+                    <TableHead className="text-right">累积下分</TableHead>
+                    <TableHead className="text-right">总输分</TableHead>
+                    <TableHead className="text-right">总赢分</TableHead>
+                    <TableHead className="text-right">玩家盈利</TableHead>
+                    <TableHead className="text-right">最后游戏</TableHead>
+                    <TableHead className="text-right">游戏时长</TableHead>
+                    <TableHead className="text-center">操作</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {displayedPlayers.length > 0 ? (
+                    displayedPlayers.map((player) => (
+                      <TableRow key={player.id}>
+                        <TableCell>
+                          <div className="flex items-center">
+                            <User className="mr-2 h-4 w-4 text-muted-foreground" />
+                            {player.id}
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-right">{player.balance.toLocaleString()}</TableCell>
+                        <TableCell className="text-right">{player.totalDeposit.toLocaleString()}</TableCell>
+                        <TableCell className="text-right">{player.totalWithdraw.toLocaleString()}</TableCell>
+                        <TableCell className="text-right">{player.totalLoss.toLocaleString()}</TableCell>
+                        <TableCell className="text-right">{player.totalWin.toLocaleString()}</TableCell>
+                        <TableCell className={cn(
+                          "text-right font-medium",
+                          player.netProfit >= 0 ? "text-green-500" : "text-red-500"
+                        )}>
+                          {player.netProfit.toLocaleString()}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {format(player.lastGameTime, "MM-dd HH:mm")}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex items-center justify-end gap-1">
+                            <Clock className="h-4 w-4 text-muted-foreground" />
+                            {Math.floor(player.totalGameTime / 60)}小时
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-center">
+                          <Button
+                            variant={player.isBlacklisted ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => handleBlacklistAction(player.id, player.isBlacklisted ? 'remove' : 'add')}
+                            className={player.isBlacklisted ? "bg-red-500 hover:bg-red-600" : ""}
+                          >
+                            <Ban className="mr-1 h-4 w-4" />
+                            {player.isBlacklisted ? "解除黑名单" : "设置黑名单"}
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={10} className="h-24 text-center">
+                        未找到玩家记录
                       </TableCell>
                     </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={10} className="h-24 text-center">
-                      未找到玩家记录
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </div>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          )}
         </CardContent>
         {filteredPlayers.length > displayCount && (
           <CardFooter className="flex justify-center border-t pt-6">
@@ -246,7 +325,7 @@ const MerchantPlayers: React.FC = () => {
               variant="outline" 
               onClick={handleLoadMore}
               disabled={loadingMore}
-              className="w-[200px]"
+              className="w-full md:w-[200px]"
             >
               {loadingMore ? (
                 <>

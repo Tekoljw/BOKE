@@ -79,6 +79,11 @@ const GameCatalog: React.FC = () => {
     }, 200);
   };
 
+  // Handle back button click - improved for faster response
+  const handleBackClick = () => {
+    navigate(-1);
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
@@ -115,7 +120,7 @@ const GameCatalog: React.FC = () => {
           <Button 
             variant="ghost"
             size="icon"
-            onClick={() => navigate(-1)}
+            onClick={handleBackClick}
             className="p-2"
           >
             <ArrowLeft className="h-5 w-5" />

@@ -3,6 +3,11 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Globe } from "lucide-react";
+import { 
+  Card, 
+  CardContent, 
+  CardFooter 
+} from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { 
   Dialog, 
@@ -12,71 +17,49 @@ import {
   DialogDescription
 } from "@/components/ui/dialog";
 
+// Generate vendor icons
+const vendorIcons = ['🎮', '🎯', '🎲', '♠️', '🃏', '🎪', '🎨', '🎭', '🎰', '🧩', '🎪', '📱', '🖥️', '🚀', '🌟', '🔮', '💎', '🏆', '🎁', '🎨'];
+
+// Generate random manufacturer data
+const generateManufacturers = (categoryId: string, count: number, startIndex: number) => {
+  return Array.from({ length: count }, (_, i) => ({
+    id: `${categoryId}-${startIndex + i}`,
+    name: `厂商 ${startIndex + i}`,
+    icon: vendorIcons[Math.floor(Math.random() * vendorIcons.length)],
+    description: `这是游戏厂商 ${startIndex + i} 的简短描述`,
+    fullDescription: `厂商 ${startIndex + i} 是一家专业的游戏开发公司，成立于${2000 + Math.floor(Math.random() * 20)}年。
+      公司专注于提供高质量的${categoryId === 'live' ? '真人' : categoryId === 'slots' ? '电子' : '棋牌'}游戏，拥有多年的行业经验和专业技术团队。
+      厂商 ${startIndex + i} 的游戏以高清画质、流畅体验和创新玩法著称，深受玩家喜爱。`,
+    games: Array.from({ length: 12 }, (_, j) => ({
+      id: `${categoryId}-${startIndex + i}-${j}`,
+      name: `游戏 ${j + 1}`,
+      type: categoryId === 'live' ? '真人游戏' : categoryId === 'slots' ? '电子游戏' : '棋牌游戏',
+      icon: vendorIcons[Math.floor(Math.random() * vendorIcons.length)]
+    }))
+  }));
+};
+
 const ManufacturerDetail: React.FC = () => {
   const navigate = useNavigate();
   const [language, setLanguage] = useState<'cn' | 'en'>('cn');
   const [contactDialogOpen, setContactDialogOpen] = useState(false);
 
-  // Mock data for manufacturer categories and details
+  // Generate 20 manufacturers across categories
   const manufacturerCategories = [
     {
       id: 'live',
       name: '真人厂商',
-      manufacturers: [
-        {
-          id: 'evo',
-          name: 'Evolution',
-          icon: '🎲',
-          description: '全球最大的线上真人游戏供应商',
-          fullDescription: `Evolution Gaming 是全球最大的线上真人游戏供应商，成立于2006年。
-            公司专注于提供高质量的真人娱乐场游戏，包括百家乐、轮盘、二十一点等多种游戏。
-            Evolution的游戏以其高清视频质量、专业荷官和创新gameplay而闻名于业界。`,
-          games: [
-            { id: '1', name: '闪电百家乐', type: '真人游戏' },
-            { id: '2', name: '无限二十一点', type: '真人游戏' },
-            { id: '3', name: '飞速轮盘', type: '真人游戏' },
-          ]
-        },
-        {
-          id: 'ag',
-          name: 'AG Gaming',
-          icon: '🎰',
-          description: '亚洲顶级真人娱乐场供应商',
-          fullDescription: 'AG Gaming提供优质的真人娱乐场体验...',
-          games: [
-            { id: '4', name: 'AG百家乐', type: '真人游戏' },
-            { id: '5', name: 'AG龙虎', type: '真人游戏' },
-          ]
-        }
-      ]
+      manufacturers: generateManufacturers('live', 7, 1)
     },
     {
       id: 'slots',
       name: '电子游戏',
-      manufacturers: [
-        {
-          id: 'pg',
-          name: 'PG Soft',
-          icon: '🎮',
-          description: '创新型电子游戏开发商',
-          fullDescription: 'PG Soft专注于移动优先的游戏开发...',
-          games: [
-            { id: '6', name: '幸运财神', type: '电子游戏' },
-            { id: '7', name: '玛雅财富', type: '电子游戏' },
-          ]
-        },
-        {
-          id: 'cq9',
-          name: 'CQ9 Gaming',
-          icon: '🎯',
-          description: '专业电子游戏开发商',
-          fullDescription: 'CQ9 Gaming提供丰富多样的电子游戏...',
-          games: [
-            { id: '8', name: '龙王捕鱼', type: '电子游戏' },
-            { id: '9', name: '战神黄忠', type: '电子游戏' },
-          ]
-        }
-      ]
+      manufacturers: generateManufacturers('slots', 7, 8)
+    },
+    {
+      id: 'poker',
+      name: '棋牌游戏',
+      manufacturers: generateManufacturers('poker', 6, 15)
     }
   ];
 
@@ -86,6 +69,11 @@ const ManufacturerDetail: React.FC = () => {
     { name: 'Lion', title: '商务总监', contact: '@Lion' },
     { name: 'Hersinber', title: '商务总监', contact: '@Hersinber' }
   ];
+
+  // Handle back button click - improved for faster response
+  const handleBackClick = () => {
+    navigate(-1);
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -124,7 +112,7 @@ const ManufacturerDetail: React.FC = () => {
           <Button 
             variant="ghost"
             size="icon"
-            onClick={() => navigate(-1)}
+            onClick={handleBackClick}
             className="p-2"
           >
             <ArrowLeft className="h-5 w-5" />
@@ -133,7 +121,7 @@ const ManufacturerDetail: React.FC = () => {
         </div>
 
         <Tabs defaultValue="live" className="w-full">
-          <TabsList className="flex flex-wrap gap-2 mb-6">
+          <TabsList className="flex flex-wrap gap-2 mb-6 justify-start w-full">
             {manufacturerCategories.map((category) => (
               <TabsTrigger key={category.id} value={category.id}>
                 {category.name}
@@ -144,7 +132,7 @@ const ManufacturerDetail: React.FC = () => {
           {manufacturerCategories.map((category) => (
             <TabsContent key={category.id} value={category.id}>
               <Tabs defaultValue={category.manufacturers[0]?.id} className="w-full">
-                <TabsList className="flex flex-wrap gap-2 mb-6">
+                <TabsList className="flex flex-wrap gap-2 mb-6 justify-start w-full overflow-x-auto">
                   {category.manufacturers.map((manufacturer) => (
                     <TabsTrigger key={manufacturer.id} value={manufacturer.id}
                       className="flex items-center gap-2">
@@ -157,7 +145,7 @@ const ManufacturerDetail: React.FC = () => {
                 {category.manufacturers.map((manufacturer) => (
                   <TabsContent key={manufacturer.id} value={manufacturer.id}
                     className="bg-white rounded-lg shadow p-6">
-                    <div className="space-y-8">
+                    <div className="space-y-6">
                       <div>
                         <h2 className="text-2xl font-bold mb-2">{manufacturer.name}</h2>
                         <p className="text-gray-600 mb-4">{manufacturer.description}</p>
@@ -168,12 +156,20 @@ const ManufacturerDetail: React.FC = () => {
 
                       <div>
                         <h3 className="text-xl font-semibold mb-4">游戏列表</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3">
                           {manufacturer.games.map((game) => (
-                            <div key={game.id} className="bg-gray-50 rounded-lg p-4">
-                              <h4 className="font-semibold">{game.name}</h4>
-                              <p className="text-sm text-gray-500">{game.type}</p>
-                            </div>
+                            <Card key={game.id} className="overflow-hidden">
+                              <div className="bg-gray-100 p-3 flex items-center justify-center aspect-square">
+                                <span className="text-2xl">{game.icon}</span>
+                              </div>
+                              <CardContent className="p-2">
+                                <h4 className="font-medium text-sm truncate">{game.name}</h4>
+                                <p className="text-xs text-gray-500 truncate">{game.type}</p>
+                              </CardContent>
+                              <CardFooter className="p-2 pt-0">
+                                <Button size="sm" className="w-full text-xs py-1">玩游戏</Button>
+                              </CardFooter>
+                            </Card>
                           ))}
                         </div>
                       </div>

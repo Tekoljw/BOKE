@@ -12,7 +12,7 @@ export const ImportantNotices = () => {
           手动汇率已超过24小时未更新
         </AlertDescription>
       </Alert>
-      <Alert variant="warning">
+      <Alert variant="default">
         <Bell className="h-4 w-4" />
         <AlertTitle>重要提示</AlertTitle>
         <AlertDescription>

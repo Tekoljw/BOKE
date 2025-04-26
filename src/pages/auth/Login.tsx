@@ -48,9 +48,10 @@ const Login: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <img src="/lovable-uploads/5e182d7b-57df-44a9-8656-4c185e0915f7.png" 
-               alt="波克棋牌" 
-               className="mx-auto h-16 w-16"
+          <img 
+            src="/lovable-uploads/530e81e8-804d-48ef-8b67-b896a5b21c01.png" 
+            alt="波克棋牌" 
+            className="mx-auto h-16 w-16 rounded-lg"
           />
           <h1 className="mt-4 text-3xl font-bold text-gray-900">波克棋牌</h1>
           <p className="mt-2 text-gray-600">请登录您的账号</p>

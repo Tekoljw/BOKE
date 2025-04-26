@@ -42,7 +42,7 @@ const AdminLayout: React.FC = () => {
         <div className="flex items-center justify-between p-4">
           <Link to="/" className={`flex items-center gap-2 ${!sidebarOpen && 'hidden'}`}>
             <img 
-              src="/lovable-uploads/135f811b-3eaa-41a9-ad61-5cd5143e0d4d.png" 
+              src="/lovable-uploads/530e81e8-804d-48ef-8b67-b896a5b21c01.png" 
               alt="波克棋牌" 
               className="h-8 w-auto rounded-lg"
             />

@@ -26,7 +26,7 @@ const LandingPage: React.FC = () => {
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center gap-3">
             <img 
-              src="/lovable-uploads/135f811b-3eaa-41a9-ad61-5cd5143e0d4d.png" 
+              src="/lovable-uploads/530e81e8-804d-48ef-8b67-b896a5b21c01.png" 
               alt="波克棋牌" 
               className="h-8 w-auto rounded-lg"
             />
@@ -36,28 +36,14 @@ const LandingPage: React.FC = () => {
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="text-white hover:bg-primary/80">
-                    <Globe className="mr-2 h-4 w-4" />
-                    {language === 'cn' ? '中文' : 'English'}
-                  </NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <div className="p-2 w-32">
-                      <Button
-                        variant="ghost"
-                        className="w-full justify-start"
-                        onClick={() => setLanguage('cn')}
-                      >
-                        中文
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        className="w-full justify-start"
-                        onClick={() => setLanguage('en')}
-                      >
-                        English
-                      </Button>
-                    </div>
-                  </NavigationMenuContent>
+                  <Button 
+                    variant="outline" 
+                    className="bg-white text-primary flex items-center space-x-2"
+                    onClick={() => setLanguage(language === 'cn' ? 'en' : 'cn')}
+                  >
+                    <Globe className="h-4 w-4" />
+                    <span>{language === 'cn' ? '中文' : 'English'}</span>
+                  </Button>
                 </NavigationMenuItem>
               </NavigationMenuList>
             </NavigationMenu>
@@ -96,7 +82,7 @@ const LandingPage: React.FC = () => {
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">热门游戏厂商</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
             {mockVendors.map((vendor) => (
               <div key={vendor.id} className="bg-white rounded-lg shadow-md overflow-hidden">
                 <div className="h-40 bg-gray-200 flex items-center justify-center">

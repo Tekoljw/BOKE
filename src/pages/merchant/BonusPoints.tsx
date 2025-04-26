@@ -73,57 +73,60 @@ const MerchantBonusPoints: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold mb-2">赠分领取</h1>
-        <p className="text-muted-foreground">查看和领取各个平台的赠分奖励</p>
+    <div className="space-y-4">
+      <div className="mb-2">
+        <h1 className="text-2xl font-bold">赠分领取</h1>
+        <p className="text-sm text-muted-foreground">查看和领取各个平台的赠分奖励</p>
       </div>
 
-      <div className="grid gap-6">
+      <div className="grid gap-2">
         {vendorBonuses.map((vendor) => (
-          <Card key={vendor.vendorId} className="p-6">
-            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-              <Award className="h-5 w-5 text-brand-accent" />
+          <Card key={vendor.vendorId} className="p-3">
+            <h2 className="text-base font-medium mb-2 flex items-center gap-1.5">
+              <Award className="h-4 w-4 text-brand-accent" />
               {vendor.vendorName}
             </h2>
             
-            <div className="space-y-4">
+            <div className="space-y-2">
               {vendor.bonusTypes.map((bonus) => (
-                <div key={bonus.id} className="border rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-2">
-                      <Gift className="h-5 w-5 text-brand-DEFAULT" />
-                      <h3 className="text-lg font-medium">{bonus.title}</h3>
+                <div key={bonus.id} className="border rounded-md p-2">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <Gift className="h-4 w-4 shrink-0 text-brand-DEFAULT" />
+                      <h3 className="text-sm font-medium truncate">{bonus.title}</h3>
                     </div>
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2 shrink-0">
                       <div className="text-right">
-                        <div className="text-sm text-muted-foreground">可领取金额</div>
-                        <div className="text-xl font-bold text-brand-accent">
+                        <div className="text-xs text-muted-foreground">可领取金额</div>
+                        <div className="text-base font-bold text-brand-accent">
                           {bonus.availableAmount}
                         </div>
                       </div>
                       <Button 
+                        size="sm"
                         onClick={() => handleClaimBonus(vendor.vendorName, bonus.title)}
                         disabled={bonus.availableAmount <= 0}
                       >
-                        立即领取
+                        领取
                       </Button>
                     </div>
                   </div>
 
                   {bonus.rules && (
-                    <Accordion type="single" collapsible>
-                      <AccordionItem value="rules">
-                        <AccordionTrigger className="flex items-center gap-2">
-                          <Info className="h-4 w-4" />
-                          查看规则
+                    <Accordion type="single" collapsible className="pt-1">
+                      <AccordionItem value="rules" className="border-0">
+                        <AccordionTrigger className="py-1 hover:no-underline">
+                          <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                            <Info className="h-3 w-3" />
+                            查看规则
+                          </span>
                         </AccordionTrigger>
                         <AccordionContent>
-                          <div className="space-y-2 pt-2">
+                          <div className="space-y-1 text-xs">
                             {bonus.rules.map((rule, index) => (
                               <div 
                                 key={index}
-                                className="flex items-center justify-between py-2 border-b last:border-0"
+                                className="flex items-center justify-between py-1 border-b last:border-0"
                               >
                                 <span>本月完成上分 {rule.depositAmount}U</span>
                                 <span className="font-medium text-brand-accent">

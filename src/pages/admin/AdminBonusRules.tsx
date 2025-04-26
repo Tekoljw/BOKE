@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
+import { Trash2, Loader } from 'lucide-react';
 
 // Mock vendors
 const mockVendors = [
@@ -43,6 +44,7 @@ const AdminBonusRules: React.FC = () => {
   const [isRulesDialogOpen, setIsRulesDialogOpen] = useState(false);
   const [selectedVendor, setSelectedVendor] = useState<string>('');
   const [vendorRules, setVendorRules] = useState<{depositAmount: number, bonusAmount: number}[]>([]);
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleOpenRulesDialog = (vendorId: string) => {
     setSelectedVendor(vendorId);
@@ -50,12 +52,23 @@ const AdminBonusRules: React.FC = () => {
     setIsRulesDialogOpen(true);
   };
 
-  const handleSaveRules = () => {
+  const handleSaveRules = async () => {
+    setIsSaving(true);
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 800));
+    
     toast({
       title: "赠分规则已保存",
       description: `已成功保存 ${mockVendors.find(v => v.id === selectedVendor)?.name} 的自动赠分规则`,
     });
+    setIsSaving(false);
     setIsRulesDialogOpen(false);
+  };
+
+  const handleDeleteRule = (index: number) => {
+    const updatedRules = [...vendorRules];
+    updatedRules.splice(index, 1);
+    setVendorRules(updatedRules);
   };
 
   return (
@@ -106,7 +119,7 @@ const AdminBonusRules: React.FC = () => {
           
           <div className="space-y-4">
             {vendorRules.map((rule, index) => (
-              <div key={index} className="flex items-end gap-4">
+              <div key={index} className="flex items-end gap-2">
                 <div className="grid w-full items-center gap-1.5">
                   <label className="text-sm text-muted-foreground">上分金额 (U)</label>
                   <Input 
@@ -131,6 +144,14 @@ const AdminBonusRules: React.FC = () => {
                     }}
                   />
                 </div>
+                <Button 
+                  variant="ghost" 
+                  size="icon"
+                  className="mt-auto text-red-500 hover:text-red-700 hover:bg-red-50"
+                  onClick={() => handleDeleteRule(index)}
+                >
+                  <Trash2 size={18} />
+                </Button>
               </div>
             ))}
             
@@ -143,10 +164,17 @@ const AdminBonusRules: React.FC = () => {
             </Button>
             
             <DialogFooter>
-              <Button variant="outline" onClick={() => setIsRulesDialogOpen(false)}>
+              <Button variant="outline" onClick={() => setIsRulesDialogOpen(false)} disabled={isSaving}>
                 取消
               </Button>
-              <Button onClick={handleSaveRules}>保存规则</Button>
+              <Button onClick={handleSaveRules} disabled={isSaving}>
+                {isSaving ? (
+                  <>
+                    <Loader className="mr-2 h-4 w-4 animate-spin" />
+                    保存中...
+                  </>
+                ) : "保存规则"}
+              </Button>
             </DialogFooter>
           </div>
         </DialogContent>

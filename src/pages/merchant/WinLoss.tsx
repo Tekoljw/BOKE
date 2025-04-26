@@ -63,7 +63,7 @@ const MerchantWinLoss = () => {
       <Card>
         <CardContent className="p-6">
           <Tabs defaultValue={selectedVendor} className="space-y-6">
-            <TabsList className="w-full h-auto flex-wrap">
+            <TabsList className="w-full justify-start h-auto flex-wrap">
               {mockVendors.map((vendor) => (
                 <TabsTrigger
                   key={vendor.id}
@@ -79,7 +79,7 @@ const MerchantWinLoss = () => {
               <TabsContent key={vendor.id} value={vendor.id}>
                 <div className="space-y-6">
                   <Tabs defaultValue={selectedGame}>
-                    <TabsList className="w-full h-auto flex-wrap">
+                    <TabsList className="w-full justify-start h-auto flex-wrap">
                       {mockGames
                         .filter((game) => game.vendorId === vendor.id)
                         .map((game) => (

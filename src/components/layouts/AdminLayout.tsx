@@ -44,7 +44,7 @@ const AdminLayout: React.FC = () => {
             <img 
               src="/lovable-uploads/530e81e8-804d-48ef-8b67-b896a5b21c01.png" 
               alt="波克棋牌" 
-              className="h-8 w-auto rounded-lg"
+              className="h-8 w-auto"
             />
             <span className="font-bold text-xl">波克棋牌</span>
           </Link>

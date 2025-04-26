@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -12,7 +11,6 @@ import NotFound from "./pages/NotFound";
 
 // Auth Pages
 import Login from "./pages/auth/Login";
-import Register from "./pages/auth/Register";
 
 // Layout Components
 import AdminLayout from "./components/layouts/AdminLayout";
@@ -43,6 +41,7 @@ import MerchantGameRecords from "./pages/merchant/GameRecords";
 import MerchantPlayers from "./pages/merchant/Players";
 import MerchantBlacklist from "./pages/merchant/Blacklist";
 import MerchantControl from "./pages/merchant/Control";
+import ManufacturerDetail from "./pages/ManufacturerDetail";
 
 const queryClient = new QueryClient();
 
@@ -56,10 +55,10 @@ const App = () => (
           {/* Public Routes */}
           <Route path="/" element={<LandingPage />} />
           <Route path="/games/:vendorId?" element={<GameCatalog />} />
+          <Route path="/manufacturer/:id" element={<ManufacturerDetail />} />
           
           {/* Auth Routes */}
           <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
           
           {/* Admin Routes */}
           <Route path="/admin" element={<AdminLayout />}>

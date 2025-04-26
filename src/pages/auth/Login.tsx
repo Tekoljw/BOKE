@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -51,7 +50,7 @@ const Login: React.FC = () => {
           <img 
             src="/lovable-uploads/530e81e8-804d-48ef-8b67-b896a5b21c01.png" 
             alt="波克棋牌" 
-            className="mx-auto h-16 w-16 rounded-lg"
+            className="mx-auto h-16 w-16"
           />
           <h1 className="mt-4 text-3xl font-bold text-gray-900">波克棋牌</h1>
           <p className="mt-2 text-gray-600">请登录您的账号</p>

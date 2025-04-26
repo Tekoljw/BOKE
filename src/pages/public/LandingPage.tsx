@@ -12,42 +12,55 @@ import {
 
 const LandingPage: React.FC = () => {
   const [language, setLanguage] = useState<'cn' | 'en'>('cn');
+  const [activeTab, setActiveTab] = useState('all');
 
-  const mockVendors = new Array(12).fill(null).map((_, index) => ({
-    id: String(index + 1),
-    name: `游戏厂商 ${index + 1}`,
-    image: '/placeholder.svg'
-  }));
+  const mockVendors = [
+    {
+      id: '1',
+      name: 'Evolution Gaming',
+      category: 'live',
+      description: '全球最大的线上真人游戏供应商',
+      image: '/placeholder.svg'
+    },
+    {
+      id: '2',
+      name: 'Pragmatic Play',
+      category: 'slots',
+      description: '顶级老虎机游戏开发商',
+      image: '/placeholder.svg'
+    },
+    // Add more vendors here
+  ];
+
+  const categories = [
+    { id: 'all', name: '全部' },
+    { id: 'live', name: '真人游戏' },
+    { id: 'slots', name: '电子游戏' },
+    { id: 'poker', name: '棋牌游戏' },
+  ];
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Header */}
       <header className="bg-primary text-white p-4 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center gap-3">
             <img 
               src="/lovable-uploads/530e81e8-804d-48ef-8b67-b896a5b21c01.png" 
               alt="波克棋牌" 
-              className="h-8 w-auto rounded-lg"
+              className="h-8 w-auto"
             />
             <span className="text-2xl font-bold">波克棋牌</span>
           </div>
           <div className="flex gap-4 items-center">
-            <NavigationMenu>
-              <NavigationMenuList>
-                <NavigationMenuItem>
-                  <Button 
-                    variant="outline" 
-                    className="bg-white text-primary flex items-center space-x-2"
-                    onClick={() => setLanguage(language === 'cn' ? 'en' : 'cn')}
-                  >
-                    <Globe className="h-4 w-4" />
-                    <span>{language === 'cn' ? '中文' : 'English'}</span>
-                  </Button>
-                </NavigationMenuItem>
-              </NavigationMenuList>
-            </NavigationMenu>
-            <Link to="/login">
+            <Button 
+              variant="outline" 
+              className="bg-sidebar text-white hover:bg-sidebar-accent flex items-center space-x-2"
+              onClick={() => setLanguage(language === 'cn' ? 'en' : 'cn')}
+            >
+              <Globe className="h-4 w-4" />
+              <span>{language === 'cn' ? '中文' : 'English'}</span>
+            </Button>
+            <Link to="/games">
               <Button variant="outline" className="bg-white text-primary hover:bg-gray-100">
                 登录
               </Button>
@@ -55,7 +68,7 @@ const LandingPage: React.FC = () => {
           </div>
         </div>
       </header>
-      
+
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-primary to-primary/70 text-white py-20">
         <div className="container mx-auto text-center px-4">
@@ -78,26 +91,48 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Game Vendors */}
+      {/* Manufacturer Information */}
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">热门游戏厂商</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
-            {mockVendors.map((vendor) => (
-              <div key={vendor.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-                <div className="h-40 bg-gray-200 flex items-center justify-center">
-                  <img src={vendor.image} alt={vendor.name} className="w-20 h-20" />
-                </div>
-                <div className="p-4 text-center">
-                  <h3 className="text-lg font-semibold">{vendor.name}</h3>
-                </div>
-              </div>
-            ))}
+          <h2 className="text-3xl font-bold text-center mb-12">厂商信息</h2>
+          <div className="flex justify-center mb-8">
+            <div className="inline-flex rounded-lg bg-white shadow p-1">
+              {categories.map((category) => (
+                <button
+                  key={category.id}
+                  className={`px-4 py-2 rounded-lg transition-colors ${
+                    activeTab === category.id
+                      ? 'bg-primary text-white'
+                      : 'text-gray-600 hover:bg-gray-100'
+                  }`}
+                  onClick={() => setActiveTab(category.id)}
+                >
+                  {category.name}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {mockVendors
+              .filter(vendor => activeTab === 'all' || vendor.category === activeTab)
+              .map((vendor) => (
+                <Link to={`/manufacturer/${vendor.id}`} key={vendor.id}>
+                  <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105">
+                    <div className="h-40 bg-gray-200 flex items-center justify-center">
+                      <img src={vendor.image} alt={vendor.name} className="w-20 h-20" />
+                    </div>
+                    <div className="p-4">
+                      <h3 className="text-lg font-semibold mb-2">{vendor.name}</h3>
+                      <p className="text-gray-600 text-sm">{vendor.description}</p>
+                    </div>
+                  </div>
+                </Link>
+              ))}
           </div>
         </div>
       </section>
-      
-      {/* Features */}
+
+      {/* Features Section */}
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">平台优势</h2>
@@ -132,46 +167,37 @@ const LandingPage: React.FC = () => {
           </div>
         </div>
       </section>
-      
-      {/* Game Categories */}
+
+      {/* Contact Section */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">热门游戏分类</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {['棋牌游戏', '街机游戏', '捕鱼游戏', '真人游戏'].map((category, index) => (
-              <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden">
-                <div className="h-40 bg-gray-300"></div>
-                <div className="p-4 text-center">
-                  <h3 className="text-lg font-semibold">{category}</h3>
-                </div>
-              </div>
-            ))}
+          <h2 className="text-3xl font-bold text-center mb-12">联系我们</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            <div className="bg-white p-6 rounded-lg shadow-md text-center">
+              <h3 className="text-xl font-bold mb-4">商务总监 Toney</h3>
+              <p className="text-gray-600 flex items-center justify-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                @Toney
+              </p>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-md text-center">
+              <h3 className="text-xl font-bold mb-4">商务总监 Lion</h3>
+              <p className="text-gray-600 flex items-center justify-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                @Lion
+              </p>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-md text-center">
+              <h3 className="text-xl font-bold mb-4">商务总监 Hersinber</h3>
+              <p className="text-gray-600 flex items-center justify-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                @Hersinber
+              </p>
+            </div>
           </div>
         </div>
       </section>
-      
-      {/* CTA */}
-      <section className="py-16 bg-secondary/10">
-        <div className="container mx-auto text-center px-4">
-          <h2 className="text-3xl font-bold mb-6">准备开始您的游戏联运之旅？</h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto text-gray-600">
-            加入我们，享受顶级的游戏内容和技术支持
-          </p>
-          <div className="flex gap-4 justify-center">
-            <Link to="/games">
-              <Button className="bg-secondary text-white hover:bg-secondary/80 px-8 py-6 text-lg">
-                游戏Demo
-              </Button>
-            </Link>
-            <Link to="/docs">
-              <Button className="bg-primary text-white hover:bg-primary/80 px-8 py-6 text-lg">
-                API接入文档
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-      
+
       {/* Footer */}
       <footer className="bg-gray-800 text-white py-10">
         <div className="container mx-auto px-4">

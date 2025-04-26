@@ -1,16 +1,22 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+import { 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableHead, 
+  TableHeader, 
+  TableRow 
 } from "@/components/ui/table";
-import { Plus, Loader, Wallet, CreditCard, Gift, GamepadIcon } from "lucide-react";
+import { 
+  Plus, 
+  Loader, 
+  Wallet, 
+  CreditCard, 
+  Gift, 
+  GamepadIcon 
+} from "lucide-react";
 import BalanceCard from '@/components/merchant/BalanceCard';
 import RechargeModal from '@/components/merchant/RechargeModal';
 import type { AccountBalance, VendorBalance, RechargeRecord } from '@/types/credit';

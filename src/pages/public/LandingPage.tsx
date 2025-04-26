@@ -39,6 +39,22 @@ const LandingPage: React.FC = () => {
     { id: 'poker', name: '棋牌游戏' },
   ];
 
+  // Modify the mockGames to include more games for the homepage
+  const mockHotGames = [
+    { id: '1', name: '闪电百家乐', type: '真人游戏', image: '/placeholder.svg' },
+    { id: '2', name: '无限二十一点', type: '真人游戏', image: '/placeholder.svg' },
+    { id: '3', name: '飞速轮盘', type: '真人游戏', image: '/placeholder.svg' },
+    { id: '4', name: '经典炸金花', type: '棋牌游戏', image: '/placeholder.svg' },
+    { id: '5', name: '德州扑克', type: '棋牌游戏', image: '/placeholder.svg' },
+    { id: '6', name: '斗地主', type: '棋牌游戏', image: '/placeholder.svg' },
+    { id: '7', name: '二人麻将', type: '棋牌游戏', image: '/placeholder.svg' },
+    { id: '8', name: '龙虎斗', type: '真人游戏', image: '/placeholder.svg' },
+    { id: '9', name: '三公', type: '棋牌游戏', image: '/placeholder.svg' },
+    { id: '10', name: '抢庄牛牛', type: '棋牌游戏', image: '/placeholder.svg' },
+    { id: '11', name: '超级水果机', type: '电子游戏', image: '/placeholder.svg' },
+    { id: '12', name: '森林宝藏', type: '电子游戏', image: '/placeholder.svg' },
+  ];
+
   return (
     <div className="min-h-screen flex flex-col">
       <header className="bg-primary text-white p-4 shadow-md">
@@ -91,26 +107,43 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
+      {/* Hot Games Section */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-3xl font-bold">热门游戏</h2>
+            <Link to="/games" className="text-primary hover:text-primary/80 flex items-center gap-2">
+              查看更多游戏体验Demo
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {mockHotGames.map((game) => (
+              <Link to={`/games`} key={game.id} className="group">
+                <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105">
+                  <div className="h-40 bg-gray-200 flex items-center justify-center">
+                    <img src={game.image} alt={game.name} className="w-20 h-20" />
+                  </div>
+                  <div className="p-4">
+                    <h3 className="text-lg font-semibold mb-2">{game.name}</h3>
+                    <p className="text-gray-600 text-sm">{game.type}</p>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Manufacturer Information */}
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">厂商信息</h2>
-          <div className="flex justify-center mb-8">
-            <div className="inline-flex rounded-lg bg-white shadow p-1">
-              {categories.map((category) => (
-                <button
-                  key={category.id}
-                  className={`px-4 py-2 rounded-lg transition-colors ${
-                    activeTab === category.id
-                      ? 'bg-primary text-white'
-                      : 'text-gray-600 hover:bg-gray-100'
-                  }`}
-                  onClick={() => setActiveTab(category.id)}
-                >
-                  {category.name}
-                </button>
-              ))}
-            </div>
+          <div className="flex justify-between items-center mb-12">
+            <h2 className="text-3xl font-bold">热门游戏厂商</h2>
+            <Link to="/manufacturer/1" className="text-primary hover:text-primary/80 flex items-center gap-2">
+              查看更多
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {mockVendors
@@ -198,7 +231,7 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Footer */}
+      {/* Footer - Updated contacts */}
       <footer className="bg-gray-800 text-white py-10">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-3 gap-8">
@@ -210,15 +243,26 @@ const LandingPage: React.FC = () => {
             </div>
             <div>
               <h3 className="text-xl font-bold mb-4">联系我们</h3>
-              <p className="text-gray-400">邮箱: contact@example.com</p>
-              <p className="text-gray-400">电话: +1 123 456 7890</p>
+              <div className="space-y-2 text-gray-400">
+                <p className="flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  商务总监 Toney @Toney
+                </p>
+                <p className="flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  商务总监 Lion @Lion
+                </p>
+                <p className="flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  商务总监 Hersinber @Hersinber
+                </p>
+              </div>
             </div>
             <div>
               <h3 className="text-xl font-bold mb-4">快速链接</h3>
               <ul className="space-y-2 text-gray-400">
                 <li><Link to="/games" className="hover:text-white">游戏大厅</Link></li>
                 <li><Link to="/login" className="hover:text-white">登录</Link></li>
-                <li><Link to="/register" className="hover:text-white">注册</Link></li>
               </ul>
             </div>
           </div>

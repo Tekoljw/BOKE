@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 const ManufacturerDetail: React.FC = () => {
   const { id } = useParams();
 
-  // Mock data - in a real app, this would come from an API
+  // Mock data for the manufacturer details
   const manufacturer = {
     id: '1',
     name: 'Evolution Gaming',

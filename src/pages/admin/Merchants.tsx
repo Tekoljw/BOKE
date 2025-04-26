@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,6 +20,7 @@ interface Merchant {
   status: 'active' | 'inactive';
   whitelistedIps: string[];
   createdAt: string;
+  agentId: string;
 }
 
 const mockMerchants: Merchant[] = [
@@ -35,6 +35,7 @@ const mockMerchants: Merchant[] = [
     status: 'active',
     whitelistedIps: ['192.168.1.1', '192.168.1.2'],
     createdAt: '2023-01-15',
+    agentId: '1',
   },
   {
     id: '2',
@@ -47,6 +48,7 @@ const mockMerchants: Merchant[] = [
     status: 'active',
     whitelistedIps: ['192.168.2.1'],
     createdAt: '2023-02-20',
+    agentId: '2',
   },
   {
     id: '3',
@@ -59,6 +61,7 @@ const mockMerchants: Merchant[] = [
     status: 'inactive',
     whitelistedIps: [],
     createdAt: '2023-03-10',
+    agentId: '3',
   },
 ];
 
@@ -81,12 +84,22 @@ const AdminMerchants: React.FC = () => {
   });
   
   const [whitelistIp, setWhitelistIp] = useState('');
+  const [selectedAgent, setSelectedAgent] = useState<string>('all');
 
-  const filteredMerchants = merchants.filter(
-    merchant => 
-      merchant.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-      merchant.username.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Mock agents data for demonstration
+  const agents = [
+    { id: '1', name: '代理商1' },
+    { id: '2', name: '代理商2' },
+    { id: '3', name: '代理商3' },
+    // Add more mock agents as needed...
+  ];
+
+  const filteredMerchants = merchants.filter(merchant => {
+    const matchesSearch = merchant.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      merchant.username.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    return matchesSearch && (selectedAgent === 'all' || merchant.agentId === selectedAgent);
+  });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -115,6 +128,7 @@ const AdminMerchants: React.FC = () => {
       status: 'active',
       whitelistedIps: [],
       createdAt: new Date().toISOString().split('T')[0],
+      agentId: '1',
     };
     
     setMerchants(prev => [...prev, newMerchant]);
@@ -260,11 +274,20 @@ const AdminMerchants: React.FC = () => {
       <Card>
         <CardHeader>
           <CardTitle>商户列表</CardTitle>
-          <CardDescription>
-            平台所有商户账号列表
-          </CardDescription>
+          <CardDescription>平台所有商户账号列表</CardDescription>
         </CardHeader>
         <CardContent>
+          <Tabs defaultValue="all" className="mb-6" onValueChange={(value) => setSelectedAgent(value)}>
+            <TabsList className="w-full flex-wrap h-auto">
+              <TabsTrigger value="all">全部</TabsTrigger>
+              {agents.map((agent) => (
+                <TabsTrigger key={agent.id} value={agent.id}>
+                  {agent.name}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
+
           <Table>
             <TableHeader>
               <TableRow>

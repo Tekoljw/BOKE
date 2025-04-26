@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Search, Plus, ChevronDown } from 'lucide-react';
+import { Search, Plus, ChevronDown, Loader } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -118,6 +118,7 @@ const AdminBonusManagement: React.FC = () => {
   const [isManualBonusOpen, setIsManualBonusOpen] = useState(false);
   const [displayedRecords, setDisplayedRecords] = useState(mockBonusRecords.slice(0, 10));
   const [hasMore, setHasMore] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   
   const form = useForm<ManualBonusFormValues>({
     resolver: zodResolver(manualBonusSchema),
@@ -129,11 +130,15 @@ const AdminBonusManagement: React.FC = () => {
     },
   });
 
-  const handleLoadMore = () => {
+  const handleLoadMore = async () => {
+    setIsLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 800));
+    
     const currentLength = displayedRecords.length;
     const nextRecords = mockBonusRecords.slice(currentLength, currentLength + 10);
     setDisplayedRecords([...displayedRecords, ...nextRecords]);
     setHasMore(currentLength + 10 < mockBonusRecords.length);
+    setIsLoading(false);
   };
 
   const handleManualBonus = (values: ManualBonusFormValues) => {
@@ -251,9 +256,14 @@ const AdminBonusManagement: React.FC = () => {
                   variant="outline"
                   onClick={handleLoadMore}
                   className="w-full max-w-sm"
+                  disabled={isLoading}
                 >
-                  <ChevronDown className="mr-2 h-4 w-4" />
-                  加载更多
+                  {isLoading ? (
+                    <Loader className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <ChevronDown className="mr-2 h-4 w-4" />
+                  )}
+                  {isLoading ? "加载中..." : "加载更多"}
                 </Button>
               </div>
             )}

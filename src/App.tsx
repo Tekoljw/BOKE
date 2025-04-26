@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -34,6 +35,7 @@ import AgentDashboard from "./pages/agent/Dashboard";
 import AgentMerchants from "./pages/agent/Merchants";
 import AgentCommission from "./pages/agent/Commission";
 import AgentSettlements from "./pages/agent/Settlements";
+import CommissionDetails from "./pages/agent/CommissionDetails";
 
 // Merchant Pages
 import MerchantDashboard from "./pages/merchant/Dashboard";

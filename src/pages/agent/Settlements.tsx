@@ -98,7 +98,7 @@ const AgentSettlements: React.FC = () => {
                       <TableCell>{record.balanceAfter.toFixed(2)}</TableCell>
                       <TableCell>
                         <Badge 
-                          variant={record.status === 'success' ? 'success' : 'destructive'}
+                          variant={record.status === 'success' ? 'default' : 'destructive'}
                           className="flex w-20 justify-center items-center gap-1"
                         >
                           {record.status === 'success' ? (

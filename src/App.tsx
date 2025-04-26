@@ -29,6 +29,15 @@ import AdminStatistics from "./pages/admin/Statistics";
 import AdminSystem from "./pages/admin/System";
 import AdminReports from "./pages/admin/Reports";
 import AdminCommission from "./pages/admin/Commission";
+import AdminWinLoss from "./pages/admin/AdminWinLoss";
+import AdminGameLogs from "./pages/admin/AdminGameLogs";
+import AdminTransactions from "./pages/admin/AdminTransactions";
+import AdminRechargeRecords from "./pages/admin/AdminRechargeRecords";
+import AdminBonusManagement from "./pages/admin/AdminBonusManagement";
+import AdminApi from "./pages/admin/AdminApi";
+import AdminSelfGames from "./pages/admin/AdminSelfGames";
+import AdminGameCustomization from "./pages/admin/AdminGameCustomization";
+import AdminVendors from "./pages/admin/AdminVendors";
 
 // Agent Pages
 import AgentDashboard from "./pages/agent/Dashboard";

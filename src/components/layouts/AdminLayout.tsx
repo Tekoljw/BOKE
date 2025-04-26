@@ -67,7 +67,9 @@ const AdminLayout: React.FC = () => {
   };
 
   const handleContactSupport = () => {
-    console.log('Contact support clicked');
+    if (window.$crisp) {
+      window.$crisp.push(['do', 'chat:open']);
+    }
   };
 
   return (
@@ -169,7 +171,7 @@ const AdminLayout: React.FC = () => {
               onClick={handleContactSupport}
             >
               <MessageCircle className="mr-1 h-4 w-4" />
-              <span>联系客服</span>
+              <span>客服</span>
             </Button>
             <UserMenu />
           </div>

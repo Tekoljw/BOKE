@@ -1,8 +1,43 @@
 
-import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from 'react';
+import { Card, CardContent } from "@/components/ui/card";
+import { TransactionFilter } from '@/components/reports/TransactionFilter';
+import { TransactionTable } from '@/components/reports/TransactionTable';
+import { TransactionRecord } from '@/types/report';
 
-const AdminTransactions: React.FC = () => {
+const mockTransactions: TransactionRecord[] = [
+  {
+    id: "T001",
+    timestamp: "2024-04-26 10:30:00",
+    username: "player1",
+    type: "deposit",
+    beforeAmount: 1000,
+    changeAmount: 500,
+    afterAmount: 1500,
+    platformBalanceChange: -500,
+    merchantBalanceChange: 500
+  }
+];
+
+const AdminTransactions = () => {
+  const [loading, setLoading] = useState(false);
+  const [records, setRecords] = useState<TransactionRecord[]>(mockTransactions);
+
+  const handleSearch = (filters: {
+    roundId: string;
+    startDate?: Date;
+    endDate?: Date;
+  }) => {
+    console.log('Search filters:', filters);
+  };
+
+  const handleLoadMore = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -11,16 +46,14 @@ const AdminTransactions: React.FC = () => {
       </div>
       
       <Card>
-        <CardHeader>
-          <CardTitle>上下分记录</CardTitle>
-          <CardDescription>
-            平台上下分交易记录列表
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="py-8 text-center text-muted-foreground">
-            此功能正在开发中...
-          </div>
+        <CardContent className="p-6 space-y-6">
+          <TransactionFilter onSearch={handleSearch} />
+          <TransactionTable
+            records={records}
+            loading={loading}
+            onLoadMore={handleLoadMore}
+            hasMore={true}
+          />
         </CardContent>
       </Card>
     </div>

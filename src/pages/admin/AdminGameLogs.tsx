@@ -1,26 +1,33 @@
 
-import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from 'react';
+import { Card, CardContent } from "@/components/ui/card";
+import { GameLogsFilter } from '@/components/reports/GameLogsFilter';
+import { GameLogsViewer } from '@/components/reports/GameLogsViewer';
 
-const AdminGameLogs: React.FC = () => {
+const AdminGameLogs = () => {
+  const [logs, setLogs] = useState<string>('');
+
+  const handleSearch = (filters: {
+    roundId: string;
+    startDate?: Date;
+    endDate?: Date;
+  }) => {
+    console.log('Search filters:', filters);
+    // Simulated log data
+    setLogs(`Round ${filters.roundId} logs from ${filters.startDate} to ${filters.endDate}`);
+  };
+
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold mb-2">对局日志</h1>
-        <p className="text-muted-foreground">查看所有商户的游戏对局记录</p>
+        <p className="text-muted-foreground">查看游戏对局详细日志记录</p>
       </div>
       
       <Card>
-        <CardHeader>
-          <CardTitle>对局日志</CardTitle>
-          <CardDescription>
-            平台游戏对局日志列表
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="py-8 text-center text-muted-foreground">
-            此功能正在开发中...
-          </div>
+        <CardContent className="p-6 space-y-6">
+          <GameLogsFilter onSearch={handleSearch} />
+          <GameLogsViewer logs={logs} />
         </CardContent>
       </Card>
     </div>

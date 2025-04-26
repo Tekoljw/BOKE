@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
@@ -30,7 +29,6 @@ const AdminLayout: React.FC = () => {
   const isMobile = useIsMobile();
   const [language, setLanguage] = useState<'zh' | 'en'>('zh');
 
-  // Close sidebar by default on mobile
   React.useEffect(() => {
     if (isMobile) {
       setSidebarOpen(false);
@@ -66,7 +64,6 @@ const AdminLayout: React.FC = () => {
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
-      {/* Mobile overlay */}
       {isMobile && sidebarOpen && (
         <div 
           className="fixed inset-0 bg-black/50 z-40"
@@ -74,7 +71,6 @@ const AdminLayout: React.FC = () => {
         />
       )}
 
-      {/* Sidebar */}
       <div 
         className={`
           fixed md:relative bg-sidebar text-white z-50 h-full
@@ -87,7 +83,7 @@ const AdminLayout: React.FC = () => {
           {sidebarOpen && (
             <Link to="/" className="flex items-center">
               <img 
-                src="/lovable-uploads/4b9bddee-a0e6-4dfb-ab50-2598752dec72.png" 
+                src="/lovable-uploads/f9035fa0-ee25-47a2-b30b-46149ba3914e.png" 
                 alt="波克棋牌" 
                 className="h-8 w-auto"
               />
@@ -127,7 +123,6 @@ const AdminLayout: React.FC = () => {
         </div>
       </div>
       
-      {/* Main content */}
       <div className="flex-1 overflow-y-auto">
         <header className="bg-white border-b h-16 flex items-center justify-between px-6">
           <div className="flex items-center gap-4">

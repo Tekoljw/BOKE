@@ -11,7 +11,8 @@ import {
   Coins,
   Database,
   Globe,
-  Gift
+  Gift,
+  Settings
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import UserMenu from '../UserMenu';
@@ -40,6 +41,7 @@ const MerchantLayout: React.FC = () => {
     { path: '/merchant/transactions', label: '上下分记录', icon: <Activity /> },
     { path: '/merchant/credit', label: '买分管理', icon: <Coins /> },
     { path: '/merchant/bonus-points', label: '赠分领取', icon: <Gift /> },
+    { path: '/merchant/win-control', label: '输赢控制', icon: <Settings /> },
     { path: '/merchant/api', label: 'API管理', icon: <Database /> },
   ];
 

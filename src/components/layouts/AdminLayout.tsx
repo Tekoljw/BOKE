@@ -85,7 +85,7 @@ const AdminLayout: React.FC = () => {
               <img 
                 src="/lovable-uploads/f9035fa0-ee25-47a2-b30b-46149ba3914e.png" 
                 alt="波克棋牌" 
-                className="h-8 w-auto"
+                className="h-8 w-auto rounded-lg"
               />
             </Link>
           )}

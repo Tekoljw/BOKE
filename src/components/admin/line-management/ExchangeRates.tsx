@@ -65,6 +65,15 @@ const ExchangeRates: React.FC = () => {
     ));
   };
 
+  const handleCurrencyChange = (oldCurrency: string, newCurrency: string) => {
+    setRates(rates.map(rate => 
+      rate.currency === oldCurrency 
+        ? { ...rate, currency: newCurrency.toUpperCase() } 
+        : rate
+    ));
+    setEditingCurrency(null);
+  };
+
   const handleEditDisplayName = (currency: string, newDisplayName: string) => {
     setRates(rates.map(rate => 
       rate.currency === currency 
@@ -134,20 +143,18 @@ const ExchangeRates: React.FC = () => {
             <TableHead>币种名称</TableHead>
             <TableHead>汇率 (1 USDT =)</TableHead>
             <TableHead>自动更新</TableHead>
-            <TableHead>操作</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {rates.map((rate) => (
             <TableRow key={rate.currency}>
-              <TableCell className="font-medium">{rate.currency}</TableCell>
               <TableCell>
                 {editingCurrency === rate.currency ? (
                   <div className="flex items-center gap-2">
                     <Input
-                      value={rate.displayName}
-                      onChange={(e) => handleEditDisplayName(rate.currency, e.target.value)}
-                      className="w-32"
+                      value={rate.currency}
+                      onChange={(e) => handleCurrencyChange(rate.currency, e.target.value)}
+                      className="w-24"
                     />
                     <Button 
                       variant="ghost" 
@@ -159,7 +166,7 @@ const ExchangeRates: React.FC = () => {
                   </div>
                 ) : (
                   <div className="flex items-center gap-2">
-                    {rate.displayName}
+                    {rate.currency}
                     <Button 
                       variant="ghost" 
                       size="icon" 
@@ -170,6 +177,7 @@ const ExchangeRates: React.FC = () => {
                   </div>
                 )}
               </TableCell>
+              <TableCell>{rate.displayName}</TableCell>
               <TableCell>
                 <Input
                   type="number"
@@ -184,13 +192,6 @@ const ExchangeRates: React.FC = () => {
                   checked={rate.autoUpdate}
                   onCheckedChange={() => toggleAutoUpdate(rate.currency)}
                 />
-              </TableCell>
-              <TableCell>
-                {rate.currency !== "USDT" && (
-                  <Button variant="destructive" size="sm" className="text-xs">
-                    删除
-                  </Button>
-                )}
               </TableCell>
             </TableRow>
           ))}

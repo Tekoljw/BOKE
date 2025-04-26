@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 
-// Mock vendors (moved from AdminBonusManagement)
+// Mock vendors
 const mockVendors = [
   { id: 'V001', name: 'CQ9' },
   { id: 'V002', name: '开元棋牌' },
@@ -14,7 +14,7 @@ const mockVendors = [
   { id: 'V004', name: 'PG电子' }
 ];
 
-// Bonus rules by vendor (moved from AdminBonusManagement)
+// Bonus rules by vendor
 const mockBonusRules = {
   'V001': [
     { depositAmount: 1000, bonusAmount: 3000 },

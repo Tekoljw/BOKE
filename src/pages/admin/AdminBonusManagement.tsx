@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Search, Plus } from 'lucide-react';
+import { Search, Plus, ChevronDown } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -116,6 +116,8 @@ const AdminBonusManagement: React.FC = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [isManualBonusOpen, setIsManualBonusOpen] = useState(false);
+  const [displayedRecords, setDisplayedRecords] = useState(mockBonusRecords.slice(0, 10));
+  const [hasMore, setHasMore] = useState(true);
   
   const form = useForm<ManualBonusFormValues>({
     resolver: zodResolver(manualBonusSchema),
@@ -126,6 +128,13 @@ const AdminBonusManagement: React.FC = () => {
       reason: "",
     },
   });
+
+  const handleLoadMore = () => {
+    const currentLength = displayedRecords.length;
+    const nextRecords = mockBonusRecords.slice(currentLength, currentLength + 10);
+    setDisplayedRecords([...displayedRecords, ...nextRecords]);
+    setHasMore(currentLength + 10 < mockBonusRecords.length);
+  };
 
   const handleManualBonus = (values: ManualBonusFormValues) => {
     toast({
@@ -200,7 +209,7 @@ const AdminBonusManagement: React.FC = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {mockBonusRecords.map((record) => (
+                  {displayedRecords.map((record) => (
                     <TableRow key={record.id}>
                       <TableCell>{record.merchantId}</TableCell>
                       <TableCell>{record.merchantName}</TableCell>
@@ -235,6 +244,19 @@ const AdminBonusManagement: React.FC = () => {
                 </TableBody>
               </Table>
             </div>
+
+            {hasMore && (
+              <div className="flex justify-center mt-4">
+                <Button
+                  variant="outline"
+                  onClick={handleLoadMore}
+                  className="w-full max-w-sm"
+                >
+                  <ChevronDown className="mr-2 h-4 w-4" />
+                  加载更多
+                </Button>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

@@ -1,136 +1,145 @@
 
-import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { ImportantNotices } from '@/components/dashboard/ImportantNotices';
+import { PromotionStats, ProfitStats } from '@/components/dashboard/DashboardStats';
+import { RankingList } from '@/components/dashboard/RankingList';
 
 const AdminDashboard: React.FC = () => {
-  // Mock data for the dashboard
-  const statsData = [
-    { title: "总商户数", value: 125, change: "+12%", status: "positive" },
-    { title: "总代理商数", value: 38, change: "+5%", status: "positive" },
-    { title: "今日活跃玩家", value: 2845, change: "+18%", status: "positive" },
-    { title: "今日总流水", value: "¥285,942", change: "-3%", status: "negative" },
-  ];
+  const [timeFrame, setTimeFrame] = useState('today');
+  const [chartView, setChartView] = useState<'daily' | 'monthly'>('daily');
   
-  const revenueData = [
-    { name: "1月", revenue: 12500, profit: 3750 },
-    { name: "2月", revenue: 15000, profit: 4500 },
-    { name: "3月", revenue: 18000, profit: 5400 },
-    { name: "4月", revenue: 22000, profit: 6600 },
-    { name: "5月", revenue: 19500, profit: 5850 },
-    { name: "6月", revenue: 25000, profit: 7500 },
+  const dailyData = [
+    { date: "04-20", vendor1: 2500, vendor2: 1800, vendor3: 1200 },
+    { date: "04-21", vendor1: 2800, vendor2: 2000, vendor3: 1500 },
+    { date: "04-22", vendor1: 2600, vendor2: 1900, vendor3: 1300 },
+    { date: "04-23", vendor1: 3000, vendor2: 2200, vendor3: 1600 },
+    { date: "04-24", vendor1: 2900, vendor2: 2100, vendor3: 1400 },
+    { date: "04-25", vendor1: 3200, vendor2: 2400, vendor3: 1800 },
+    { date: "04-26", vendor1: 3500, vendor2: 2600, vendor3: 2000 },
   ];
-  
-  const gamePerformance = [
-    { name: "斗地主", plays: 1250, revenue: 15000 },
-    { name: "麻将", plays: 950, revenue: 12000 },
-    { name: "德州扑克", plays: 850, revenue: 10500 },
-    { name: "二八杠", plays: 720, revenue: 9000 },
-    { name: "三张牌", plays: 650, revenue: 8200 },
+
+  const monthlyData = [
+    { month: "1月", vendor1: 75000, vendor2: 55000, vendor3: 35000 },
+    { month: "2月", vendor1: 82000, vendor2: 58000, vendor3: 38000 },
+    { month: "3月", vendor1: 88000, vendor2: 62000, vendor3: 42000 },
+    { month: "4月", vendor1: 95000, vendor2: 68000, vendor3: 45000 },
   ];
-  
+
+  const vendors = [
+    { id: 'vendor1', name: '波克棋牌', amount: 95000 },
+    { id: 'vendor2', name: '开元棋牌', amount: 68000 },
+    { id: 'vendor3', name: '乐游棋牌', amount: 45000 },
+  ];
+
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold mb-2">平台仪表盘</h1>
         <p className="text-muted-foreground">平台数据概览和关键指标</p>
       </div>
+
+      <ImportantNotices />
       
-      {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {statsData.map((stat, index) => (
-          <Card key={index}>
-            <CardHeader className="pb-2">
-              <CardDescription>{stat.title}</CardDescription>
+      <div className="grid gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>推广情况</CardTitle>
+            <CardDescription>商户和代理推广数据统计</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <PromotionStats />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>盈利情况</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Tabs value={timeFrame} onValueChange={setTimeFrame}>
+              <TabsList>
+                <TabsTrigger value="today">今日</TabsTrigger>
+                <TabsTrigger value="yesterday">昨日</TabsTrigger>
+                <TabsTrigger value="month">本月</TabsTrigger>
+                <TabsTrigger value="lastMonth">上月</TabsTrigger>
+                <TabsTrigger value="year">今年</TabsTrigger>
+              </TabsList>
+              <TabsContent value={timeFrame}>
+                <ProfitStats timeFrame={timeFrame} />
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>收入趋势</CardTitle>
+              <CardDescription>按时间统计的收入数据</CardDescription>
+            </div>
+            <div className="flex gap-2">
+              <Button 
+                variant={chartView === 'daily' ? 'default' : 'outline'} 
+                onClick={() => setChartView('daily')}
+              >
+                日
+              </Button>
+              <Button 
+                variant={chartView === 'monthly' ? 'default' : 'outline'} 
+                onClick={() => setChartView('monthly')}
+              >
+                月
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[400px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chartView === 'daily' ? dailyData : monthlyData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey={chartView === 'daily' ? 'date' : 'month'} />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="vendor1" name="波克棋牌" fill="#8B5CF6" />
+                  <Bar dataKey="vendor2" name="开元棋牌" fill="#0EA5E9" />
+                  <Bar dataKey="vendor3" name="乐游棋牌" fill="#F97316" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+
+        <div className="grid gap-6 md:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle>热门线路</CardTitle>
+              <CardDescription>按上分金额排序</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex justify-between items-end">
-                <div className="text-2xl font-bold">{stat.value}</div>
-                <div className={`text-sm ${stat.status === 'positive' ? 'text-green-500' : 'text-red-500'}`}>
-                  {stat.change}
-                </div>
+              <div className="space-y-4">
+                {vendors.map((vendor, index) => (
+                  <div key={vendor.id} className="flex justify-between items-center">
+                    <div>
+                      <div className="font-medium">{vendor.name}</div>
+                      <div className="text-sm text-muted-foreground">
+                        上分金额 (USDT)
+                      </div>
+                    </div>
+                    <div className="text-right font-medium">
+                      ${vendor.amount.toLocaleString()}
+                    </div>
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>
-        ))}
-      </div>
-      
-      {/* Revenue Chart */}
-      <Card className="col-span-2">
-        <CardHeader>
-          <CardTitle>收入趋势</CardTitle>
-          <CardDescription>近6个月平台总收入和利润</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={revenueData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip formatter={(value) => `¥${value}`} />
-                <Bar dataKey="revenue" name="总收入" fill="#0F6FFF" />
-                <Bar dataKey="profit" name="利润" fill="#FF6B00" />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </CardContent>
-      </Card>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Popular Games */}
-        <Card>
-          <CardHeader>
-            <CardTitle>热门游戏</CardTitle>
-            <CardDescription>按游戏参与度排序</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {gamePerformance.map((game, index) => (
-                <div key={index} className="flex justify-between items-center">
-                  <div>
-                    <div className="font-medium">{game.name}</div>
-                    <div className="text-sm text-muted-foreground">{game.plays} 场次</div>
-                  </div>
-                  <div className="text-right">
-                    <div className="font-medium">¥{game.revenue.toLocaleString()}</div>
-                    <div className="text-sm text-muted-foreground">收入</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-        
-        {/* Recent Activities */}
-        <Card>
-          <CardHeader>
-            <CardTitle>最近活动</CardTitle>
-            <CardDescription>系统最新活动记录</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {[
-                { title: "新商户注册", time: "10分钟前", description: "商户 'GameZone' 完成注册" },
-                { title: "佣金结算", time: "1小时前", description: "代理商 'TopAgent' 佣金 ¥12,500 已结算" },
-                { title: "系统更新", time: "3小时前", description: "系统维护完成，所有游戏恢复运行" },
-                { title: "新游戏上线", time: "昨天", description: "德州扑克专业版已上线" },
-                { title: "代理商报表", time: "2天前", description: "月度代理商报表已生成" },
-              ].map((activity, index) => (
-                <div key={index} className="flex">
-                  <div className="mr-4 flex h-full w-[2px] bg-border">
-                    <div className="mt-2 h-2 w-2 rounded-full bg-primary"></div>
-                  </div>
-                  <div>
-                    <div className="font-medium">{activity.title}</div>
-                    <div className="text-sm text-muted-foreground">{activity.time}</div>
-                    <div className="text-sm mt-1">{activity.description}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+
+          <RankingList />
+        </div>
       </div>
     </div>
   );

@@ -32,7 +32,7 @@ const AgentLayout: React.FC = () => {
 
   const navigationItems = [
     { path: '/agent', label: '我的佣金', icon: <Coins /> },
-    { path: '/agent/merchants', label: '商户管理', icon: <Users /> },
+    { path: '/agent/merchants', label: '我的商户', icon: <Users /> },
     { path: '/agent/settlements', label: '结算记录', icon: <FileText /> },
   ];
 

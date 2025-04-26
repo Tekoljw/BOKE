@@ -1,4 +1,3 @@
-
 // User Interfaces
 export interface User {
   id: string;
@@ -25,6 +24,11 @@ export interface Merchant extends User {
   usdtBalance: number;
   feeRate: number;
   featured: boolean;
+  telegramId?: string;
+  totalDeposit?: number;
+  monthlyDeposit?: number;
+  totalCommission?: number;
+  monthlyCommission?: number;
 }
 
 // Game Interfaces

@@ -1,4 +1,3 @@
-
 export interface CommissionStats {
   unsettled: number;
   totalSettled: number;
@@ -16,4 +15,13 @@ export interface MerchantStats {
 
 export interface SettlementFormData {
   usdtAddress: string;
+}
+
+export interface SettlementRecord {
+  id: string;
+  timestamp: string;
+  amount: number;
+  balanceBefore: number;
+  balanceAfter: number;
+  status: 'success' | 'failed';
 }

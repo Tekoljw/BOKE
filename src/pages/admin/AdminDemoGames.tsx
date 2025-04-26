@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -6,8 +5,8 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, Gamepad2 } from "lucide-react";
+import { LoadMore } from "@/components/ui/load-more";
 
-// Mock data for vendors and games
 const mockVendors = Array.from({ length: 50 }, (_, i) => ({
   id: `v${i + 1}`,
   name: `厂商 ${i + 1}`,
@@ -34,8 +33,8 @@ const AdminDemoGames: React.FC = () => {
   const [selectedVendor, setSelectedVendor] = useState(mockVendors[0]?.id);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentGames, setCurrentGames] = useState(generateMockGames(mockVendors[0]?.id));
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Filter vendors based on search term
   const filteredVendors = searchTerm 
     ? mockVendors.filter(v => v.name.toLowerCase().includes(searchTerm.toLowerCase()))
     : mockVendors;
@@ -59,6 +58,14 @@ const AdminDemoGames: React.FC = () => {
         ? {...game, featured: !game.featured} 
         : game
     ));
+  };
+
+  const handleLoadMore = () => {
+    setIsLoading(true);
+    // Simulate API call
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
   };
 
   return (
@@ -165,6 +172,7 @@ const AdminDemoGames: React.FC = () => {
                   ))}
                 </TableBody>
               </Table>
+              <LoadMore onLoadMore={handleLoadMore} loading={isLoading} />
             </TabsContent>
           </Tabs>
         </CardContent>

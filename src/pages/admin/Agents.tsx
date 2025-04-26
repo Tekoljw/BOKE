@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/components/ui/use-toast";
 import { Agent } from '@/types';
+import { LoadMore } from "@/components/ui/load-more";
 
 const AdminAgents: React.FC = () => {
   const { toast } = useToast();
@@ -18,7 +19,6 @@ const AdminAgents: React.FC = () => {
     email: "",
     commissionRate: 0,
   });
-  
   const [agents, setAgents] = useState<Agent[]>([
     { 
       id: '1', 
@@ -57,12 +57,13 @@ const AdminAgents: React.FC = () => {
       pendingCommission: 4500
     }
   ]);
-  
+  const [isLoading, setIsLoading] = useState(false);
+
   const filteredAgents = agents.filter(agent => 
     agent.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
     agent.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({
@@ -70,7 +71,7 @@ const AdminAgents: React.FC = () => {
       [name]: name === 'commissionRate' ? parseFloat(value) : value,
     });
   };
-  
+
   const handleAdd = () => {
     setFormData({
       username: "",
@@ -80,7 +81,7 @@ const AdminAgents: React.FC = () => {
     setIsEditMode(false);
     setIsDialogOpen(true);
   };
-  
+
   const handleEdit = (agent: Agent) => {
     setSelectedAgent(agent);
     setFormData({
@@ -91,7 +92,7 @@ const AdminAgents: React.FC = () => {
     setIsEditMode(true);
     setIsDialogOpen(true);
   };
-  
+
   const handleToggleStatus = (id: string, currentStatus: 'active' | 'inactive' | 'frozen') => {
     const newStatus = currentStatus === 'active' ? 'frozen' as const : 'active' as const;
     const updatedAgents = agents.map(agent => 
@@ -104,7 +105,7 @@ const AdminAgents: React.FC = () => {
       description: `代理商已${newStatus === 'active' ? '启用' : '冻结'}`,
     });
   };
-  
+
   const handleDelete = (id: string) => {
     const updatedAgents = agents.filter(agent => agent.id !== id);
     setAgents(updatedAgents);
@@ -114,7 +115,7 @@ const AdminAgents: React.FC = () => {
       description: "代理商账号已成功删除",
     });
   };
-  
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -159,7 +160,15 @@ const AdminAgents: React.FC = () => {
     
     setIsDialogOpen(false);
   };
-  
+
+  const handleLoadMore = () => {
+    setIsLoading(true);
+    // Simulate API call
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -244,6 +253,7 @@ const AdminAgents: React.FC = () => {
               )}
             </TableBody>
           </Table>
+          <LoadMore onLoadMore={handleLoadMore} loading={isLoading} />
         </CardContent>
       </Card>
       

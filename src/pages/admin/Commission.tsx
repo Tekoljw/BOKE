@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -6,8 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Check, X } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { LoadMore } from "@/components/ui/load-more";
 
-// Mock data for commission orders
 const mockCommissionOrders = [
   {
     id: "CO001",
@@ -42,6 +42,9 @@ const AdminCommission: React.FC = () => {
   const { toast } = useToast();
   const [selectedOrder, setSelectedOrder] = useState<typeof mockCommissionOrders[0] | null>(null);
   const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleOpenReview = (order: typeof mockCommissionOrders[0]) => {
     if (order.status === 'pending') {
@@ -73,6 +76,13 @@ const AdminCommission: React.FC = () => {
     }
   };
 
+  const handleLoadMore = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -83,6 +93,24 @@ const AdminCommission: React.FC = () => {
       <Card>
         <CardHeader>
           <CardTitle>佣金申请列表</CardTitle>
+          <div className="mt-4 flex flex-col sm:flex-row gap-4">
+            <div className="grid w-full max-w-sm items-center gap-1.5">
+              <label className="text-sm text-muted-foreground">开始时间</label>
+              <Input
+                type="datetime-local"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+              />
+            </div>
+            <div className="grid w-full max-w-sm items-center gap-1.5">
+              <label className="text-sm text-muted-foreground">结束时间</label>
+              <Input
+                type="datetime-local"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+              />
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           <Table>
@@ -115,6 +143,7 @@ const AdminCommission: React.FC = () => {
               ))}
             </TableBody>
           </Table>
+          <LoadMore onLoadMore={handleLoadMore} loading={isLoading} />
         </CardContent>
       </Card>
 

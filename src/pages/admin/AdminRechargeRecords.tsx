@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -6,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Search } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { LoadMore } from "@/components/ui/load-more";
 
 // Mock data
 const mockRechargeRecords = [
@@ -55,12 +55,21 @@ const AdminRechargeRecords: React.FC = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [activeAgent, setActiveAgent] = useState('all');
+  const [isLoading, setIsLoading] = useState(false);
 
   const filteredRecords = activeAgent === 'all' 
     ? mockRechargeRecords 
     : mockRechargeRecords.filter(record => 
         record.agentName === `代理商${activeAgent.replace('agent', '')}`
       );
+
+  const handleLoadMore = () => {
+    setIsLoading(true);
+    // Simulate API call
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+  };
 
   return (
     <div className="space-y-6">
@@ -141,6 +150,7 @@ const AdminRechargeRecords: React.FC = () => {
                       ))}
                     </TableBody>
                   </Table>
+                  <LoadMore onLoadMore={handleLoadMore} loading={isLoading} />
                 </div>
               </div>
             </CardContent>

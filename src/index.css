@@ -135,3 +135,13 @@
 .appear-animation {
   @apply animate-fade-in;
 }
+
+@layer utilities {
+  /* Soft Color Backgrounds */
+  .bg-soft-purple { @apply bg-[#E5DEFF] border border-primary/20; }
+  .bg-soft-orange { @apply bg-[#FEC6A1] border border-orange-200/50; }
+  .bg-soft-green { @apply bg-[#F2FCE2] border border-green-200/50; }
+  .bg-soft-blue { @apply bg-[#D3E4FD] border border-blue-200/50; }
+  .bg-soft-pink { @apply bg-[#FFDEE2] border border-pink-200/50; }
+  .bg-soft-yellow { @apply bg-[#FEF7CD] border border-yellow-200/50; }
+}

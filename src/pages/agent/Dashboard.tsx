@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import {
   Dialog,
@@ -12,7 +13,16 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import BalanceCard from '@/components/merchant/BalanceCard';
-import { Coins, Users, DollarSign, Percent } from 'lucide-react';
+import { 
+  Coins, 
+  Users, 
+  DollarSign, 
+  Percent, 
+  TrendingUp, 
+  CreditCard, 
+  Calendar, 
+  ArrowUpRight 
+} from 'lucide-react';
 import type { CommissionStats, MerchantStats } from '@/types/commission';
 
 const MyCommission: React.FC = () => {
@@ -54,16 +64,16 @@ const MyCommission: React.FC = () => {
       </div>
       
       {/* Commission Rate Card */}
-      <Card>
+      <Card className="bg-soft-purple border-primary/20">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-primary">
             <Percent className="h-5 w-5" />
             我的佣金比例
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
-            <div className="text-3xl font-bold">10%</div>
+            <div className="text-3xl font-bold text-primary">10%</div>
             <p className="text-muted-foreground">
               佣金计算方式 = 商户充值买分金额（USDT）× 我的佣金比例
             </p>
@@ -78,32 +88,38 @@ const MyCommission: React.FC = () => {
           <BalanceCard 
             title="未结算佣金" 
             amount={commissionStats.unsettled}
-            icon={<Coins className="h-5 w-5" />}
+            icon={<CreditCard className="h-5 w-5 text-orange-500" />}
+            className="bg-soft-orange border-orange-200/50"
           />
           <BalanceCard 
             title="已结算佣金总额" 
             amount={commissionStats.totalSettled}
-            icon={<DollarSign className="h-5 w-5" />}
+            icon={<DollarSign className="h-5 w-5 text-green-500" />}
+            className="bg-soft-green border-green-200/50"
           />
           <BalanceCard 
             title="今日佣金收入" 
             amount={commissionStats.todayEarnings}
-            icon={<Coins className="h-5 w-5" />}
+            icon={<TrendingUp className="h-5 w-5 text-blue-500" />}
+            className="bg-soft-blue border-blue-200/50"
           />
           <BalanceCard 
             title="本月佣金收入" 
             amount={commissionStats.monthlyEarnings}
-            icon={<Coins className="h-5 w-5" />}
+            icon={<Calendar className="h-5 w-5 text-purple-500" />}
+            className="bg-soft-purple border-purple-200/50"
           />
           <BalanceCard 
             title="上月佣金收入" 
             amount={commissionStats.lastMonthEarnings}
-            icon={<Coins className="h-5 w-5" />}
+            icon={<ArrowUpRight className="h-5 w-5 text-pink-500" />}
+            className="bg-soft-pink border-pink-200/50"
           />
           <BalanceCard 
             title="累积佣金收入" 
             amount={commissionStats.totalEarnings}
-            icon={<Coins className="h-5 w-5" />}
+            icon={<Coins className="h-5 w-5 text-yellow-500" />}
+            className="bg-soft-yellow border-yellow-200/50"
           />
         </div>
       </div>
@@ -115,12 +131,14 @@ const MyCommission: React.FC = () => {
           <BalanceCard 
             title="总商户数量" 
             amount={merchantStats.totalMerchants}
-            icon={<Users className="h-5 w-5" />}
+            icon={<Users className="h-5 w-5 text-teal-500" />}
+            className="bg-soft-green border-teal-200/50"
           />
           <BalanceCard 
             title="活跃商户数量" 
             amount={merchantStats.activeMerchants}
-            icon={<Users className="h-5 w-5" />}
+            icon={<Users className="h-5 w-5 text-indigo-500" />}
+            className="bg-soft-blue border-indigo-200/50"
           >
             <p className="mt-2 text-sm text-muted-foreground">
               30天内充值买分总量: {merchantStats.thirtyDayVolume.toLocaleString()}

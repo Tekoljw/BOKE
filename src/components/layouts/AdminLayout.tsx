@@ -41,6 +41,7 @@ const AdminLayout: React.FC = () => {
     { path: '/admin', label: '仪表盘', icon: <Home /> },
     { path: '/admin/agents', label: '代理商管理', icon: <Users /> },
     { path: '/admin/merchants', label: '商户管理', icon: <Users /> },
+    { path: '/admin/win-control', label: '输赢控制', icon: <Shield /> },
     { path: '/admin/win-loss', label: '输赢报表', icon: <BarChart2 /> },
     { path: '/admin/game-logs', label: '对局日志', icon: <FileText /> },
     { path: '/admin/transactions', label: '上下分记录', icon: <ArrowDownUp /> },

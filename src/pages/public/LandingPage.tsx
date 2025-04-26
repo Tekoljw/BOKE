@@ -76,7 +76,7 @@ const LandingPage: React.FC = () => {
               <Globe className="h-4 w-4" />
               <span>{language === 'cn' ? '中文' : 'English'}</span>
             </Button>
-            <Link to="/games">
+            <Link to="/login">
               <Button variant="outline" className="bg-white text-primary hover:bg-gray-100">
                 登录
               </Button>

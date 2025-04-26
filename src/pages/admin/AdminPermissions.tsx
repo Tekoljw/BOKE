@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -8,8 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Search, UserCheck, UserX, PlusCircle, Save } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
-// Mock data for user accounts
 const mockUsers = [
   { 
     id: 'admin1', 
@@ -55,7 +54,6 @@ const mockUsers = [
   },
 ];
 
-// Permission sections
 const permissionSections = [
   { 
     id: 'merchants', 
@@ -97,8 +95,16 @@ const AdminPermissions: React.FC = () => {
   const [users, setUsers] = useState(mockUsers);
   const [selectedUser, setSelectedUser] = useState(mockUsers[0]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isNewAccountDialogOpen, setIsNewAccountDialogOpen] = useState(false);
+  const [newAccountForm, setNewAccountForm] = useState({
+    name: '',
+    username: '',
+    role: 'admin',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
 
-  // Filter users based on search term
   const filteredUsers = searchTerm 
     ? users.filter(u => u.name.toLowerCase().includes(searchTerm.toLowerCase()) || u.id.toLowerCase().includes(searchTerm.toLowerCase()))
     : users;
@@ -115,12 +121,10 @@ const AdminPermissions: React.FC = () => {
       const updatedPermissions = {...prevUser.permissions};
       
       if (checked) {
-        // Add permission
         if (!updatedPermissions[section].includes(permission)) {
           updatedPermissions[section] = [...updatedPermissions[section], permission];
         }
       } else {
-        // Remove permission
         updatedPermissions[section] = updatedPermissions[section].filter(p => p !== permission);
       }
       
@@ -136,7 +140,6 @@ const AdminPermissions: React.FC = () => {
       if (user.id === userId) {
         const newStatus = user.status === 'active' ? 'inactive' : 'active';
         
-        // Also update selected user if it's the one being toggled
         if (selectedUser.id === userId) {
           setSelectedUser({...selectedUser, status: newStatus});
         }
@@ -161,6 +164,31 @@ const AdminPermissions: React.FC = () => {
     });
   };
 
+  const handleNewAccount = () => {
+    if (newAccountForm.password !== newAccountForm.confirmPassword) {
+      toast({
+        title: "密码不匹配",
+        description: "请确认两次输入的密码相同",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    toast({
+      title: "账号创建成功",
+      description: `账号 ${newAccountForm.name} 已成功创建`,
+    });
+    setIsNewAccountDialogOpen(false);
+    setNewAccountForm({
+      name: '',
+      username: '',
+      role: 'admin',
+      email: '',
+      password: '',
+      confirmPassword: '',
+    });
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -182,7 +210,7 @@ const AdminPermissions: React.FC = () => {
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
-              <Button>
+              <Button onClick={() => setIsNewAccountDialogOpen(true)}>
                 <PlusCircle className="mr-2 h-4 w-4" />
                 新建账号
               </Button>
@@ -321,6 +349,77 @@ const AdminPermissions: React.FC = () => {
           </div>
         </CardContent>
       </Card>
+
+      <Dialog open={isNewAccountDialogOpen} onOpenChange={setIsNewAccountDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>创建新账号</DialogTitle>
+            <DialogDescription>
+              创建新的系统管理账号
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-1 gap-4">
+              <div>
+                <Label htmlFor="name">账号名称</Label>
+                <Input
+                  id="name"
+                  value={newAccountForm.name}
+                  onChange={(e) => setNewAccountForm(prev => ({ ...prev, name: e.target.value }))}
+                />
+              </div>
+              <div>
+                <Label htmlFor="username">登录账号</Label>
+                <Input
+                  id="username"
+                  value={newAccountForm.username}
+                  onChange={(e) => setNewAccountForm(prev => ({ ...prev, username: e.target.value }))}
+                />
+              </div>
+              <div>
+                <Label htmlFor="email">电子邮箱</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={newAccountForm.email}
+                  onChange={(e) => setNewAccountForm(prev => ({ ...prev, email: e.target.value }))}
+                />
+              </div>
+              <div>
+                <Label>角色类型</Label>
+                <Tabs defaultValue={newAccountForm.role} onValueChange={(value) => setNewAccountForm(prev => ({ ...prev, role: value }))}>
+                  <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="admin">管理员</TabsTrigger>
+                    <TabsTrigger value="auditor">审计员</TabsTrigger>
+                  </TabsList>
+                </Tabs>
+              </div>
+              <div>
+                <Label htmlFor="password">密码</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={newAccountForm.password}
+                  onChange={(e) => setNewAccountForm(prev => ({ ...prev, password: e.target.value }))}
+                />
+              </div>
+              <div>
+                <Label htmlFor="confirmPassword">确认密码</Label>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  value={newAccountForm.confirmPassword}
+                  onChange={(e) => setNewAccountForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                />
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsNewAccountDialogOpen(false)}>取消</Button>
+            <Button onClick={handleNewAccount}>创建账号</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

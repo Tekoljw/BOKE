@@ -8,9 +8,11 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PlusCircle, Pencil, Trash2, Shield } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
+import { LoadMore } from "@/components/ui/load-more";
 
 interface Merchant {
   id: string;
+  merchantId: string;
   name: string;
   username: string;
   email: string;
@@ -26,6 +28,7 @@ interface Merchant {
 const mockMerchants: Merchant[] = [
   {
     id: '1',
+    merchantId: 'M00001',
     name: '波克棋牌',
     username: 'bokeqipai',
     email: 'boke@example.com',
@@ -39,6 +42,7 @@ const mockMerchants: Merchant[] = [
   },
   {
     id: '2',
+    merchantId: 'M00002',
     name: '开元棋牌',
     username: 'kaiyuan',
     email: 'kaiyuan@example.com',
@@ -52,6 +56,7 @@ const mockMerchants: Merchant[] = [
   },
   {
     id: '3',
+    merchantId: 'M00003',
     name: '乐游棋牌',
     username: 'leyou',
     email: 'leyou@example.com',
@@ -73,7 +78,9 @@ const AdminMerchants: React.FC = () => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isWhitelistDialogOpen, setIsWhitelistDialogOpen] = useState(false);
   const [selectedMerchant, setSelectedMerchant] = useState<Merchant | null>(null);
-  
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+
   const [formData, setFormData] = useState({
     name: '',
     username: '',
@@ -114,6 +121,7 @@ const AdminMerchants: React.FC = () => {
     
     const newMerchant: Merchant = {
       id: `${Date.now()}`,
+      merchantId: 'M00004',
       name: formData.name,
       username: formData.username,
       email: formData.email,
@@ -244,6 +252,12 @@ const AdminMerchants: React.FC = () => {
     setIsWhitelistDialogOpen(true);
   };
 
+  const handleLoadMore = async () => {
+    setLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setLoading(false);
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -285,6 +299,7 @@ const AdminMerchants: React.FC = () => {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead>商户ID</TableHead>
                 <TableHead>商户名</TableHead>
                 <TableHead>账号</TableHead>
                 <TableHead>USDT余额</TableHead>
@@ -299,6 +314,7 @@ const AdminMerchants: React.FC = () => {
             <TableBody>
               {filteredMerchants.map((merchant) => (
                 <TableRow key={merchant.id}>
+                  <TableCell>{merchant.merchantId}</TableCell>
                   <TableCell className="font-medium">{merchant.name}</TableCell>
                   <TableCell>{merchant.username}</TableCell>
                   <TableCell className="text-blue-600 font-medium">{merchant.usdtBalance}</TableCell>
@@ -539,6 +555,12 @@ const AdminMerchants: React.FC = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      
+      <LoadMore 
+        onLoadMore={handleLoadMore}
+        loading={loading}
+        hasMore={hasMore}
+      />
     </div>
   );
 };

@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Search, Upload, Save } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { InfoCircled } from "lucide-react";
 
 const mockVendors = Array.from({ length: 10 }, (_, i) => ({
   id: `v${i + 1}`,
@@ -64,6 +66,13 @@ const AdminVendorIntro: React.FC = () => {
         <h1 className="text-3xl font-bold mb-2">厂商介绍配置</h1>
         <p className="text-muted-foreground">管理游戏厂商介绍信息</p>
       </div>
+
+      <Alert>
+        <InfoCircled className="h-4 w-4" />
+        <AlertDescription>
+          此配置仅对首页厂商介绍的页面展示生效，跟系统支持的厂商无关
+        </AlertDescription>
+      </Alert>
       
       <Card>
         <CardContent className="p-6">
